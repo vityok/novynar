@@ -21,6 +21,14 @@ public class Backend
     private String framework = "embedded";
     private String protocol = "jdbc:derby:";
 
+    private final static Backend INSTANCE = new Backend();
+
+    protected Backend() {}
+
+    public static Backend getInstance() {
+	return INSTANCE;
+    }
+
     /**
      * <p>
      * Starts the actual demo activities. This includes creating a database by
@@ -36,16 +44,11 @@ public class Backend
      * database until it is rebooted. That is why this demo will not shut down
      * the database unless it is running Derby embedded.</p>
      *
-     * @param args - Optional argument specifying which framework or JDBC driver
-     *        to use to connect to Derby. Default is the embedded framework,
-     *        see the <code>main()</code> method for details.
      * @see #main(String[])
      */
-    public void go(String[] args)
+    public void setup()
 	throws Exception
     {
-        /* parse the arguments to determine which framework is desired*/
-        parseArguments(args);
 
         System.out.println("SimpleApp starting in " + framework + " mode");
 
@@ -99,10 +102,6 @@ public class Backend
 
             System.out.println("Connected to and created database " + dbName);
 
-            // We want to control transactions manually. Autocommit is on by
-            // default in JDBC.
-            conn.setAutoCommit(false);
-
             /* Creating a statement object that we can use for running various
              * SQL statements commands against the database.*/
             s = conn.createStatement();
@@ -154,7 +153,6 @@ public class Backend
             psUpdate.setInt(3, 180);
             psUpdate.executeUpdate();
             System.out.println("Updated 180 Grand to 300 Lakeshore");
-
 
             /*
                We select the rows and verify the results.
@@ -216,13 +214,6 @@ public class Backend
             // delete the table
             s.execute("drop table location");
             System.out.println("Dropped table location");
-
-            /*
-               We commit the transaction. Any changes will be persisted to
-               the database now.
-             */
-            conn.commit();
-            System.out.println("Committed the transaction");
 
             /*
              * In embedded mode, an application should shut down the database.
@@ -344,29 +335,6 @@ public class Backend
             // for stack traces, refer to derby.log or uncomment this:
             //e.printStackTrace(System.err);
             e = e.getNextException();
-        }
-    }
-
-    /**
-     * Parses the arguments given and sets the values of this class's instance
-     * variables accordingly - that is, which framework to use, the name of the
-     * JDBC driver class, and which connection protocol to use. The
-     * protocol should be used as part of the JDBC URL when connecting to Derby.
-     * <p>
-     * If the argument is "embedded" or invalid, this method will not change
-     * anything, meaning that the default values will be used.</p>
-     * <p>
-     * @param args JDBC connection framework, either "embedded" or "derbyclient".
-     * Only the first argument will be considered, the rest will be ignored.
-     */
-    private void parseArguments(String[] args)
-    {
-        if (args.length > 0) {
-            if (args[0].equalsIgnoreCase("derbyclient"))
-            {
-                framework = "derbyclient";
-                protocol = "jdbc:derby://localhost:1527/";
-            }
         }
     }
 }

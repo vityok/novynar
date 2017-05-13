@@ -1,6 +1,10 @@
-# README #
+# Novinator #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+A very simple RSS news reader and agregator. Designed to be
+self-contained and without external dependencies. Relies solely on the
+standard libraries provided by the Java runtime environment.
+
+Not yet usable, in the very early stages of development.
 
 ### What is this repository for? ###
 
@@ -23,7 +27,8 @@ This README would normally document whatever steps are necessary to get your app
 * Code review
 * Other guidelines
 
-### Who do I talk to? ###
+### Contacts ###
 
-* Repo owner or admin
-* Other community or team contact
+Check the [project
+page](https://bitbucket.org/vityok/novinator/overview) for ways to
+leave feedback/open tickets for bug reports.

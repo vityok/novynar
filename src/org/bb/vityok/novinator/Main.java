@@ -1,6 +1,6 @@
 package org.bb.vityok.novinator;
 
-import org.bb.vityok.novinator.db.Backend;
+import org.bb.vityok.novinator.ui.NovinatorApp;
 
 public class Main
 {
@@ -9,7 +9,7 @@ public class Main
     {
 	System.out.println("Hello world");
 
-        new Backend().go(args);
+	NovinatorApp.start(args);
 
         System.out.println("SimpleApp finished");
     }
