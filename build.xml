@@ -1,0 +1,57 @@
+<project name="novinator" basedir="." default="main">
+
+  <property name="src.dir"     value="src"/>
+
+  <property name="build.dir"   value="build"/>
+  <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="jar.dir"     value="${build.dir}/jar"/>
+
+  <property name="main-class"  value="org.bb.vityok.novinator.Main"/>
+
+  <property environment="env"/>
+  <property name="derby.home"  value="${env.JAVA_HOME}/db"/>
+
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>
+
+  <path id="build.class.path">
+    <pathelement location="${derby.home}/lib/derby.jar"/>
+  </path>
+
+  <path id="run.class.path">
+    <pathelement location="${derby.home}/lib/derby.jar"/>
+    <pathelement location="${jar.dir}/${ant.project.name}.jar"/>
+  </path>
+
+  <target name="compile">
+    <mkdir dir="${classes.dir}"/>
+    <javac includeantruntime="false"
+	   classpathref="build.class.path"
+	   srcdir="${src.dir}"
+	   destdir="${classes.dir}">
+    </javac>
+  </target>
+
+  <target name="jar" depends="compile">
+    <mkdir dir="${jar.dir}"/>
+    <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="${main-class}"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="run" depends="jar">
+    <java
+	classname="${main-class}"
+	fork="true">
+      <classpath refid="run.class.path"/>
+    </java>
+  </target>
+
+  <target name="clean-build" depends="clean,jar"/>
+
+  <target name="main" depends="clean,run"/>
+
+</project>
