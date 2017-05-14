@@ -1,6 +1,7 @@
 package org.bb.vityok.novinator.ui;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import org.bb.vityok.novinator.db.Backend;
+import org.bb.vityok.novinator.feed.FeedReader;
 
 public class NovinatorApp extends Application {
 
@@ -43,7 +45,7 @@ public class NovinatorApp extends Application {
 	MenuItem exit = new MenuItem("Exit");
 	exit.setOnAction(new EventHandler<ActionEvent>() {
 		public void handle(ActionEvent t) {
-		    System.exit(0);
+		    Platform.exit();
 		}
 	    });
         menuFile.getItems().addAll(exit);
@@ -85,7 +87,8 @@ public class NovinatorApp extends Application {
 		@Override
 		    public void handle(ActionEvent event) {
 		    try {
-			Backend.getInstance().setup();
+			// Backend.getInstance().setup();
+			FeedReader.getInstance().loadFeeds();
 		    } catch (Exception e) {
 			e.printStackTrace();
 		    }
@@ -95,6 +98,12 @@ public class NovinatorApp extends Application {
 
         hbox.getChildren().add(btn);
 	return hbox;
+    }
+
+    @Override
+    public void init() {
+	// Backend.getInstance().setup();
+	// FeedReader.getInstance().loadFeeds();
     }
 
     @Override
@@ -111,5 +120,10 @@ public class NovinatorApp extends Application {
 
         primaryStage.setMaximized(true);
         primaryStage.show();
+    }
+
+    @Override
+    public void stop() {
+	System.out.println("Graceful shutdown. Bye-bye");
     }
 }
