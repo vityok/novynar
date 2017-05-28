@@ -125,5 +125,6 @@ public class NovinatorApp extends Application {
     @Override
     public void stop() {
 	System.out.println("Graceful shutdown. Bye-bye");
+	Backend.getInstance().close();
     }
 }

@@ -8,12 +8,17 @@ import java.io.Serializable;
 public class Channel
     implements Serializable
 {
+    private String channelId;
     private String title;
     private String link;
     private String description;
     private List<NewsItem> items;
 
     public Channel () { }
+
+    /** primary key */
+    public String getChannelId() { return channelId; }
+    public void setChannelId(String channelId) { this.channelId = channelId; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
