@@ -80,161 +80,48 @@ public class Backend
         PreparedStatement psUpdate;
         Statement s;
         ResultSet rs = null;
-        try
-	    {
-		Properties props = new Properties(); // connection properties
-		// providing a user name and password is optional in the embedded
-		// and derbyclient frameworks
-		props.put("user", "user1");
-		props.put("password", "user1");
 
-		/* By default, the schema APP will be used when no username is
-		 * provided.
-		 * Otherwise, the schema name is the same as the user name (in this
-		 * case "user1" or USER1.)
-		 *
-		 * Note that user authentication is off by default, meaning that any
-		 * user can connect to your database using any password. To enable
-		 * authentication, see the Derby Developer's Guide.
-		 */
+        try {
+	    String dbName = "novynarDB"; // the name of the database
 
-		String dbName = "derbyDB"; // the name of the database
+	    /*
+	     * This connection specifies create=true in the connection URL to
+	     * cause the database to be created when connecting for the first
+	     * time. To remove the database, remove the directory derbyDB (the
+	     * same as the database name) and its contents.
+	     *
+	     * The directory derbyDB will be created under the directory that
+	     * the system property derby.system.home points to, or the current
+	     * directory (user.dir) if derby.system.home is not set.
+	     */
+	    conn = DriverManager.getConnection(protocol + dbName
+					       + ";create=true", null);
 
-		/*
-		 * This connection specifies create=true in the connection URL to
-		 * cause the database to be created when connecting for the first
-		 * time. To remove the database, remove the directory derbyDB (the
-		 * same as the database name) and its contents.
-		 *
-		 * The directory derbyDB will be created under the directory that
-		 * the system property derby.system.home points to, or the current
-		 * directory (user.dir) if derby.system.home is not set.
-		 */
-		conn = DriverManager.getConnection(protocol + dbName
-						   + ";create=true", props);
+	    System.out.println("Connected to and created database " + dbName);
 
-		System.out.println("Connected to and created database " + dbName);
+	    /* Creating a statement object that we can use for running various
+	     * SQL statements commands against the database.*/
+	    s = conn.createStatement();
 
-		/* Creating a statement object that we can use for running various
-		 * SQL statements commands against the database.*/
-		s = conn.createStatement();
-		statements.add(s);
+	    // check if we've got a fresh databse or it is already a
+	    // populated one
+	    PreparedStatement psCheckTables = conn.prepareStatement("SELECT tablename FROM sys.systables WHERE tablename='news_item'");
+	    ResultSet rsCheckTables = psCheckTables.executeQuery();
+	    if (!rsCheckTables.next()) {
+		// the database is empty, populate it with required
+		// tables and other data structures
+
 
 		// We create a table...
-		s.execute("create table location(num int, addr varchar(40))");
-		System.out.println("Created table location");
-
-		// and add a few rows...
-
-		/* It is recommended to use PreparedStatements when you are
-		 * repeating execution of an SQL statement. PreparedStatements also
-		 * allows you to parameterize variables. By using PreparedStatements
-		 * you may increase performance (because the Derby engine does not
-		 * have to recompile the SQL statement each time it is executed) and
-		 * improve security (because of Java type checking).
-		 */
-		// parameter 1 is num (int), parameter 2 is addr (varchar)
-		psInsert = conn.prepareStatement(
-						 "insert into location values (?, ?)");
-		statements.add(psInsert);
-
-		psInsert.setInt(1, 1956);
-		psInsert.setString(2, "Webster St.");
-		psInsert.executeUpdate();
-		System.out.println("Inserted 1956 Webster");
-
-		psInsert.setInt(1, 1910);
-		psInsert.setString(2, "Union St.");
-		psInsert.executeUpdate();
-		System.out.println("Inserted 1910 Union");
-
-		// Let's update some rows as well...
-
-		// parameter 1 and 3 are num (int), parameter 2 is addr (varchar)
-		psUpdate = conn.prepareStatement(
-						 "update location set num=?, addr=? where num=?");
-		statements.add(psUpdate);
-
-		psUpdate.setInt(1, 180);
-		psUpdate.setString(2, "Grand Ave.");
-		psUpdate.setInt(3, 1956);
-		psUpdate.executeUpdate();
-		System.out.println("Updated 1956 Webster to 180 Grand");
-
-		psUpdate.setInt(1, 300);
-		psUpdate.setString(2, "Lakeshore Ave.");
-		psUpdate.setInt(3, 180);
-		psUpdate.executeUpdate();
-		System.out.println("Updated 180 Grand to 300 Lakeshore");
-
-		/*
-		  We select the rows and verify the results.
-		*/
-		rs = s.executeQuery(
-				    "SELECT num, addr FROM location ORDER BY num");
-
-		/* we expect the first returned column to be an integer (num),
-		 * and second to be a String (addr). Rows are sorted by street
-		 * number (num).
-		 *
-		 * Normally, it is best to use a pattern of
-		 *  while(rs.next()) {
-		 *    // do something with the result set
-		 *  }
-		 * to process all returned rows, but we are only expecting two rows
-		 * this time, and want the verification code to be easy to
-		 * comprehend, so we use a different pattern.
-		 */
-
-		int number; // street number retrieved from the database
-		boolean failure = false;
-		if (!rs.next())
-		    {
-			failure = true;
-			reportFailure("No rows in ResultSet");
-		    }
-
-		if ((number = rs.getInt(1)) != 300)
-		    {
-			failure = true;
-			reportFailure(
-				      "Wrong row returned, expected num=300, got " + number);
-		    }
-
-		if (!rs.next())
-		    {
-			failure = true;
-			reportFailure("Too few rows");
-		    }
-
-		if ((number = rs.getInt(1)) != 1910)
-		    {
-			failure = true;
-			reportFailure(
-				      "Wrong row returned, expected num=1910, got " + number);
-		    }
-
-		if (rs.next())
-		    {
-			failure = true;
-			reportFailure("Too many rows");
-		    }
-
-		if (!failure) {
-		    System.out.println("Verified the rows");
-		}
-
-		// delete the table
-		s.execute("drop table location");
-		System.out.println("Dropped table location");
-
-
+		s.execute("CREATE TABLE news_item(title VARCHAR(256), link VARCHAR(1024), "
+			  + "description VARCHAR(6144), creator VARCHAR(256), date TIMESTAMP, "
+			  + "subject VARCHAR(6144))");
+		System.out.println("Created table news_item");
 
 	    }
-        catch (SQLException sqle)
-	    {
-		printSQLException(sqle);
-	    } finally {
+	} catch (SQLException sqle) {
+	    printSQLException(sqle);
+	} finally {
             // release all open resources to avoid unnecessary memory usage
 
             // ResultSet

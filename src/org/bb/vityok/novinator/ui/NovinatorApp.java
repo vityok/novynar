@@ -3,12 +3,18 @@ package org.bb.vityok.novinator.ui;
 import javafx.application.Application;
 import javafx.application.Platform;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+
+import javafx.geometry.Insets;
 
 import javafx.scene.Scene;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -17,14 +23,23 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import org.bb.vityok.novinator.NewsItem;
 import org.bb.vityok.novinator.db.Backend;
 import org.bb.vityok.novinator.feed.FeedReader;
 
+
+/** Primary UI controller implementing the glue binding all components
+ * of the application together.
+ */
 public class NovinatorApp extends Application {
+
+    /** Table view with the current selection of news items. */
+    private TableView itemsTable = null;
 
     public static void start(String[] args) {
         launch(args);
     }
+
 
     private HBox buildMenuBar() {
 	HBox box = new HBox();
@@ -62,6 +77,7 @@ public class NovinatorApp extends Application {
 	return box;
     }
 
+
     public VBox buildFeedsTree() {
 	// **** FEEDS TREE
 	VBox vbox = new VBox();
@@ -76,6 +92,33 @@ public class NovinatorApp extends Application {
 	vbox.getChildren().addAll(tree);
 	return vbox;
     }
+
+
+    private VBox buildItemsTable() {
+	itemsTable = new TableView();
+
+        itemsTable.setEditable(false);
+
+        TableColumn titleCol = new TableColumn("Title");
+        TableColumn authorCol = new TableColumn("Author");
+        TableColumn dateCol = new TableColumn("Date");
+
+	titleCol.setCellValueFactory(new PropertyValueFactory<NewsItem,String>("title"));
+	authorCol.setCellValueFactory(new PropertyValueFactory<NewsItem,String>("author"));
+	dateCol.setCellValueFactory(new PropertyValueFactory<NewsItem,String>("date"));
+
+        itemsTable.getColumns().add(titleCol);
+	itemsTable.getColumns().add(authorCol);
+	itemsTable.getColumns().add(dateCol);
+
+        final VBox vbox = new VBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(10, 0, 0, 10));
+        vbox.getChildren().add(itemsTable);
+
+	return vbox;
+    }
+
 
     private HBox buildCenterPane() {
 	HBox hbox = new HBox();
@@ -96,9 +139,11 @@ public class NovinatorApp extends Application {
 		}
 	    });
 
-        hbox.getChildren().add(btn);
+        hbox.getChildren().addAll(buildItemsTable(), btn);
 	return hbox;
     }
+
+    // LIFE CYCLE OF THE APPLICATION
 
     @Override
     public void init() {

@@ -30,6 +30,7 @@
 	   classpathref="build.class.path"
 	   srcdir="${src.dir}"
 	   destdir="${classes.dir}">
+      <compilerarg value="-Xlint:unchecked"/>
     </javac>
   </target>
 
