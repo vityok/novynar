@@ -26,7 +26,7 @@ public class RDF
     public void processFeed(Document doc)
 	throws Exception
     {
-	NewsItemDAO dao = new NewsItemDAO();
+	NewsItemDAO dao = NewsItemDAO.getInstance();
 	Element docElement = doc.getDocumentElement();
 	Node channelNode = docElement.getElementsByTagName("channel").item(0);
 

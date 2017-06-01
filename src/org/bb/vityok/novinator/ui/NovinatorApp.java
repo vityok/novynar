@@ -21,10 +21,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import org.bb.vityok.novinator.NewsItem;
 import org.bb.vityok.novinator.db.Backend;
+import org.bb.vityok.novinator.db.NewsItemDAO;
 import org.bb.vityok.novinator.feed.FeedReader;
 
 
@@ -34,7 +37,9 @@ import org.bb.vityok.novinator.feed.FeedReader;
 public class NovinatorApp extends Application {
 
     /** Table view with the current selection of news items. */
-    private TableView itemsTable = null;
+    private TableView<NewsItem> itemsTable = null;
+    private WebView itemView = null;
+    private Label itemTitle = null;
 
     public static void start(String[] args) {
         launch(args);
@@ -95,13 +100,13 @@ public class NovinatorApp extends Application {
 
 
     private VBox buildItemsTable() {
-	itemsTable = new TableView();
+	itemsTable = new TableView<NewsItem>();
 
         itemsTable.setEditable(false);
 
-        TableColumn titleCol = new TableColumn("Title");
-        TableColumn authorCol = new TableColumn("Author");
-        TableColumn dateCol = new TableColumn("Date");
+        TableColumn<NewsItem,String> titleCol = new TableColumn<NewsItem,String>("Title");
+        TableColumn<NewsItem,String> authorCol = new TableColumn<NewsItem,String>("Author");
+        TableColumn<NewsItem,String> dateCol = new TableColumn<NewsItem,String>("Date");
 
 	titleCol.setCellValueFactory(new PropertyValueFactory<NewsItem,String>("title"));
 	authorCol.setCellValueFactory(new PropertyValueFactory<NewsItem,String>("author"));
@@ -110,6 +115,13 @@ public class NovinatorApp extends Application {
         itemsTable.getColumns().add(titleCol);
 	itemsTable.getColumns().add(authorCol);
 	itemsTable.getColumns().add(dateCol);
+
+	itemsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+		if (newSelection != null) {
+		    System.out.println("selected: " + newSelection);
+		    selectedItem(newSelection);
+		}
+	    });
 
         final VBox vbox = new VBox();
         vbox.setSpacing(5);
@@ -120,18 +132,35 @@ public class NovinatorApp extends Application {
     }
 
 
+    private void updateItemsTable() {
+	try {
+	    FeedReader.getInstance().loadFeeds();
+	    NewsItemDAO dao = NewsItemDAO.getInstance();
+	    ObservableList<NewsItem> items = FXCollections.observableArrayList(dao.getNewsItemByChannel(""));
+	    itemsTable.setItems(items);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+    }
+
+
     private HBox buildCenterPane() {
 	HBox hbox = new HBox();
-    	// **** BUTTON
+        hbox.getChildren().addAll(buildItemsTable());
+	return hbox;
+    }
 
-        Button btn = new Button();
+    private VBox buildContentPane() {
+	VBox vbox = new VBox();
+	itemTitle = new Label("");
+    	// **** BUTTON
+	Button btn = new Button();
         btn.setText("Say 'Hello World'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
 		@Override
-		    public void handle(ActionEvent event) {
+		public void handle(ActionEvent event) {
 		    try {
-			// Backend.getInstance().setup();
-			FeedReader.getInstance().loadFeeds();
+			updateItemsTable();
 		    } catch (Exception e) {
 			e.printStackTrace();
 		    }
@@ -139,9 +168,21 @@ public class NovinatorApp extends Application {
 		}
 	    });
 
-        hbox.getChildren().addAll(buildItemsTable(), btn);
-	return hbox;
+	itemView = new WebView();
+	vbox.getChildren().addAll(itemTitle, itemView, btn);
+	return vbox;
     }
+
+
+    private void selectedItem(NewsItem item) {
+	if (item == null) {
+	    itemView.getEngine().loadContent("<h1>Title</h1>");
+	} else {
+	    itemView.getEngine().loadContent(item.getDescription());
+	    itemTitle.setText(item.getTitle());
+	}
+    }
+
 
     // LIFE CYCLE OF THE APPLICATION
 
@@ -156,9 +197,13 @@ public class NovinatorApp extends Application {
 	BorderPane root = new BorderPane();
 	root.setTop(buildMenuBar());
 	root.setLeft(buildFeedsTree());
+	root.setRight(buildContentPane());
 	root.setCenter(buildCenterPane());
+	// populate items table with the items
+	updateItemsTable();
+	selectedItem(null);
 	// root.setRight(addFlowPane());
-        Scene scene = new Scene(root, 400, 350);
+        Scene scene = new Scene(root);
 
         primaryStage.setTitle("Hello World!");
         primaryStage.setScene(scene);

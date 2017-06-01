@@ -9,12 +9,12 @@ import javafx.beans.property.SimpleStringProperty;
 public class NewsItem
     implements Serializable
 {
-    private SimpleStringProperty title;
-    private SimpleStringProperty link;
-    private SimpleStringProperty description;
-    private SimpleStringProperty creator;
-    private SimpleStringProperty date;
-    private SimpleStringProperty subject;
+    private SimpleStringProperty title = new SimpleStringProperty();
+    private SimpleStringProperty link = new SimpleStringProperty();
+    private SimpleStringProperty description = new SimpleStringProperty();
+    private SimpleStringProperty creator = new SimpleStringProperty();
+    private SimpleStringProperty date = new SimpleStringProperty();
+    private SimpleStringProperty subject = new SimpleStringProperty();
 
     public NewsItem () { }
 
