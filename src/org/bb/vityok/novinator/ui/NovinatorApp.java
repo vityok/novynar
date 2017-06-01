@@ -26,6 +26,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import org.bb.vityok.novinator.NewsItem;
+import org.bb.vityok.novinator.OPMLManager;
 import org.bb.vityok.novinator.db.Backend;
 import org.bb.vityok.novinator.db.NewsItemDAO;
 import org.bb.vityok.novinator.feed.FeedReader;
@@ -86,6 +87,8 @@ public class NovinatorApp extends Application {
     public VBox buildFeedsTree() {
 	// **** FEEDS TREE
 	VBox vbox = new VBox();
+
+	OPMLManager.getInstance().loadConfig();
 
 	TreeItem<String> rootItem = new TreeItem<String> ("Inbox");
         rootItem.setExpanded(true);
@@ -215,6 +218,7 @@ public class NovinatorApp extends Application {
     @Override
     public void stop() {
 	System.out.println("Graceful shutdown. Bye-bye");
+	OPMLManager.getInstance().storeConfig();
 	Backend.getInstance().close();
     }
 }

@@ -6,29 +6,13 @@ standard libraries provided by the Java runtime environment.
 
 Not yet usable, in the very early stages of development.
 
-### What is this repository for? ###
+### Components ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
+* User interface is built on top of JavaFX
+** HTML content is rendered using standard WebView component
+* Data storage backend is embedded Apache Derby database, which comes along with JavaSE 8
+* Feeds with the feeds tree and their configuration is stored in an OPML file
 
 ### Contacts ###
 
-Check the [project
-page](https://bitbucket.org/vityok/novinator/overview) for ways to
-leave feedback/open tickets for bug reports.
+Check the [project page](https://bitbucket.org/vityok/novinator/overview) for ways to leave feedback/open tickets for bug reports.
