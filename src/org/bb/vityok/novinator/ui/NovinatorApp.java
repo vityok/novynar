@@ -1,5 +1,7 @@
 package org.bb.vityok.novinator.ui;
 
+import java.util.List;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 
@@ -21,6 +23,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -39,6 +42,7 @@ public class NovinatorApp extends Application {
 
     /** Table view with the current selection of news items. */
     private TableView<NewsItem> itemsTable = null;
+    private TreeView<OPMLManager.Outline> channelsTree = null;
     private WebView itemView = null;
     private Label itemTitle = null;
 
@@ -84,20 +88,52 @@ public class NovinatorApp extends Application {
     }
 
 
+    /** Encapsulates OPMLManager.Outline and serves as the view to
+     * represent its data to the user.
+     */
+    public class OutlineTreeItem extends TreeItem<OPMLManager.Outline> {
+	public OutlineTreeItem(OPMLManager.Outline ol) {
+	    super(ol);
+	    buildChildren();
+	}
+
+	public String toString() {
+	    return ((OPMLManager.Outline) getValue()).toString();
+	}
+
+	private void buildChildren() {
+	    OPMLManager.Outline ol = getValue();
+	    if (ol != null && ol.hasChildren()) {
+		List<OPMLManager.Outline> outlines = ol.getChildren();
+		if (outlines != null) {
+		    ObservableList<TreeItem<OPMLManager.Outline>> children = FXCollections.observableArrayList();
+		    for (OPMLManager.Outline childOutline : outlines) {
+			getChildren().add(new OutlineTreeItem(childOutline));
+		    }
+		}
+	    }
+	}
+    } // end class OutlineTreeItem
+
+
+    /** Builds the channels tree in the left side of the window.
+     *
+     * Uses OPMLManager.Outline class as a data model.
+     */
     public VBox buildFeedsTree() {
 	// **** FEEDS TREE
 	VBox vbox = new VBox();
 
 	OPMLManager.getInstance().loadConfig();
 
-	TreeItem<String> rootItem = new TreeItem<String> ("Inbox");
+	OPMLManager.Outline root = OPMLManager.getInstance().getRootOutline();
+	TreeItem<OPMLManager.Outline> rootItem = new OutlineTreeItem(root);
         rootItem.setExpanded(true);
-        for (int i = 1; i < 6; i++) {
-            TreeItem<String> item = new TreeItem<String> ("Message" + i);
-            rootItem.getChildren().add(item);
-        }
-        TreeView<String> tree = new TreeView<String> (rootItem);
-	vbox.getChildren().addAll(tree);
+        channelsTree = new TreeView<OPMLManager.Outline> (rootItem);
+	VBox.setVgrow(channelsTree, Priority.ALWAYS);
+	
+	vbox.getChildren().addAll(channelsTree);
+
 	return vbox;
     }
 
@@ -125,7 +161,8 @@ public class NovinatorApp extends Application {
 		    selectedItem(newSelection);
 		}
 	    });
-
+	VBox.setVgrow(itemsTable, Priority.ALWAYS);
+	
         final VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
