@@ -1,4 +1,4 @@
-package org.bb.vityok.novinator.db;
+package org.bb.vityok.novinar.db;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 
-import org.bb.vityok.novinator.NewsItem;
+import org.bb.vityok.novinar.NewsItem;
 
 
 /** Implements database access operations for the NewsItem object.

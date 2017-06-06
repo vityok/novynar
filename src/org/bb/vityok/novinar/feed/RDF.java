@@ -1,14 +1,14 @@
-package org.bb.vityok.novinator.feed;
+package org.bb.vityok.novinar.feed;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
-import org.bb.vityok.novinator.NewsItem;
+import org.bb.vityok.novinar.NewsItem;
 
-import org.bb.vityok.novinator.db.Backend;
-import org.bb.vityok.novinator.db.NewsItemDAO;
+import org.bb.vityok.novinar.db.Backend;
+import org.bb.vityok.novinar.db.NewsItemDAO;
 
 
 /** Parse RDF/XML news feeds.

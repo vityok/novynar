@@ -1,4 +1,4 @@
-package org.bb.vityok.novinator.db;
+package org.bb.vityok.novinar.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

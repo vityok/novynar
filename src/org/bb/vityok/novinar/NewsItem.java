@@ -1,4 +1,4 @@
-package org.bb.vityok.novinator;
+package org.bb.vityok.novinar;
 
 import java.io.Serializable;
 

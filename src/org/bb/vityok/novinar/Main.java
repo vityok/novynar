@@ -1,6 +1,6 @@
-package org.bb.vityok.novinator;
+package org.bb.vityok.novinar;
 
-import org.bb.vityok.novinator.ui.NovinatorApp;
+import org.bb.vityok.novinar.ui.NovinarApp;
 
 public class Main
 {
@@ -9,7 +9,7 @@ public class Main
     {
 	System.out.println("Hello world");
 
-	NovinatorApp.start(args);
+	NovinarApp.start(args);
 
         System.out.println("SimpleApp finished");
     }

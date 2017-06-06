@@ -3,4 +3,4 @@
  * Information about feeds and their hierarchy is stored separately in
  * an OPML file.
  */
-package org.bb.vityok.novinator.db;
+package org.bb.vityok.novinar.db;

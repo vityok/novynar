@@ -1,4 +1,4 @@
-package org.bb.vityok.novinator.ui;
+package org.bb.vityok.novinar.ui;
 
 import java.util.List;
 
@@ -28,17 +28,17 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-import org.bb.vityok.novinator.NewsItem;
-import org.bb.vityok.novinator.OPMLManager;
-import org.bb.vityok.novinator.db.Backend;
-import org.bb.vityok.novinator.db.NewsItemDAO;
-import org.bb.vityok.novinator.feed.FeedReader;
+import org.bb.vityok.novinar.NewsItem;
+import org.bb.vityok.novinar.OPMLManager;
+import org.bb.vityok.novinar.db.Backend;
+import org.bb.vityok.novinar.db.NewsItemDAO;
+import org.bb.vityok.novinar.feed.FeedReader;
 
 
 /** Primary UI controller implementing the glue binding all components
  * of the application together.
  */
-public class NovinatorApp extends Application {
+public class NovinarApp extends Application {
 
     /** Table view with the current selection of news items. */
     private TableView<NewsItem> itemsTable = null;

@@ -1,4 +1,4 @@
-package org.bb.vityok.novinator.feed;
+package org.bb.vityok.novinar.feed;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
