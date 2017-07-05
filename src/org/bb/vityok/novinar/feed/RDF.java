@@ -1,4 +1,4 @@
-package org.bb.vityok.novinator.feed;
+package org.bb.vityok.novinar.feed;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;

@@ -1,4 +1,4 @@
-package org.bb.vityok.novinator.db;
+package org.bb.vityok.novinar.db;
 
 import java.util.List;
 import java.util.LinkedList;

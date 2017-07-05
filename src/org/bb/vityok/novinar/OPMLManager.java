@@ -23,7 +23,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.bb.vityok.novinator.db.ChannelDAO;
+import org.bb.vityok.novinar.db.ChannelDAO;
 
 
 /** Managing the OPML file that defines the subscribed feeds and their
