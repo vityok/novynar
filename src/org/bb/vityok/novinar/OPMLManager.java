@@ -15,12 +15,16 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Entity;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import org.bb.vityok.novinator.db.ChannelDAO;
+
 
 /** Managing the OPML file that defines the subscribed feeds and their
  * parameters.
@@ -34,6 +38,8 @@ public class OPMLManager
     private final static OPMLManager instance = new OPMLManager();
 
     public static final String DEFAULT_CONFIG_FILE = "backup.opml";
+
+    public static final String NOVINAR_NS = "https://bitbucket.org/vityok/novinar";
 
     private Document doc;
     private Outline rootOutline;
@@ -50,19 +56,44 @@ public class OPMLManager
 	private int id;
 	private Node node;
 	private List<Outline> children = null;
+	private Channel channel;
 
 	/** Binds the outline with the associated DOM node. */
 	public Outline(Node node) {
 	    this.node = node;
 	    this.title = getAttribute("text", "N/A");
 	    this.url = getAttribute("xmlUrl", null);
-	    this.id = Integer.valueOf(getAttribute("id", "0"));
+	    this.id = 0;
 	    buildChildren();
+
+	    if (hasChildren()) {
+		String idStr = getAttributeNS(NOVINAR_NS, "channelId", null);
+		if (idStr == null) {
+		    this.id = ChannelDAO.getInstance().createChannelFor(url);
+		    setAttribute(NOVINAR_NS, "channelId", Integer.toString(id));
+		} else {
+		    this.id = Integer.valueOf(idStr);
+		}
+	    }
 	}
 
 	private String getAttribute(String name, String defaultValue) {
 	    NamedNodeMap atts = node.getAttributes();
 	    Node att = atts.getNamedItem(name);
+	    return (att == null) ? defaultValue : att.getNodeValue();
+	}
+
+	private void setAttribute(String namespaceURI, String name, String value) {
+	    NamedNodeMap atts = node.getAttributes();
+	    Attr attr = doc.createAttributeNS(namespaceURI, name);
+	    attr.setValue(value);
+	    atts.setNamedItemNS(attr);
+	}
+
+
+	private String getAttributeNS(String namespaceURI, String name, String defaultValue) {
+	    NamedNodeMap atts = node.getAttributes();
+	    Node att = atts.getNamedItemNS(namespaceURI, name);
 	    return (att == null) ? defaultValue : att.getNodeValue();
 	}
 
@@ -83,7 +114,7 @@ public class OPMLManager
 	public String toString() { return getTitle(); }
 
 	/** Find child outline nodes and add them to the children
-	 * list. 
+	 * list.
 	 */
 	private void buildChildren() {
 	    NodeList childNodes = node.getChildNodes();
@@ -94,7 +125,7 @@ public class OPMLManager
 		    children.add(new Outline(childNode));
 		}
 	    }
-	    
+
 	}
     } // end class Outline
 
@@ -111,6 +142,11 @@ public class OPMLManager
 	return null;
     }
 
+
+    /** Parse the configuration XML-OPML file and reconstruct the
+     * Outline-Channels tree with relevant configuration from the
+     * DOM.
+     */
     public void loadConfig() {
 	try {
 	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

@@ -131,7 +131,7 @@ public class NovinarApp extends Application {
         rootItem.setExpanded(true);
         channelsTree = new TreeView<OPMLManager.Outline> (rootItem);
 	VBox.setVgrow(channelsTree, Priority.ALWAYS);
-	
+
 	vbox.getChildren().addAll(channelsTree);
 
 	return vbox;
@@ -162,7 +162,7 @@ public class NovinarApp extends Application {
 		}
 	    });
 	VBox.setVgrow(itemsTable, Priority.ALWAYS);
-	
+
         final VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
@@ -228,7 +228,11 @@ public class NovinarApp extends Application {
 
     @Override
     public void init() {
-	// Backend.getInstance().setup();
+	try {
+	    Backend.getInstance().setup();
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
 	// FeedReader.getInstance().loadFeeds();
     }
 

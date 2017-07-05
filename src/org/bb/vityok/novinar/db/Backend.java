@@ -63,7 +63,7 @@ public class Backend
 	throws Exception
     {
 
-        System.out.println("SimpleApp starting in " + framework + " mode");
+        System.out.println("SimpleApp starting in " + framework + " mode. SETUP");
 
 	DriverManager.registerDriver(new org.apache.derby.jdbc.EmbeddedDriver());
 
@@ -110,14 +110,28 @@ public class Backend
 	    if (!rsCheckTables.next()) {
 		// the database is empty, populate it with required
 		// tables and other data structures
+		s.execute("CREATE TABLE channel (channel_id INT NOT NULL PRIMARY KEY "
+			  + "  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
+			  + "title VARCHAR(1024), "
+			  + "link VARCHAR(2048), "
+			  + "description VARCHAR(4096), "
+			  + "latest_refresh TIMESTAMP" // last time this channel feed has been downloaded
+			  + ")");
 
-
-		// We create a table...
-		s.execute("CREATE TABLE news_item(title VARCHAR(256), link VARCHAR(1024), "
-			  + "description VARCHAR(6144), creator VARCHAR(256), date TIMESTAMP, "
-			  + "subject VARCHAR(6144))");
-		System.out.println("Created table news_item");
-
+		s.execute("CREATE TABLE news_item("
+			  + "news_item_id INT NOT NULL PRIMARY KEY "
+			  + "  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
+			  + "channel_id INT NOT NULL, "
+			  + "title VARCHAR(1024), "
+			  + "link VARCHAR(2048), "
+			  + "description VARCHAR(12288), "
+			  + "creator VARCHAR(256), "
+			  + "date TIMESTAMP, "
+			  + "subject VARCHAR(6144),"
+			  + "FOREIGN KEY (channel_id)"
+			  + "  REFERENCES channel (channel_id)"
+			  +")");
+		System.out.println("Created tables CHANNEL and NEWS_ITEM");
 	    }
 	} catch (SQLException sqle) {
 	    printSQLException(sqle);
