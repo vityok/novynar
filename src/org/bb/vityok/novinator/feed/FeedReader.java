@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.util.List;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
@@ -13,6 +15,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+
+import org.bb.vityok.novinator.Channel;
+import org.bb.vityok.novinator.db.ChannelDAO;
+
 
 /** Download news feed and send it to the appropriate parser (Atom,
  * RSS, RSS+RDF, etc).
@@ -37,9 +43,10 @@ public class FeedReader
 	return INSTANCE;
     }
 
-    public Document loadFeed(URL feedURL)
+    public Document loadFeed(Channel chan)
 	throws Exception
     {
+	URL feedURL = new URL(chan.getLink());
 	HttpURLConnection con = (HttpURLConnection) feedURL.openConnection();
 
 	int responseCode = con.getResponseCode();
@@ -62,7 +69,7 @@ public class FeedReader
 	    System.out.println("Root element :[" + doc.getDocumentElement().getNodeName() + "]");
 	    if ("rdf:RDF".equals(doc.getDocumentElement().getNodeName())) {
 		System.out.println("Processing RDF feed");
-		RDF.getInstance().processFeed(doc);
+		RDF.getInstance().processFeed(chan, doc);
 	    }
 
 	    return doc;
@@ -74,7 +81,16 @@ public class FeedReader
     public void loadFeeds()
 	throws Exception
     {
-	loadFeed(DEFAULT_URL);
+	ChannelDAO cdao = ChannelDAO.getInstance();
+	if (cdao.getChannelsCount() == 0) {
+	    // empty db, let's put our default feed
+	    cdao.createChannelFor(DEFAULT_URL.toString());
+	}
+
+	List<Channel> channels = ChannelDAO.getInstance().getAllChannels();
+	for (Channel channel : channels) {
+	    loadFeed(channel);
+	}
     }
 
 }

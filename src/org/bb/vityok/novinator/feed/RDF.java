@@ -6,6 +6,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
 import org.bb.vityok.novinator.NewsItem;
+import org.bb.vityok.novinator.Channel;
 
 import org.bb.vityok.novinator.db.Backend;
 import org.bb.vityok.novinator.db.NewsItemDAO;
@@ -23,7 +24,7 @@ public class RDF
 
     public static RDF getInstance() { return INSTANCE; }
 
-    public void processFeed(Document doc)
+    public void processFeed(Channel chan, Document doc)
 	throws Exception
     {
 	NewsItemDAO dao = NewsItemDAO.getInstance();
@@ -57,7 +58,7 @@ public class RDF
 		newsItem.setTitle(iTitle);
 		newsItem.setLink(iLink);
 		newsItem.setDescription(iDescription);
-		dao.insertOrUpdateItem(cTitle, newsItem);
+		dao.insertOrUpdateItem(chan, newsItem);
 	    }
 	}
     }

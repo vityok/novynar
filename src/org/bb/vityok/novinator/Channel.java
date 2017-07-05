@@ -1,5 +1,6 @@
 package org.bb.vityok.novinator;
 
+import java.util.Calendar;
 import java.util.List;
 
 import java.io.Serializable;
@@ -8,17 +9,18 @@ import java.io.Serializable;
 public class Channel
     implements Serializable
 {
-    private String channelId;
+    private int channelId;
     private String title;
     private String link;
     private String description;
+    private Calendar latestUpdate;  // last time the channel has been updated
     private List<NewsItem> items;
 
     public Channel () { }
 
     /** primary key */
-    public String getChannelId() { return channelId; }
-    public void setChannelId(String channelId) { this.channelId = channelId; }
+    public int getChannelId() { return channelId; }
+    public void setChannelId(int channelId) { this.channelId = channelId; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
@@ -29,7 +31,9 @@ public class Channel
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
+    public Calendar getLatestUpdate() { return latestUpdate; }
+    public void setLatestUpdate() { this.latestUpdate = latestUpdate; }
+
     public List<NewsItem> getItems() { return items; }
     public void setItems(List<NewsItem> items) { this.items = items; }
-
 }
