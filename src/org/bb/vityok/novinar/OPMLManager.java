@@ -47,8 +47,8 @@ public class OPMLManager
     protected OPMLManager() { }
     public static OPMLManager getInstance() { return instance; }
 
-    /** Represents an OPML Outline with the minimal set of
-     * features.
+    /** Represents an OPML Outline with the minimal set of features
+     * required for handling the feed information.
      */
     public class Outline {
 	private String url;
@@ -65,16 +65,16 @@ public class OPMLManager
 	    this.url = getAttribute("xmlUrl", null);
 	    this.id = 0;
 	    buildChildren();
-
-	    if (hasChildren()) {
-		String idStr = getAttributeNS(NOVINAR_NS, "channelId", null);
-		if (idStr == null) {
-		    this.id = ChannelDAO.getInstance().createChannelFor(url);
-		    setAttribute(NOVINAR_NS, "channelId", Integer.toString(id));
-		} else {
-		    this.id = Integer.valueOf(idStr);
-		}
-	    }
+            String idStr = getAttributeNS(NOVINAR_NS, "channelId", null);
+            if (idStr == null) {
+                // this is an item that we didn't process yet
+                if (this.url != null) {
+                    this.id = ChannelDAO.getInstance().createChannelFor(url);
+                    setAttribute(NOVINAR_NS, "channelId", Integer.toString(id));
+                }
+            } else {
+                this.id = Integer.valueOf(idStr);
+            }
 	}
 
 	private String getAttribute(String name, String defaultValue) {
@@ -152,11 +152,12 @@ public class OPMLManager
 	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	    dbf.setNamespaceAware(true);
 	    DocumentBuilder db = dbf.newDocumentBuilder();
-	    doc = db.parse(new File(DEFAULT_CONFIG_FILE));
+            File configFile = new File(DEFAULT_CONFIG_FILE);
+	    doc = db.parse(configFile);
 	    Node bodyNode = doc.getElementsByTagName("body").item(0);
 	    Node rootOutlineNode = getChildByName(bodyNode, "outline");
 	    rootOutline = new Outline(rootOutlineNode);
-	    System.out.println("Loaded OPML config from " + DEFAULT_CONFIG_FILE);
+	    System.out.println("Loaded OPML config from " + configFile.getPath());
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}

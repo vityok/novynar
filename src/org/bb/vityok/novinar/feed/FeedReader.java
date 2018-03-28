@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
 import org.bb.vityok.novinar.Channel;
+import org.bb.vityok.novinar.OPMLManager;
 import org.bb.vityok.novinar.db.ChannelDAO;
 
 
@@ -46,6 +47,8 @@ public class FeedReader
     public Document loadFeed(Channel chan)
 	throws Exception
     {
+        System.out.println("loading items for the channel: " + chan);
+        
 	URL feedURL = new URL(chan.getLink());
 	HttpURLConnection con = (HttpURLConnection) feedURL.openConnection();
 
@@ -84,7 +87,7 @@ public class FeedReader
 	ChannelDAO cdao = ChannelDAO.getInstance();
 	if (cdao.getChannelsCount() == 0) {
 	    // empty db, let's put our default feed
-	    cdao.createChannelFor(DEFAULT_URL.toString());
+	    // cdao.createChannelFor(DEFAULT_URL.toString());
 	}
 
 	List<Channel> channels = ChannelDAO.getInstance().getAllChannels();

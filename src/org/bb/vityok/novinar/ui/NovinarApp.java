@@ -35,8 +35,8 @@ import org.bb.vityok.novinar.db.NewsItemDAO;
 import org.bb.vityok.novinar.feed.FeedReader;
 
 
-/** Primary UI controller implementing the glue binding all components
- * of the application together.
+/** Primary UI controller that implements the glue binding all
+ * components of the application together.
  */
 public class NovinarApp extends Application {
 
@@ -130,6 +130,11 @@ public class NovinarApp extends Application {
 	TreeItem<OPMLManager.Outline> rootItem = new OutlineTreeItem(root);
         rootItem.setExpanded(true);
         channelsTree = new TreeView<OPMLManager.Outline> (rootItem);
+        channelsTree.getSelectionModel().selectedItemProperty().addListener( (obs, oldSelection, newSelection) -> {
+                TreeItem<OPMLManager.Outline> selectedItem = (TreeItem<OPMLManager.Outline>) newSelection;
+                OPMLManager.Outline outline = selectedItem.getValue();
+                selectedOutline(outline);
+            });
 	VBox.setVgrow(channelsTree, Priority.ALWAYS);
 
 	vbox.getChildren().addAll(channelsTree);
@@ -138,6 +143,7 @@ public class NovinarApp extends Application {
     }
 
 
+    /** Builds the items in the list of news items. */
     private VBox buildItemsTable() {
 	itemsTable = new TableView<NewsItem>();
 
@@ -158,7 +164,7 @@ public class NovinarApp extends Application {
 	itemsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 		if (newSelection != null) {
 		    System.out.println("selected: " + newSelection);
-		    selectedItem(newSelection);
+		    selectedNewsItem(newSelection);
 		}
 	    });
 	VBox.setVgrow(itemsTable, Priority.ALWAYS);
@@ -176,13 +182,25 @@ public class NovinarApp extends Application {
 	try {
 	    FeedReader.getInstance().loadFeeds();
 	    NewsItemDAO dao = NewsItemDAO.getInstance();
-	    ObservableList<NewsItem> items = FXCollections.observableArrayList(dao.getNewsItemByChannel(""));
+	    ObservableList<NewsItem> items = FXCollections.observableArrayList(dao.getNewsItemByChannel(null));
 	    itemsTable.setItems(items);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
     }
 
+    /** Select only items from the channels selected by the user in
+     * the channels tree.
+     */
+    private void updateItemsTable(OPMLManager.Outline outline) {
+	try {
+	    NewsItemDAO dao = NewsItemDAO.getInstance();
+	    ObservableList<NewsItem> items = FXCollections.observableArrayList(dao.getNewsItemByChannel(outline));
+	    itemsTable.setItems(items);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+    }
 
     private HBox buildCenterPane() {
 	HBox hbox = new HBox();
@@ -214,7 +232,26 @@ public class NovinarApp extends Application {
     }
 
 
-    private void selectedItem(NewsItem item) {
+    /** Status bar in the bottom of the main window. */
+    private HBox buildStatusBar() {
+        HBox statusbar = new HBox();
+        return statusbar;
+    }
+
+
+    /** Handle selected outline in the channels tree. Update the list
+     * of news items to contain only those items associated with this
+     * outline and its children (when there are any).
+     */
+    private void selectedOutline(OPMLManager.Outline outline) {
+        System.out.println("selected tree item, url=" + outline.getUrl()
+                           + " title=" + outline.getTitle()
+                           + " id=" + outline.getId());
+        updateItemsTable(outline);
+    }
+
+    /** Handle news item selection in the list of the news items. */
+    private void selectedNewsItem(NewsItem item) {
 	if (item == null) {
 	    itemView.getEngine().loadContent("<h1>Title</h1>");
 	} else {
@@ -243,9 +280,10 @@ public class NovinarApp extends Application {
 	root.setLeft(buildFeedsTree());
 	root.setRight(buildContentPane());
 	root.setCenter(buildCenterPane());
+        root.setBottom(buildStatusBar());
 	// populate items table with the items
 	updateItemsTable();
-	selectedItem(null);
+	selectedNewsItem(null);
 	// root.setRight(addFlowPane());
         Scene scene = new Scene(root);
 

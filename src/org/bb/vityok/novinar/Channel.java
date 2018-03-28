@@ -36,4 +36,11 @@ public class Channel
 
     public List<NewsItem> getItems() { return items; }
     public void setItems(List<NewsItem> items) { this.items = items; }
+
+    public String toString() {
+        return "channel {id=" + getChannelId()
+            + " link=" + getLink()
+            + " title=" + getTitle()
+            + "}";
+    }
 }

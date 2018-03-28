@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><opml xmlns:rssowl="http://www.rssowl.org" version="1.1">
+  <head>
+    <title>RSSOwl Subscriptions</title>
+    <dateModified>Mon, 24 Apr 2017 14:20:51 EEST</dateModified>
+  </head>
+  <body>
+    <outline rssowl:id="7" rssowl:isSet="true" text="My Feeds">
+      <outline rssowl:id="147" rssowl:isSet="false" text="Science">
+        <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+        <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="1939"/>
+        <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        <outline rssowl:id="149" text="information aesthetics" xmlUrl="http://feeds.infosthetics.com/infosthetics.com">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="150" text="FlowingData" xmlUrl="http://feeds.feedburner.com/FlowingData">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="151" text="Well-formed data" xmlUrl="http://feeds.feedburner.com/well-formed_data">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="152" text="blprnt.blg" xmlUrl="http://blog.blprnt.com/feed">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="153" text="Jim Vallandingham" xmlUrl="http://feeds.feedburner.com/jim-vallandingham">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="154" text="floatingsheep" xmlUrl="http://www.floatingsheep.org/feeds/posts/default?alt=rss">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="155" text="Cartastrophe" xmlUrl="http://cartastrophe.wordpress.com/feed/">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="158" text="Kelso's Corner" xmlUrl="http://feeds.feedburner.com/KelsosCorner">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="160" text="stamen design - the next most obvious thing" xmlUrl="http://content.stamen.com/node/feed">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="161" text="Chart Porn" xmlUrl="http://chartporn.org/feed/">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="164" text="tecznotes" xmlUrl="http://mike.teczno.com/notes/index.xml">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="165" text="Junk Charts" xmlUrl="http://junkcharts.typepad.com/junk_charts/rss.xml">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="167" text="Infographics news" xmlUrl="http://feeds.feedburner.com/blogspot/gZldN">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="168" text="Visualising Data" xmlUrl="http://feeds.feedburner.com/VisualisingData">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="170" text="Matthew Ericson - ericson.net" xmlUrl="http://www.ericson.net/content/feed/">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="171" text="Data Pointed" xmlUrl="http://www.datapointed.net/feed/">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="172" text="The Excel Charts Blog" xmlUrl="http://feeds.feedburner.com/JCCharts">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="173" text="The Daily Viz" xmlUrl="http://thedailyviz.com/feed/">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="174" text="Neoformix" xmlUrl="http://neoformix.com/index.xml">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="175" text="feltron" xmlUrl="http://feltron.tumblr.com/rss">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="177" text="The Numbers Guy" xmlUrl="http://blogs.wsj.com/numbersguy/feed/">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="178" text="somethingaboutmaps" xmlUrl="http://somethingaboutmaps.wordpress.com/feed/">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+      </outline>
+      <outline rssowl:id="183" rssowl:isSet="false" text="Wikipedia">
+        <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="86400"/>
+        <outline rssowl:id="188" text="Чи ви знаєте, що...?" xmlUrl="http://znaete.wordpress.com/feed/">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="86400"/>
+        </outline>
+      </outline>
+      <outline rssowl:id="190" rssowl:isSet="false" text="Programming">
+        <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+        <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="49180"/>
+        <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        <outline rssowl:id="191" text="Журнал &quot;Інформаційні технології. Аналітичні матеріали&quot;.  - Інтернет, інформаційна безпека, бази даних, ІТ-новини" xmlUrl="http://it.ridne.net/rss.xml">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="193" text="A Nickel's Worth" xmlUrl="http://a-nickels-worth.blogspot.com/feeds/posts/default">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="194" text="Common Lisp Weekly News" xmlUrl="http://lispnews.wordpress.com/feed/">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="195" text="Russian Lisp Planet" xmlUrl="http://lisper.ru/planet/atom.xml">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="196" text="Planet Lisp" xmlUrl="http://planet.lisp.org/rss20.xml">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="7576"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="199" text="Lambda the Ultimate - Programming Languages Weblog" xmlUrl="http://lambda-the-ultimate.org/rss.xml">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="200" text="BAE Systems Threat Research Blog" xmlUrl="http://baesystemsai.blogspot.com/feeds/posts/default">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="2973"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+      </outline>
+      <outline rssowl:id="201" rssowl:isSet="false" text="Ukraine">
+        <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="46666"/>
+        <outline rssowl:id="202" text="Добре там, де ми є" xmlUrl="http://maidan.org.ua/blogs/hudkovych/?feed=atom"/>
+        <outline rssowl:id="203" text="Блог Сергея Тигипко" xmlUrl="http://tigipko.livejournal.com/data/atom"/>
+        <outline rssowl:id="204" text="УКРАЇНСЬКА МОВА ТА ЛІТЕРАТУРА" xmlUrl="http://community.livejournal.com/ua_mova/data/atom"/>
+        <outline rssowl:id="205" text="Про переклад з української та на українську" xmlUrl="http://community.livejournal.com/translate_ua/data/atom"/>
+        <outline rssowl:id="206" text="ЮЩЕНКО ТАК !!!!!" xmlUrl="http://community.livejournal.com/ukr_nationalism/data/rss"/>
+        <outline rssowl:id="207" text="Леся Оробець" xmlUrl="http://lesyaorobets.livejournal.com/data/atom"/>
+        <outline rssowl:id="209" text="Бригада.UA" xmlUrl="http://community.livejournal.com/brygada_ukr/data/atom"/>
+        <outline rssowl:id="210" text="Louise, I think this is beginning of a bueatiful friendship" xmlUrl="http://nazavzhdy.livejournal.com/data/rss">
+          <rssowl:pref id="org.rssowl.ui.internal.LoadErrorKey" type="5" value="Server returned HTTP Status 403 (Forbidden)"/>
+        </outline>
+        <outline rssowl:id="211" text="Олесь Бузина - авторский сайт" xmlUrl="http://www.buzina.org/index.php?format=feed&amp;type=rss">
+          <rssowl:pref id="org.rssowl.ui.internal.LoadErrorKey" type="5" value="Invalid or Malformed Feed"/>
+        </outline>
+        <outline rssowl:id="212" text="dniprovska" xmlUrl="http://dniprovska.livejournal.com/data/rss"/>
+        <outline rssowl:id="213" text="Рефлексії" xmlUrl="http://wmartyniuk.blogspot.com/feeds/posts/default"/>
+        <outline rssowl:id="214" text="Щоденник пересічного українця" xmlUrl="http://vivagor.livejournal.com/data/atom"/>
+      </outline>
+      <outline rssowl:id="215" rssowl:isSet="false" text="Other">
+        <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="53258"/>
+        <outline rssowl:id="217" text="Anarchy Without Bombs" xmlUrl="http://anarchywithoutbombs.com/feed/">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateIntervalState" type="0" value="false"/>
+        </outline>
+        <outline rssowl:id="218" text="Андрей Илларионов" xmlUrl="http://aillarionov.livejournal.com/data/atom">
+          <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="7982"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="221" text="Via Meadia" xmlUrl="http://blogs.the-american-interest.com/wrm/feed/">
+          <rssowl:pref id="org.rssowl.ui.internal.LoadErrorKey" type="5" value="Maximum redirects (100) exceeded"/>
+        </outline>
+        <outline rssowl:id="222" text="Taking Hayek Seriously" xmlUrl="http://takinghayekseriously.wordpress.com/feed/">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateIntervalState" type="0" value="false"/>
+        </outline>
+        <outline rssowl:id="223" text="Hudson Institute" xmlUrl="http://www.hudson.org/rss/customRSS.xml.cfm?pcs=RS,CEI,CEES,ES,GPR,CID,MES,FSS,SPP&amp;events=any,audio,video">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateIntervalState" type="0" value="false"/>
+        </outline>
+        <outline rssowl:id="224" text="The Middle East and Beyond" xmlUrl="http://blogs.the-american-interest.com/garfinkle/feed/">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateIntervalState" type="0" value="false"/>
+        </outline>
+        <outline rssowl:id="225" text="Borys Kushniruk" xmlUrl="http://boryskushniruk.blogactiv.eu/feed/">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateIntervalState" type="0" value="false"/>
+        </outline>
+        <outline rssowl:id="226" text="EU opinion &amp; policy debates - across languages | BlogActiv.eu" xmlUrl="http://blogactiv.eu/feed/atom/">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateIntervalState" type="0" value="false"/>
+        </outline>
+        <outline rssowl:id="227" text="Presseurop | Ukraine" xmlUrl="http://www.presseurop.eu/en/taxonomy/term/203/%2A/feed"/>
+        <outline rssowl:id="228" text="Eastbook - blog on EU Eastern Partnership" xmlUrl="http://eastbook.eu/en/feed/atom/"/>
+        <outline rssowl:id="229" rssowl:isSet="false" text="Think Tanks">
+          <outline rssowl:id="230" text="Медіакритика" xmlUrl="http://www.mediakrytyka.info/feed"/>
+          <outline rssowl:id="231" text="Центр Разумкова: головні новини" xmlUrl="http://razumkov.org.ua/cache/1205400949.xml">
+            <rssowl:pref id="org.rssowl.ui.internal.LoadErrorKey" type="5" value="Server returned HTTP Status 404 (Not Found)"/>
+          </outline>
+          <outline rssowl:id="232" text="Центр Разумкова: коментарі" xmlUrl="http://razumkov.org.ua/cache/1205399790.xml">
+            <rssowl:pref id="org.rssowl.ui.internal.LoadErrorKey" type="5" value="Server returned HTTP Status 404 (Not Found)"/>
+          </outline>
+          <outline rssowl:id="233" text="Studies from the Cato Institute" xmlUrl="http://feeds.cato.org/PublicationsFromTheCatoInstitute">
+            <rssowl:pref id="org.rssowl.pref.BMUpdateIntervalState" type="0" value="false"/>
+          </outline>
+          <outline rssowl:id="235" text="Taking Hayek Seriously" xmlUrl="http://hayekcenter.org/?feed=rss2">
+            <rssowl:pref id="org.rssowl.pref.BMUpdateIntervalState" type="0" value="false"/>
+          </outline>
+          <outline rssowl:id="242" text="RAND: Russia" xmlUrl="http://www.rand.org/hot_topics/russia/index.xml">
+            <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="7982"/>
+            <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+          </outline>
+          <outline rssowl:id="243" text="Hoover Institution" xmlUrl="http://www.hoover.org/rss/hoover.xml">
+            <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="7982"/>
+            <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+          </outline>
+          <outline rssowl:id="244" text="Adam Smith Institute blog" xmlUrl="http://feeds.feedburner.com/adamsmithinstitute">
+            <rssowl:pref id="org.rssowl.ui.internal.LoadErrorKey" type="5" value="Unsupported Format 'html'"/>
+          </outline>
+          <outline rssowl:id="245" text="Raymond Ibrahim :: Writings" xmlUrl="http://www.pundicity.com/ibrahim/rss.xml">
+            <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+            <rssowl:pref id="org.rssowl.ui.internal.LoadErrorKey" type="5" value="Server returned HTTP Status 404 (Not Found)"/>
+            <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+          </outline>
+        </outline>
+      </outline>
+      <outline rssowl:id="246" rssowl:isSet="false" text="Military">
+        <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+        <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="54662"/>
+        <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+        <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        <outline rssowl:id="247" text="Військова панорама" xmlUrl="http://wartime.org.ua/rss.xml">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="250" text="Danger Room" xmlUrl="http://www.wired.com/dangerroom/feed/">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="251" text="Центр воєнної політики та політики безпеки" xmlUrl="http://defpol.org.ua/site/index.php/uk?format=feed&amp;type=rss">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="253" text="Defense-Update" xmlUrl="http://feeds.feedblitz.com/feedburner/defenseupdate">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="254" text="Andrei-bt" xmlUrl="http://andrei-bt.livejournal.com/data/atom">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="255" text="bmpd" xmlUrl="http://bmpd.livejournal.com/data/atom">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="256" text="Денис Мокрушин" xmlUrl="http://twower.livejournal.com/data/atom">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="257" text="militarizm" xmlUrl="http://militarizm.livejournal.com/data/atom">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="258" text="Armament Research Services" xmlUrl="http://www.armamentresearch.com/feed/">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="259" text="k_a_r_d_e_n" xmlUrl="http://k-a-r-d-e-n.livejournal.com/data/atom">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="260" text="armor.kiev.ua" xmlUrl="http://armor-kiev-ua.livejournal.com/data/atom">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="261" text="War Is Boring — Medium" xmlUrl="https://medium.com/feed/war-is-boring">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="262" text="Ukraine@war" xmlUrl="http://ukraineatwar.blogspot.com/feeds/posts/default">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="263" text="MILITARY NAVIGATOR" xmlUrl="http://www.milnavigator.com/uk/feed/">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="264" text="Army Guide News" xmlUrl="http://army-guide.com/eng/rss.php">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="265" text="Diaporama" xmlUrl="http://www.armyrecognition.com/module/155.html?format=feed&amp;type=atom">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="266" text="Defense Industry Daily" xmlUrl="http://www.defenseindustrydaily.com/feed/">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="267" text="Ukrainian Military Pages" xmlUrl="http://www.ukrmilitary.com/feeds/posts/default">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="268" text="elgri" xmlUrl="http://elgri.livejournal.com/data/atom">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="269" text="Народна армія" xmlUrl="http://na.mil.gov.ua/feed">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="270" text="DEFENCE 24 - Siły zbrojne" xmlUrl="http://www.defence24.pl/rss/sily-zbrojne">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="25551" text="DEFENCE 24 - News" xmlUrl="http://www.defence24.com/rss/news">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="24307"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+        <outline rssowl:id="27957" text="ukdefencejournal.org.uk" xmlUrl="https://ukdefencejournal.org.uk/feed">
+          <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" type="3" value="10800"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" type="0" value="true"/>
+        </outline>
+      </outline>
+      <outline rssowl:id="273" rssowl:isSet="false" text="ME">
+        <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+        <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="49465"/>
+        <rssowl:pref id="org.rssowl.pref.DelNewsByAgeValue" type="1" value="14"/>
+        <outline rssowl:id="274" text="Al-Monitor" xmlUrl="http://www.al-monitor.com/pulse/home/rssfeeds/full-rss/maincontent/Al-Monitor.rss">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMUpdateIntervalState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeValue" type="1" value="14"/>
+        </outline>
+        <outline rssowl:id="275" text="Memri Latest Reports" xmlUrl="http://www.memri.org/latest_reports.rss">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.ui.internal.LoadErrorKey" type="5" value="Server returned HTTP Status 503 (Service Unavailable)"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeValue" type="1" value="14"/>
+        </outline>
+        <outline rssowl:id="276" text="BBC News - Middle East" xmlUrl="http://feeds.bbci.co.uk/news/world/middle_east/rss.xml">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMUpdateIntervalState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeValue" type="1" value="14"/>
+        </outline>
+        <outline rssowl:id="277" text="Content Item" xmlUrl="http://www.washingtoninstitute.org/rss/66/5">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeValue" type="1" value="14"/>
+        </outline>
+        <outline rssowl:id="278" text="iran - Google News" xmlUrl="http://news.google.com/news?hl=en&amp;gl=us&amp;q=iran&amp;um=1&amp;ie=UTF-8&amp;output=rss">
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" type="0" value="true"/>
+          <rssowl:pref id="org.rssowl.pref.BMUpdateIntervalState" type="0" value="false"/>
+          <rssowl:pref id="org.rssowl.pref.DelNewsByAgeValue" type="1" value="14"/>
+        </outline>
+      </outline>
+      <rssowl:newsbin name="Archive" rssowl:id="7662">
+        <rssowl:pref id="org.rssowl.pref.ArchiveBinMarker" type="0" value="true"/>
+        <rssowl:pref id="org.rssowl.pref.NMSelectedNews" type="3" value="7663"/>
+        <rssowl:pref id="org.rssowl.pref.BMNewsGrouping" type="1" value="1"/>
+      </rssowl:newsbin>
+    </outline>
+    <rssowl:label color="163,21,2" id="1" name="Important" order="0"/>
+    <rssowl:label color="200,118,10" id="2" name="Work" order="1"/>
+    <rssowl:label color="82,92,58" id="3" name="Personal" order="2"/>
+    <rssowl:label color="92,101,126" id="4" name="To Do" order="3"/>
+    <rssowl:label color="82,16,0" id="5" name="Later" order="4"/>
+    <rssowl:pref id="org.rssowl.ui.FirstStartToken" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.UseMasterPassword" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.UseOSPassword" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.RememberPassword" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.MarkNewsReadOnMinimize" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.MarkNewsReadOnScrolling" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.MarkFeedReadOnChange" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.MarkNewsReadOnTabClose" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.MarkDuplicateNewsRead" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.DisableJavaScript" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.UseExternalBrowser" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.UseCustomExternalBrowser" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.CustomBrowserPath" kind="0" type="5" value=""/>
+    <rssowl:pref id="org.rssowl.pref.ReopenBrowserTabs" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.UseSystemTray" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.TrayOnExit" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.TrayOnStart" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.RestoreTrayDoubleclick" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.MarkReadState" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.MarkReadInMillis" kind="0" type="1" value="0"/>
+    <rssowl:pref id="org.rssowl.pref.DelNewsByCountState" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.DelNewsByCountValue" kind="0" type="1" value="200"/>
+    <rssowl:pref id="org.rssowl.pref.DelNewsByAgeState" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.DelNewsByAgeValue" kind="0" type="1" value="30"/>
+    <rssowl:pref id="org.rssowl.pref.DelReadNewsState" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.NeverDelUnreadNewsState" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.NeverDelLabeledNewsState" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.BMNewsColumns" kind="0" type="2" value="0,5,6"/>
+    <rssowl:pref id="org.rssowl.pref.BMNewsSortColumn" kind="0" type="1" value="1"/>
+    <rssowl:pref id="org.rssowl.pref.BMNewsSortAscending" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.BMUpdateInterval" kind="0" type="3" value="1800"/>
+    <rssowl:pref id="org.rssowl.pref.BMUpdateIntervalState" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.BMOpenOnStartup" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.BMReloadOnStartup" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.ui.internal.editors.feed.SearchTarget" kind="0" type="1" value="1"/>
+    <rssowl:pref id="org.rssowl.ui.internal.editors.feed.GroupType" kind="0" type="1" value="0"/>
+    <rssowl:pref id="org.rssowl.ui.internal.editors.feed.FilterType" kind="0" type="1" value="0"/>
+    <rssowl:pref id="org.rssowl.ui.internal.editors.feed.SashFormWeights" kind="0" type="2" value="430,567"/>
+    <rssowl:pref id="org.rssowl.ui.internal.editors.feed.Layout" kind="0" type="1" value="1"/>
+    <rssowl:pref id="org.rssowl.ui.internal.editors.feed.HighlightSearchResults" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.ui.internal.editors.feed.FeedToolBarHidden" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.ui.internal.editors.feed.BrowserToolBarHidden" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.ui.internal.views.explorer.BeginSearchOnTyping" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.ui.internal.views.explorer.AlwaysShowSearch" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.ui.internal.views.explorer.SortByName" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.ui.internal.views.explorer.FilterType" kind="0" type="1" value="0"/>
+    <rssowl:pref id="org.rssowl.ui.internal.views.explorer.GroupingType" kind="0" type="1" value="0"/>
+    <rssowl:pref id="org.rssowl.ui.internal.views.explorer.EnableLinking" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.ui.internal.views.explorer.DisableFavicons" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.BMNewsFiltering" kind="0" type="1" value="-1"/>
+    <rssowl:pref id="org.rssowl.pref.BMNewsGrouping" kind="0" type="1" value="-1"/>
+    <rssowl:pref id="org.rssowl.pref.BMLoadImages" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.EnableImages" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.EnableMedia" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.BMOpenSiteForNews" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.OpenSiteForEmptyNews" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.UseTransformer" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.TransformerIdentifier" kind="0" type="5" value="org.rssowl.ui.InstapaperTransformer"/>
+    <rssowl:pref id="org.rssowl.pref.ShowNotificationPoup" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.ShowNotificationPoupOnlyWhenMinimized" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.StickyNotificationPoup" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.AutoCloseNotificationPoupValue" kind="0" type="1" value="8"/>
+    <rssowl:pref id="org.rssowl.pref.LimitNotificationPoup" kind="0" type="1" value="5"/>
+    <rssowl:pref id="org.rssowl.pref.LimitNotifierToSelection" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.CloseNotifierOnOpen" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.FadeNotifier" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.ShowExcerptInNotifier" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.AlwaysReuseFeedView" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.AlwaysReuseBrowser" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.OpenLinksInNewTab" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpBMByLastVisitState" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpBMByLastVisitValue" kind="0" type="1" value="30"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpBMByLastUpdateState" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpBMByLastUpdateValue" kind="0" type="1" value="30"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpBMByConError" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpBMBySynchronization" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpBMByDuplicates" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpNewsByCountState" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpNewsByCountValue" kind="0" type="1" value="200"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpNewsByAgeState" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpNewsByAgeValue" kind="0" type="1" value="30"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpReadNewsState" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpNeverDelUnreadNewsState" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpNeverDelLabeledNewsState" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpReminderDateMillies" kind="0" type="3" value="1480677486841"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpReminderState" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpReminderDaysValue" kind="0" type="1" value="30"/>
+    <rssowl:pref id="org.rssowl.pref.CleanUpIndex" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.SearchDialogPreviewVisible" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.SearchDialogNewsColumns" kind="0" type="2" value="12,0,11,1,5,6,9"/>
+    <rssowl:pref id="org.rssowl.pref.SearchDialogNewsSortColumn" kind="0" type="1" value="12"/>
+    <rssowl:pref id="org.rssowl.pref.SearchDialogNewsSortAscending" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.ShowToolbar" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.ShowStatus" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.BMLoadTitleFromFeed" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.OpenBrowserInBackground" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.ShareProviderState" kind="0" type="2" value="-3,-5,-1,-6,-7,-24,-8,-19,-9,-10,-12,-13,-4,-14,-15,-16,-17,-11,-18,-20,-21,-2,-22,-23,-25,-26,-27,-28,-29"/>
+    <rssowl:pref id="org.rssowl.pref.HideCompletedDownloads" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.ImportResources" kind="0" type="6" value="/home/victor/opera-newsfeeds.opml"/>
+    <rssowl:pref id="org.rssowl.pref.ToolbarItems" kind="0" type="2" value="2,0,5,6,0,7,8,0,10,0,11,12,0,39,0,13,14,0,20,0,15,16"/>
+    <rssowl:pref id="org.rssowl.pref.ToolbarMode" kind="0" type="1" value="0"/>
+    <rssowl:pref id="org.rssowl.pref.DefaultNextAction" kind="0" type="1" value="1"/>
+    <rssowl:pref id="org.rssowl.pref.DefaultPreviousAction" kind="0" type="1" value="5"/>
+    <rssowl:pref id="org.rssowl.pref.BMMenuFilter" kind="0" type="1" value="0"/>
+    <rssowl:pref id="org.rssowl.pref.UpdateOnStartup" kind="0" type="0" value="true"/>
+    <rssowl:pref id="org.rssowl.pref.RememberAggregateNewsOption" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.AggregateNewsAsSearch" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.LocalizedFeedSearch" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.JSInfobarClosed" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.EnableIEPopupBlocker" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.ArchiveBinMarker" kind="0" type="0" value="false"/>
+    <rssowl:pref id="org.rssowl.pref.NewsBrowserPageSize" kind="0" type="1" value="50"/>
+    <rssowl:pref id="instance/org.eclipse.ui.workbench/OPEN_ON_SINGLE_CLICK" kind="1" type="0" value="true"/>
+    <rssowl:pref id="instance/org.eclipse.ui.workbench/USE_IPERSISTABLE_EDITORS" kind="1" type="0" value="true"/>
+    <rssowl:pref id="instance/org.eclipse.ui/SHOW_MULTIPLE_EDITOR_TABS" kind="1" type="0" value="true"/>
+    <rssowl:pref id="instance/org.eclipse.ui.workbench/REUSE_OPEN_EDITORS_BOOLEAN" kind="1" type="0" value="false"/>
+    <rssowl:pref id="instance/org.eclipse.ui.workbench/REUSE_OPEN_EDITORS" kind="1" type="1" value="5"/>
+    <rssowl:pref id="/configuration/org.eclipse.core.net/proxiesEnabled" kind="1" type="0" value="false"/>
+    <rssowl:pref id="/configuration/org.eclipse.core.net/systemProxiesEnabled" kind="1" type="0" value="false"/>
+    <rssowl:pref id="/configuration/org.eclipse.core.net/proxyData/HTTP/hasAuth" kind="1" type="0" value="false"/>
+    <rssowl:pref id="/configuration/org.eclipse.core.net/proxyData/HTTPS/hasAuth" kind="1" type="0" value="false"/>
+    <rssowl:pref id="/configuration/org.eclipse.core.net/proxyData/SOCKS/hasAuth" kind="1" type="0" value="false"/>
+    <rssowl:pref id="instance/org.eclipse.ui.workbench/org.rssowl.ui.NewsTextFont" kind="1" type="5" value="1|Verdana|12.0|0|GTK|1|;"/>
+  </body>
+</opml>

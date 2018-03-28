@@ -15,3 +15,10 @@ Not yet usable, in the very early stages of development.
 ### Contacts ###
 
 Check the [project page](https://bitbucket.org/vityok/novinar/overview) for ways to leave feedback/open tickets for bug reports.
+
+# TODO #
+
+* don't store channel info in the db, rely on the opml file for
+  that. OPMLManager should be the one responsible for managing the
+  channel info. DB will rely on the channel IDs provided by the
+  OPMLManager

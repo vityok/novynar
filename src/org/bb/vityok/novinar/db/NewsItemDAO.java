@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 
 import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.NewsItem;
+import org.bb.vityok.novinar.OPMLManager;
 
 
 /** Implements database access operations for the NewsItem object.
@@ -56,13 +57,20 @@ public class NewsItemDAO
     }
 
 
-    public List<NewsItem> getNewsItemByChannel(String channel)
+    public List<NewsItem> getNewsItemByChannel(OPMLManager.Outline outline)
 	throws Exception
     {
 	List<NewsItem> list = new LinkedList<NewsItem>();
 	Backend be = Backend.getInstance();
 	Connection conn = be.getConnection();
-	PreparedStatement ps = conn.prepareStatement("SELECT title, link, description, creator, date, subject FROM news_item");
+	PreparedStatement ps;
+        if (outline != null) {
+            ps = conn.prepareStatement("SELECT title, link, description, creator, date, subject FROM news_item WHERE channel_id=?");
+            ps.setInt(1, outline.getId());
+        } else {
+            ps = conn.prepareStatement("SELECT title, link, description, creator, date, subject FROM news_item");
+        }
+
 	ResultSet rs = ps.executeQuery();
 	while (rs.next()) {
 	    NewsItem item = new NewsItem();
@@ -75,66 +83,5 @@ public class NewsItemDAO
 	    list.add(item);
 	}
 	return list;
-
-	// /*
-	//   We select the rows and verify the results.
-	// */
-	// rs = s.executeQuery(
-	// 		    "SELECT num, addr FROM location ORDER BY num");
-
-	// /* we expect the first returned column to be an integer (num),
-	//  * and second to be a String (addr). Rows are sorted by street
-	//  * number (num).
-	//  *
-	//  * Normally, it is best to use a pattern of
-	//  *  while(rs.next()) {
-	//  *    // do something with the result set
-	//  *  }
-	//  * to process all returned rows, but we are only expecting two rows
-	//  * this time, and want the verification code to be easy to
-	//  * comprehend, so we use a different pattern.
-	//  */
-
-	// int number; // street number retrieved from the database
-	// boolean failure = false;
-	// if (!rs.next())
-	//     {
-	// 	failure = true;
-	// 	reportFailure("No rows in ResultSet");
-	//     }
-
-	// if ((number = rs.getInt(1)) != 300)
-	//     {
-	// 	failure = true;
-	// 	reportFailure(
-	// 		      "Wrong row returned, expected num=300, got " + number);
-	//     }
-
-	// if (!rs.next())
-	//     {
-	// 	failure = true;
-	// 	reportFailure("Too few rows");
-	//     }
-
-	// if ((number = rs.getInt(1)) != 1910)
-	//     {
-	// 	failure = true;
-	// 	reportFailure(
-	// 		      "Wrong row returned, expected num=1910, got " + number);
-	//     }
-
-	// if (rs.next())
-	//     {
-	// 	failure = true;
-	// 	reportFailure("Too many rows");
-	//     }
-
-	// if (!failure) {
-	//     System.out.println("Verified the rows");
-	// }
-
-	// // delete the table
-	// s.execute("drop table location");
-	// System.out.println("Dropped table location");
     }
 }

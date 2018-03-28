@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><opml xmlns:rssowl="http://www.rssowl.org" version="1.1">
+  <head>
+    <title>RSSOwl Subscriptions</title>
+    <dateModified>Mon, 24 Apr 2017 14:20:51 EEST</dateModified>
+  </head>
+  <body>
+    <outline xmlns:ns0="https://bitbucket.org/vityok/novinar" ns0:channelId="2" rssowl:id="7" rssowl:isSet="true" text="My Feeds">
+      <outline ns0:channelId="1"  text="Science">
+	<outline ns0:channelId="2" text="Slashdot" xmlUrl="http://rss.slashdot.org/Slashdot/slashdotMain">
+	</outline>
+      </outline>
+    </outline>
+  </body>
+</opml>
