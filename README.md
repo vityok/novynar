@@ -22,3 +22,5 @@ Check the [project page](https://bitbucket.org/vityok/novinar/overview) for ways
   that. OPMLManager should be the one responsible for managing the
   channel info. DB will rely on the channel IDs provided by the
   OPMLManager
+
+* add unit tests for the core api/middleware

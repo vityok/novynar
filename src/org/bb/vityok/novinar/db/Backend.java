@@ -63,7 +63,7 @@ public class Backend
 	throws Exception
     {
 
-        System.out.println("SimpleApp starting in " + framework + " mode. SETUP");
+        System.out.println("Database backend is starting in " + framework + " mode. SETUP");
 
 	DriverManager.registerDriver(new org.apache.derby.jdbc.EmbeddedDriver());
 
@@ -127,9 +127,9 @@ public class Backend
 			  + "description VARCHAR(12288), "
 			  + "creator VARCHAR(256), "
 			  + "date TIMESTAMP, "
-			  + "subject VARCHAR(6144),"
-			  + "FOREIGN KEY (channel_id)"
-			  + "  REFERENCES channel (channel_id)"
+			  + "subject VARCHAR(6144)"
+			  // + "FOREIGN KEY (channel_id)"
+			  // + "  REFERENCES channel (channel_id)"
 			  +")");
 		System.out.println("Created tables CHANNEL and NEWS_ITEM");
 	    }

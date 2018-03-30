@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.NewsItem;
 import org.bb.vityok.novinar.OPMLManager;
+import org.bb.vityok.novinar.Channel;
 
 
 /** Implements database access operations for the NewsItem object.
@@ -57,16 +58,16 @@ public class NewsItemDAO
     }
 
 
-    public List<NewsItem> getNewsItemByChannel(OPMLManager.Outline outline)
+    public List<NewsItem> getNewsItemByChannel(Channel chan)
 	throws Exception
     {
 	List<NewsItem> list = new LinkedList<NewsItem>();
 	Backend be = Backend.getInstance();
 	Connection conn = be.getConnection();
 	PreparedStatement ps;
-        if (outline != null) {
+        if (chan != null) {
             ps = conn.prepareStatement("SELECT title, link, description, creator, date, subject FROM news_item WHERE channel_id=?");
-            ps.setInt(1, outline.getId());
+            ps.setInt(1, chan.getChannelId());
         } else {
             ps = conn.prepareStatement("SELECT title, link, description, creator, date, subject FROM news_item");
         }

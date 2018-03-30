@@ -5,7 +5,7 @@
   </head>
   <body>
     <outline xmlns:ns0="https://bitbucket.org/vityok/novinar" ns0:channelId="2" rssowl:id="7" rssowl:isSet="true" text="My Feeds">
-      <outline ns0:channelId="1"  text="Science">
+      <outline ns0:channelId="1" text="Science">
 	<outline ns0:channelId="2" text="Slashdot" xmlUrl="http://rss.slashdot.org/Slashdot/slashdotMain">
 	</outline>
       </outline>

@@ -18,7 +18,6 @@ import org.w3c.dom.Element;
 
 import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.OPMLManager;
-import org.bb.vityok.novinar.db.ChannelDAO;
 
 
 /** Download news feed and send it to the appropriate parser (Atom,
@@ -48,7 +47,7 @@ public class FeedReader
 	throws Exception
     {
         System.out.println("loading items for the channel: " + chan);
-        
+
 	URL feedURL = new URL(chan.getLink());
 	HttpURLConnection con = (HttpURLConnection) feedURL.openConnection();
 
@@ -74,26 +73,27 @@ public class FeedReader
 		System.out.println("Processing RDF feed");
 		RDF.getInstance().processFeed(chan, doc);
 	    }
-
+            chan.updatedNow();
 	    return doc;
 	} else {
 	    return null;
 	}
     }
 
+    /** Refresh/download all feeds from all known channels. */
     public void loadFeeds()
 	throws Exception
     {
-	ChannelDAO cdao = ChannelDAO.getInstance();
-	if (cdao.getChannelsCount() == 0) {
+        List<Channel> channels = OPMLManager.getInstance().getChannels();
+        System.out.println("loading " + channels.size() + " channels");
+        for (Channel channel : channels) {
+	    loadFeed(channel);
+        }
+
+	// ChannelDAO cdao = ChannelDAO.getInstance();
+	// if (cdao.getChannelsCount() == 0) {
 	    // empty db, let's put our default feed
 	    // cdao.createChannelFor(DEFAULT_URL.toString());
-	}
-
-	List<Channel> channels = ChannelDAO.getInstance().getAllChannels();
-	for (Channel channel : channels) {
-	    loadFeed(channel);
-	}
+	// }
     }
-
 }

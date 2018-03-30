@@ -23,8 +23,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.bb.vityok.novinar.db.ChannelDAO;
-
 
 /** Managing the OPML file that defines the subscribed feeds and their
  * parameters.
@@ -44,91 +42,12 @@ public class OPMLManager
     private Document doc;
     private Outline rootOutline;
 
+    /** List of feed channels defined in the OPML file */
+    private List<Channel> channels = new LinkedList<Channel>();
+
+
     protected OPMLManager() { }
     public static OPMLManager getInstance() { return instance; }
-
-    /** Represents an OPML Outline with the minimal set of features
-     * required for handling the feed information.
-     */
-    public class Outline {
-	private String url;
-	private String title;
-	private int id;
-	private Node node;
-	private List<Outline> children = null;
-	private Channel channel;
-
-	/** Binds the outline with the associated DOM node. */
-	public Outline(Node node) {
-	    this.node = node;
-	    this.title = getAttribute("text", "N/A");
-	    this.url = getAttribute("xmlUrl", null);
-	    this.id = 0;
-	    buildChildren();
-            String idStr = getAttributeNS(NOVINAR_NS, "channelId", null);
-            if (idStr == null) {
-                // this is an item that we didn't process yet
-                if (this.url != null) {
-                    this.id = ChannelDAO.getInstance().createChannelFor(url);
-                    setAttribute(NOVINAR_NS, "channelId", Integer.toString(id));
-                }
-            } else {
-                this.id = Integer.valueOf(idStr);
-            }
-	}
-
-	private String getAttribute(String name, String defaultValue) {
-	    NamedNodeMap atts = node.getAttributes();
-	    Node att = atts.getNamedItem(name);
-	    return (att == null) ? defaultValue : att.getNodeValue();
-	}
-
-	private void setAttribute(String namespaceURI, String name, String value) {
-	    NamedNodeMap atts = node.getAttributes();
-	    Attr attr = doc.createAttributeNS(namespaceURI, name);
-	    attr.setValue(value);
-	    atts.setNamedItemNS(attr);
-	}
-
-
-	private String getAttributeNS(String namespaceURI, String name, String defaultValue) {
-	    NamedNodeMap atts = node.getAttributes();
-	    Node att = atts.getNamedItemNS(namespaceURI, name);
-	    return (att == null) ? defaultValue : att.getNodeValue();
-	}
-
-	public String getUrl() { return url; }
-	public String getTitle() { return title; }
-	public int getId() { return id; }
-
-	public List<Outline> getChildren() {
-	    return children;
-	}
-
-	public boolean hasChildren() {
-	    return (children == null) ?
-		false :
-		children.size() > 0;
-	}
-
-	public String toString() { return getTitle(); }
-
-	/** Find child outline nodes and add them to the children
-	 * list.
-	 */
-	private void buildChildren() {
-	    NodeList childNodes = node.getChildNodes();
-	    children = new LinkedList<Outline>();
-	    for (int i = 0; i < childNodes.getLength(); i++) {
-		Node childNode = childNodes.item(i);
-		if (childNode.getNodeName().equals("outline")) {
-		    children.add(new Outline(childNode));
-		}
-	    }
-
-	}
-    } // end class Outline
-
 
     /** Returns first child node having specified name. */
     public Node getChildByName(Node node, String name) {
@@ -177,4 +96,25 @@ public class OPMLManager
     }
 
     public Outline getRootOutline() { return rootOutline; }
+
+    public Document getDocument() { return doc; }
+
+
+    public List<Channel> getChannels () {
+        return channels;
+    }
+
+    public void addChannel(Channel chan) {
+        channels.add(chan);
+    }
+
+    /** Generates next channel id. The corresponding counter is stored
+     * in an attribute in the root outline node. */
+    public int genChannelId() {
+        String cntrStr = rootOutline.getAttributeNS(NOVINAR_NS, "channelCounter", "0");
+        int cntr = Integer.valueOf(cntrStr);
+        cntr++;
+        rootOutline.setAttribute(OPMLManager.NOVINAR_NS, "channelCounter", Integer.toString(cntr));
+        return cntr;
+    }
 }
