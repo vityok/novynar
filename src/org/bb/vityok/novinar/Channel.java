@@ -32,11 +32,32 @@ public class Channel
 
     public Channel(Outline ol) {
         this.ol = ol;
-    }
+
+        OPMLManager oman = OPMLManager.getInstance();
+        String idStr = oman.getAttributeNS(ol.getNode(),
+                                           OPMLManager.NOVINAR_NS,
+                                           OPMLManager.A_CHANNEL_ID,
+                                           null);
+        if (idStr == null) {
+            // this is an item that we didn't process yet
+            this.channelId = oman.genChannelId();
+            setChannelId(channelId);
+        } else {
+            this.channelId = Integer.valueOf(idStr);
+        }
+    } // end Channel
 
     /** primary key */
-    public int getChannelId() { return ol.getId(); }
-    public void setChannelId(int channelId) { /* todo */ }
+    public int getChannelId() { return channelId; }
+
+    /** Assign a new ID for this channel. */
+    public void setChannelId(int channelId) {
+        OPMLManager oman = OPMLManager.getInstance();
+        oman.setAttribute(ol.getNode(),
+                          OPMLManager.NOVINAR_NS,
+                          OPMLManager.A_CHANNEL_ID,
+                          Integer.toString(channelId));
+    }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { /* todo */ }

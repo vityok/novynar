@@ -28,28 +28,37 @@ import org.w3c.dom.NodeList;
  * parameters.
  *
  * It essentially a DAO of the feeds tree and their configuration,
- * interfacing the application with both the XML/OPML file defining
- * the tree and the database backend containing everything else.
+ * interfacing the application with the XML/OPML file.
  */
 public class OPMLManager
 {
     private final static OPMLManager instance = new OPMLManager();
 
-    public static final String DEFAULT_CONFIG_FILE = "backup.opml";
+    public static final File DEFAULT_CONFIG_FILE = new File("backup.opml");
 
     public static final String NOVINAR_NS = "https://bitbucket.org/vityok/novinar";
+    public static final String A_CHANNEL_ID = "channelId";
+    public static final String A_CHANNEL_COUNTER = "channelCounter";
 
     private Document doc;
+    private Node rootOutlineNode;
     private Outline rootOutline;
 
-    /** List of feed channels defined in the OPML file */
+    /** List of feed channels defined in the OPML file.
+     *
+     * Instead of traversing the OPML tree in search of Channel data
+     * maintain this list.
+     */
     private List<Channel> channels = new LinkedList<Channel>();
 
 
     protected OPMLManager() { }
+
     public static OPMLManager getInstance() { return instance; }
 
-    /** Returns first child node having specified name. */
+    /** Returns first child node of the given node with the specified
+     * name.
+     */
     public Node getChildByName(Node node, String name) {
 	NodeList children = node.getChildNodes();
 	for (int i = 0; i < children.getLength(); i++) {
@@ -67,14 +76,18 @@ public class OPMLManager
      * DOM.
      */
     public void loadConfig() {
+        loadConfig(DEFAULT_CONFIG_FILE);
+    }
+
+    public void loadConfig(File configFile) {
+        channels = new LinkedList<Channel>();
 	try {
 	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	    dbf.setNamespaceAware(true);
 	    DocumentBuilder db = dbf.newDocumentBuilder();
-            File configFile = new File(DEFAULT_CONFIG_FILE);
 	    doc = db.parse(configFile);
 	    Node bodyNode = doc.getElementsByTagName("body").item(0);
-	    Node rootOutlineNode = getChildByName(bodyNode, "outline");
+	    rootOutlineNode = getChildByName(bodyNode, "outline");
 	    rootOutline = new Outline(rootOutlineNode);
 	    System.out.println("Loaded OPML config from " + configFile.getPath());
 	} catch (Exception e) {
@@ -83,22 +96,44 @@ public class OPMLManager
     }
 
 
+    /** Store OPML data to the DEFAULT_CONFIG_FILE. */
     public void storeConfig() {
+        storeConfig(DEFAULT_CONFIG_FILE);
+    }
+
+
+    /** Store OPML data to the given configFile. */
+    public void storeConfig(File configFile) {
 	try {
 	    Transformer transformer = TransformerFactory.newInstance().newTransformer();
-	    Result output = new StreamResult(new File(DEFAULT_CONFIG_FILE));
+	    Result output = new StreamResult(configFile);
 	    Source input = new DOMSource(doc);
 
 	    transformer.transform(input, output);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
+
     }
 
     public Outline getRootOutline() { return rootOutline; }
 
     public Document getDocument() { return doc; }
 
+    public void setAttribute(Node node, String namespaceURI, String name, String value) {
+        NamedNodeMap atts = node.getAttributes();
+        Attr attr = getDocument()
+            .createAttributeNS(namespaceURI, name);
+        attr.setValue(value);
+        atts.setNamedItemNS(attr);
+    }
+
+
+    public String getAttributeNS(Node node, String namespaceURI, String name, String defaultValue) {
+        NamedNodeMap atts = node.getAttributes();
+        Node att = atts.getNamedItemNS(namespaceURI, name);
+        return (att == null) ? defaultValue : att.getNodeValue();
+    }
 
     public List<Channel> getChannels () {
         return channels;
@@ -108,13 +143,23 @@ public class OPMLManager
         channels.add(chan);
     }
 
-    /** Generates next channel id. The corresponding counter is stored
-     * in an attribute in the root outline node. */
+    /** Returns the current value of the channels counter. */
+    public int getChannelCounter () {
+        String cntrStr = getAttributeNS(rootOutlineNode, NOVINAR_NS, A_CHANNEL_COUNTER, "0");
+        return Integer.valueOf(cntrStr);
+    }
+
+    /** Generates and stores next channel id.
+     *
+     * The corresponding counter is stored as attribute in the root
+     * outline node.
+     */
     public int genChannelId() {
-        String cntrStr = rootOutline.getAttributeNS(NOVINAR_NS, "channelCounter", "0");
-        int cntr = Integer.valueOf(cntrStr);
-        cntr++;
-        rootOutline.setAttribute(OPMLManager.NOVINAR_NS, "channelCounter", Integer.toString(cntr));
+        int cntr = getChannelCounter() + 1;
+        setAttribute(rootOutlineNode,
+                     NOVINAR_NS,
+                     A_CHANNEL_COUNTER,
+                     Integer.toString(cntr));
         return cntr;
     }
 }

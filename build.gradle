@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
     compile group: 'org.apache.derby', name: 'derby', version: '10.14.1.0'
+
     testCompile(
             'org.junit.jupiter:junit-jupiter-api:5.1.0'
     )
@@ -37,7 +38,7 @@ sourceSets {
     }
     test {
         java {
-            srcDirs = ["test"]
+            srcDirs = ['test']
         }
     }
 }

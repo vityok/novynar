@@ -30,29 +30,11 @@ public class Outline
         this.url = getAttribute("xmlUrl", null);
         this.id = 0;
 
-        String idStr = getAttributeNS(OPMLManager.NOVINAR_NS, "channelId", null);
         if (this.url == null) {
             // feed URL is not defined, treat it as a folder
             buildChildren();
         } else {
-            // feed URL is defined, construct a channel object based
-            // on this outline
-            if (idStr == null) {
-                // this is an item that we didn't process yet
-
-                // todo: instead of maintaining counter in the database,
-                // place it as the attribute of the root node in the OPML
-                // document. Make OPMLManager increment the counter
-                // whenever needed
-
-                // todo: refactor this.id = ChannelDAO.getInstance().createChannelFor(url);
-                setAttribute(OPMLManager.NOVINAR_NS,
-                             "channelId",
-                             Integer.toString(OPMLManager.getInstance().genChannelId()));
-            } else {
-                this.id = Integer.valueOf(idStr);
-            }
-
+            // feed URL is defined for Channels
             this.channel = new Channel(this);
             OPMLManager.getInstance().addChannel(channel);
         }
@@ -73,21 +55,13 @@ public class Outline
 
 
     public void setAttribute(String namespaceURI, String name, String value) {
-        NamedNodeMap atts = node.getAttributes();
-        Attr attr = OPMLManager.getInstance()
-            .getDocument()
-            .createAttributeNS(namespaceURI, name);
-        attr.setValue(value);
-        atts.setNamedItemNS(attr);
+        OPMLManager.getInstance().setAttribute(node, namespaceURI, name, value);
     }
 
 
     public String getAttributeNS(String namespaceURI, String name, String defaultValue) {
-        NamedNodeMap atts = node.getAttributes();
-        Node att = atts.getNamedItemNS(namespaceURI, name);
-        return (att == null) ? defaultValue : att.getNodeValue();
+        return OPMLManager.getInstance().getAttributeNS(node, namespaceURI, name, defaultValue);
     }
-
 
     public String getUrl() { return url; }
     public String getTitle() { return title; }
@@ -103,10 +77,9 @@ public class Outline
             ( children.size() > 0 );
     }
 
-    public String toString() { return "outline: " + getTitle(); }
+    public String toString() { return getTitle(); }
 
-    /** Find child outline nodes and add them to the children
-     * list.
+    /** Find child outline nodes and add them to the children list.
      */
     private void buildChildren() {
         NodeList childNodes = node.getChildNodes();
