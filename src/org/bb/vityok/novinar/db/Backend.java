@@ -56,8 +56,6 @@ public class Backend
      * doing shutdown unless you know that no one else needs to access the
      * database until it is rebooted. That is why this demo will not shut down
      * the database unless it is running Derby embedded.</p>
-     *
-     * @see #main(String[])
      */
     public void setup()
 	throws Exception
