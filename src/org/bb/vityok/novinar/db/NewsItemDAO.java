@@ -22,21 +22,17 @@ import org.bb.vityok.novinar.Channel;
  */
 public class NewsItemDAO
 {
-    private final static NewsItemDAO instance = new NewsItemDAO();
+    private Backend dbend;
 
-    protected NewsItemDAO()
+    public NewsItemDAO(Backend dbend)
     {
-    }
-
-    public static NewsItemDAO getInstance() {
-	return instance;
+        this.dbend = dbend;
     }
 
     public void insertOrUpdateItem(Channel chan, NewsItem item)
 	throws Exception
     {
-	Backend be = Backend.getInstance();
-	Connection conn = be.getConnection();
+	Connection conn = dbend.getConnection();
 	// check if such item already exists in the database before
 	// insert
 	PreparedStatement cs = conn.prepareStatement("SELECT link FROM news_item WHERE link=?");
@@ -58,12 +54,14 @@ public class NewsItemDAO
     }
 
 
+    /** Returns a list of items for the given channel or all items if
+     * the given channel is null.
+     */
     public List<NewsItem> getNewsItemByChannel(Channel chan)
 	throws Exception
     {
 	List<NewsItem> list = new LinkedList<NewsItem>();
-	Backend be = Backend.getInstance();
-	Connection conn = be.getConnection();
+	Connection conn = dbend.getConnection();
 	PreparedStatement ps;
         if (chan != null) {
             ps = conn.prepareStatement("SELECT title, link, description, creator, date, subject FROM news_item WHERE channel_id=?");
@@ -84,5 +82,11 @@ public class NewsItemDAO
 	    list.add(item);
 	}
 	return list;
+    }
+
+    public List<NewsItem> getNewsItemByChannels(List<Channel> chans)
+	throws Exception
+    {
+        return new LinkedList<>();
     }
 }

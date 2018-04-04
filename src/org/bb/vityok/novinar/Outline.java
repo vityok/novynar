@@ -3,8 +3,6 @@ package org.bb.vityok.novinar;
 import java.util.List;
 import java.util.LinkedList;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -15,39 +13,44 @@ import org.w3c.dom.NodeList;
  */
 public class Outline
 {
-    private String url;
     private String title;
-    private int id;
-    private Node node;
+    private Node node; // DOM node that corresponds to this outline
+
     private List<Outline> children = null;
+
+    /* Channel object if there is any, and there must be one if this
+     * is a channel outline */
     private Channel channel = null;
+
+    private OPMLManager oman;
 
 
     /** Binds the outline with the associated DOM node. */
-    public Outline(Node node) {
+    public Outline(OPMLManager oman, Node node) {
+        this.oman = oman;
         this.node = node;
         this.title = getAttribute("text", "N/A");
-        this.url = getAttribute("xmlUrl", null);
-        this.id = 0;
+        String url = getAttribute("xmlUrl", null);
 
-        if (this.url == null) {
+        if (url == null || url.isEmpty()) {
             // feed URL is not defined, treat it as a folder
             buildChildren();
         } else {
             // feed URL is defined for Channels
             this.channel = new Channel(this);
-            OPMLManager.getInstance().addChannel(channel);
+            oman.addChannel(channel);
         }
     }
 
     public Node getNode() { return node; }
+    public OPMLManager getOPMLManager() { return oman; }
 
     /** Channels are leafs in the OPML tree, return the associated
      * channel object if there is any.
      */
     public Channel getChannel() { return channel; }
 
-    public String getAttribute(String name, String defaultValue) {
+    public final String getAttribute(String name, String defaultValue) {
         NamedNodeMap atts = node.getAttributes();
         Node att = atts.getNamedItem(name);
         return (att == null) ? defaultValue : att.getNodeValue();
@@ -55,17 +58,15 @@ public class Outline
 
 
     public void setAttribute(String namespaceURI, String name, String value) {
-        OPMLManager.getInstance().setAttribute(node, namespaceURI, name, value);
+        oman.setAttribute(node, namespaceURI, name, value);
     }
 
 
     public String getAttributeNS(String namespaceURI, String name, String defaultValue) {
-        return OPMLManager.getInstance().getAttributeNS(node, namespaceURI, name, defaultValue);
+        return oman.getAttributeNS(node, namespaceURI, name, defaultValue);
     }
 
-    public String getUrl() { return url; }
     public String getTitle() { return title; }
-    public int getId() { return id; }
 
     public List<Outline> getChildren() {
         return children;
@@ -77,17 +78,18 @@ public class Outline
             ( children.size() > 0 );
     }
 
+    @Override
     public String toString() { return getTitle(); }
 
     /** Find child outline nodes and add them to the children list.
      */
     private void buildChildren() {
         NodeList childNodes = node.getChildNodes();
-        children = new LinkedList<Outline>();
+        children = new LinkedList<>();
         for (int i = 0; i < childNodes.getLength(); i++) {
             Node childNode = childNodes.item(i);
             if (childNode.getNodeName().equals("outline")) {
-                children.add(new Outline(childNode));
+                children.add(new Outline(oman, childNode));
             }
         }
     }

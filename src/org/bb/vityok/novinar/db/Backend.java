@@ -21,11 +21,18 @@ public class Backend
     private final String framework = "embedded";
     private final String protocol = "jdbc:derby:";
 
-    private final static Backend INSTANCE = new Backend();
+    public static final String DEFAULT_DB_NAME = "novynarDB";
+    
+    private String dbName;
 
     private Connection conn;
 
-    protected Backend() {
+    public Backend() {
+        this(DEFAULT_DB_NAME);
+    }
+
+    public Backend(String dbName) {
+        this.dbName = dbName;
 	try {
 	    setup();
 	} catch (Exception e) {
@@ -33,9 +40,6 @@ public class Backend
 	}
     }
 
-    public static Backend getInstance() {
-	return INSTANCE;
-    }
 
     public Connection getConnection()
     {
@@ -80,17 +84,18 @@ public class Backend
         ResultSet rs = null;
 
         try {
-	    String dbName = "novynarDB"; // the name of the database
 
 	    /*
-	     * This connection specifies create=true in the connection URL to
-	     * cause the database to be created when connecting for the first
-	     * time. To remove the database, remove the directory derbyDB (the
-	     * same as the database name) and its contents.
+	     * This connection specifies create=true in the connection
+	     * URL to cause the database to be created when connecting
+	     * for the first time. To remove the database, remove the
+	     * directory specified by the database name and its
+	     * contents.
 	     *
-	     * The directory derbyDB will be created under the directory that
-	     * the system property derby.system.home points to, or the current
-	     * directory (user.dir) if derby.system.home is not set.
+	     * The directory dbName will be created under the
+	     * directory that the system property derby.system.home
+	     * points to, or the current directory (user.dir) if
+	     * derby.system.home is not set.
 	     */
 	    conn = DriverManager.getConnection(protocol + dbName
 					       + ";create=true", null);

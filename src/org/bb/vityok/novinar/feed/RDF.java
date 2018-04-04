@@ -5,11 +5,9 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
+import org.bb.vityok.novinar.Novinar;
 import org.bb.vityok.novinar.NewsItem;
 import org.bb.vityok.novinar.Channel;
-
-import org.bb.vityok.novinar.db.Backend;
-import org.bb.vityok.novinar.db.NewsItemDAO;
 
 
 /** Parse RDF/XML news feeds.
@@ -18,16 +16,15 @@ import org.bb.vityok.novinar.db.NewsItemDAO;
  */
 public class RDF
 {
-    private static final RDF INSTANCE = new RDF();
+    private static final RDF instance = new RDF();
 
     protected RDF() { }
 
-    public static RDF getInstance() { return INSTANCE; }
+    public static RDF getInstance() { return instance; }
 
-    public void processFeed(Channel chan, Document doc)
+    public void processFeed(Channel chan, Document doc, Novinar novinar)
 	throws Exception
     {
-	NewsItemDAO dao = NewsItemDAO.getInstance();
 	Element docElement = doc.getDocumentElement();
 	Node channelNode = docElement.getElementsByTagName("channel").item(0);
 
@@ -58,7 +55,7 @@ public class RDF
 		newsItem.setTitle(iTitle);
 		newsItem.setLink(iLink);
 		newsItem.setDescription(iDescription);
-		dao.insertOrUpdateItem(chan, newsItem);
+		novinar.insertOrUpdateItem(chan, newsItem);
 	    }
 	}
     }

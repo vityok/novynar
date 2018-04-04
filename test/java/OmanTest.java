@@ -11,36 +11,33 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.bb.vityok.novinar.Channel;
-import org.bb.vityok.novinar.OPMLManager;
+import org.bb.vityok.novinar.Novinar;
 
 @DisplayName("Test the OPML manager")
 class OmanTest {
 
     public static final File opmlFile = new File("test/resources/opml-file.opml");
+    Novinar novinar = null;
 
     @BeforeEach
     void setup() {
-        OPMLManager oman = OPMLManager.getInstance();
-        oman.loadConfig(opmlFile);
+        novinar = new Novinar(opmlFile, "testDB");
     }
 
     @Test
     void loadOPMLData() {
-        OPMLManager oman = OPMLManager.getInstance();
-        assertNotNull(oman.getDocument());
-        assertNotNull(oman.getRootOutline());
-        assertNotNull(oman.getChannels());
+        assertNotNull(novinar.getRootOutline());
+        assertNotNull(novinar.getChannels());
     }
 
     @Test
     void channelIdGeneration() {
-        OPMLManager oman = OPMLManager.getInstance();
-        for (Channel chan : oman.getChannels()) {
+        for (Channel chan : novinar.getChannels()) {
             System.out.println("channel: " + chan);
         }
             
         // there is only one channel in the OPML file
-        assertEquals(oman.getChannels().size(), 1);
-        assertEquals(oman.getChannelCounter(), oman.getChannels().size());
+        assertEquals(novinar.getChannels().size(), 1);
+        assertEquals(novinar.getChannelCounter(), novinar.getChannels().size());
     }
 }

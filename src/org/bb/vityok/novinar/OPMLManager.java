@@ -2,6 +2,8 @@ package org.bb.vityok.novinar;
 
 import java.io.File;
 
+import java.text.SimpleDateFormat;
+
 import java.util.List;
 import java.util.LinkedList;
 
@@ -18,7 +20,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
-import org.w3c.dom.Entity;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -32,13 +33,14 @@ import org.w3c.dom.NodeList;
  */
 public class OPMLManager
 {
-    private final static OPMLManager instance = new OPMLManager();
-
-    public static final File DEFAULT_CONFIG_FILE = new File("backup.opml");
+    public static final File DEFAULT_OPML_FILE = new File("backup.opml");
 
     public static final String NOVINAR_NS = "https://bitbucket.org/vityok/novinar";
     public static final String A_CHANNEL_ID = "channelId";
     public static final String A_CHANNEL_COUNTER = "channelCounter";
+    public static final String A_LAST_UPDATED = "lastUpdated";
+
+    public static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     private Document doc;
     private Node rootOutlineNode;
@@ -49,12 +51,15 @@ public class OPMLManager
      * Instead of traversing the OPML tree in search of Channel data
      * maintain this list.
      */
-    private List<Channel> channels = new LinkedList<Channel>();
+    private List<Channel> channels = new LinkedList<>();
 
 
-    protected OPMLManager() { }
-
-    public static OPMLManager getInstance() { return instance; }
+    public OPMLManager() {
+        loadConfig();
+    }
+    public OPMLManager(File configFile) {
+        loadConfig(configFile);
+    }
 
     /** Returns first child node of the given node with the specified
      * name.
@@ -76,11 +81,11 @@ public class OPMLManager
      * DOM.
      */
     public void loadConfig() {
-        loadConfig(DEFAULT_CONFIG_FILE);
+        loadConfig(DEFAULT_OPML_FILE);
     }
 
     public void loadConfig(File configFile) {
-        channels = new LinkedList<Channel>();
+        channels = new LinkedList<>();
 	try {
 	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 	    dbf.setNamespaceAware(true);
@@ -88,7 +93,7 @@ public class OPMLManager
 	    doc = db.parse(configFile);
 	    Node bodyNode = doc.getElementsByTagName("body").item(0);
 	    rootOutlineNode = getChildByName(bodyNode, "outline");
-	    rootOutline = new Outline(rootOutlineNode);
+	    rootOutline = new Outline(this, rootOutlineNode);
 	    System.out.println("Loaded OPML config from " + configFile.getPath());
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -96,9 +101,9 @@ public class OPMLManager
     }
 
 
-    /** Store OPML data to the DEFAULT_CONFIG_FILE. */
+    /** Store OPML data to the DEFAULT_OPML_FILE. */
     public void storeConfig() {
-        storeConfig(DEFAULT_CONFIG_FILE);
+        storeConfig(DEFAULT_OPML_FILE);
     }
 
 

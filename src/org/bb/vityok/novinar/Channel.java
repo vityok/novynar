@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 import java.util.Calendar;
 
+import java.text.ParseException;
 
 /** Representation of a news feed channel.
  *
@@ -28,12 +29,13 @@ public class Channel
     private Calendar latestUpdate;  // last time the channel has been updated
     private List<NewsItem> items;
 
-    private Outline ol;
+    /** Outline that corresponds to this channel object. */
+    private final Outline ol;
 
     public Channel(Outline ol) {
         this.ol = ol;
-
-        OPMLManager oman = OPMLManager.getInstance();
+        this.link = ol.getAttribute("xmlUrl", null);
+        OPMLManager oman = ol.getOPMLManager();
         String idStr = oman.getAttributeNS(ol.getNode(),
                                            OPMLManager.NOVINAR_NS,
                                            OPMLManager.A_CHANNEL_ID,
@@ -45,6 +47,28 @@ public class Channel
         } else {
             this.channelId = Integer.valueOf(idStr);
         }
+
+        // timestamp
+        String tsStr = oman.getAttributeNS(ol.getNode(),
+                                           OPMLManager.NOVINAR_NS,
+                                           OPMLManager.A_LAST_UPDATED,
+                                           null);
+        latestUpdate = null;
+        if (tsStr != null) {
+            try {
+                latestUpdate = (new Calendar.Builder()
+                                .setInstant(OPMLManager.TIMESTAMP_FORMAT
+                                            .parse(tsStr))
+                                .build());
+            } catch (ParseException pe) {
+                System.out.println("failed to parse Channel " + getTitle()
+                                   + " timestamp: " + tsStr);
+            }
+        }
+        if (latestUpdate == null) {
+            // couldn't parse it from the XML
+            latestUpdate = new Calendar.Builder().setInstant(0).build();
+        }
     } // end Channel
 
     /** primary key */
@@ -52,7 +76,7 @@ public class Channel
 
     /** Assign a new ID for this channel. */
     public void setChannelId(int channelId) {
-        OPMLManager oman = OPMLManager.getInstance();
+        OPMLManager oman = ol.getOPMLManager();
         oman.setAttribute(ol.getNode(),
                           OPMLManager.NOVINAR_NS,
                           OPMLManager.A_CHANNEL_ID,
@@ -62,14 +86,26 @@ public class Channel
     public String getTitle() { return title; }
     public void setTitle(String title) { /* todo */ }
 
-    public String getLink() { return ol.getUrl(); }
+    public String getLink() { return link; }
     public void setLink(String link) { /* todo */ }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Calendar getLatestUpdate() { return latestUpdate; }
-    public void setLatestUpdate(Calendar cal) { this.latestUpdate = cal; }
+    public Calendar getLatestUpdate() {
+        return latestUpdate;
+    }
+    public void setLatestUpdate(Calendar cal) {
+        String updateTs = OPMLManager.TIMESTAMP_FORMAT.format(cal.getTime());
+        this.latestUpdate = cal;
+        OPMLManager oman = ol.getOPMLManager();
+        oman.setAttribute(ol.getNode(),
+                          OPMLManager.NOVINAR_NS,
+                          OPMLManager.A_LAST_UPDATED,
+                          updateTs);
+        System.out.println("updated channel: " + getTitle()
+                           + " at: " + updateTs);
+    }
 
     /** Mark the channel as updated just now. */
     public void updatedNow() {
@@ -78,9 +114,7 @@ public class Channel
                              .build());
     }
 
-    // public List<NewsItem> getItems() { return items; }
-    // public void setItems(List<NewsItem> items) { this.items = items; }
-
+    @Override
     public String toString() {
         return "channel {id=" + getChannelId()
             + " link=" + getLink()
