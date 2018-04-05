@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 
 import java.util.List;
 
@@ -40,33 +41,57 @@ public class FeedReader
 	throws Exception
     {
         System.out.println("loading items for the channel: " + chan);
+        String location = chan.getLink();
+        String url = chan.getLink();
+        URL base, next;
 
-	URL feedURL = new URL(chan.getLink());
-	HttpURLConnection con = (HttpURLConnection) feedURL.openConnection();
+        while (true) {
+            URL feedURL = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) feedURL.openConnection();
 
-	int responseCode = con.getResponseCode();
-	System.out.println("\nSending 'GET' request to URL : " + feedURL);
-	System.out.println("Response Code : " + responseCode);
+            con.setConnectTimeout(15000);
+            con.setReadTimeout(15000);
+            con.setRequestProperty("User-Agent", "Novinar RSS feed reader");
+            con.setInstanceFollowRedirects(true);
 
-	if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'GET' request to URL : " + feedURL);
+            System.out.println("Response Code : " + responseCode);
 
-	    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-	    Document doc = dBuilder.parse(con.getInputStream());
-	    doc.getDocumentElement().normalize();
+            // this approach in combination with
+            // con.setInstanceFollowRedirects(true) allows to follow
+            // redirects from HTTP to HTTPS locations. See:
+            // https://stackoverflow.com/questions/1884230/urlconnection-doesnt-follow-redirect
+            switch (con.getResponseCode())
+                {
+                case HttpURLConnection.HTTP_MOVED_PERM:
+                case HttpURLConnection.HTTP_MOVED_TEMP:
+                    location = con.getHeaderField("Location");
+                    location = URLDecoder.decode(location, "UTF-8");
+                    base     = new URL(url);
+                    next     = new URL(base, location);  // Deal with relative URLs
+                    url      = next.toExternalForm();
+                    continue;
+                case HttpURLConnection.HTTP_OK:
+                    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                    Document doc = dBuilder.parse(con.getInputStream());
+                    doc.getDocumentElement().normalize();
 
-	    //optional, but recommended
-	    //read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-	    System.out.println("Root element :[" + doc.getDocumentElement().getNodeName() + "]");
-	    if ("rdf:RDF".equals(doc.getDocumentElement().getNodeName())) {
-		System.out.println("Processing RDF feed");
-		RDF.getInstance().processFeed(chan, doc, novinar);
-	    }
-            chan.updatedNow();
-	    return doc;
-	} else {
-	    return null;
-	}
+                    // optional, but recommended read this:
+                    // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+                    System.out.println("Root element :[" + doc.getDocumentElement().getNodeName() + "]");
+                    if ("rdf:RDF".equals(doc.getDocumentElement().getNodeName())) {
+                        System.out.println("Processing RDF feed");
+                        RDF.getInstance().processFeed(chan, doc, novinar);
+                        chan.updatedNow();
+                        return doc;
+                    } else {
+                        System.out.println("FeedReader doesn't know how to handle this type of feeds. Inspect: " + url);
+                        return null;
+                    }
+                }
+        }
     }
 
     /** Refresh/download all feeds from all known channels. */

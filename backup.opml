@@ -4,10 +4,13 @@
     <dateModified>Mon, 24 Apr 2017 14:20:51 EEST</dateModified>
   </head>
   <body>
-    <outline xmlns:ns0="https://bitbucket.org/vityok/novinar" ns0:channelId="2" rssowl:id="7" rssowl:isSet="true" text="My Feeds">
+    <outline xmlns:ns0="https://bitbucket.org/vityok/novinar" ns0:channelCounter="1" ns0:channelId="2" rssowl:id="7" rssowl:isSet="true" text="My Feeds">
       <outline ns0:channelId="1" text="Science">
-	<outline ns0:lastUpdated="2018-04-04T19:31:47" ns0:channelId="2" text="Slashdot" xmlUrl="http://rss.slashdot.org/Slashdot/slashdotMain">
+	<outline xmlns:ns1="https://bitbucket.org/vityok/novinar" ns0:channelId="2" ns1:lastUpdated="2018-04-05T13:44:48" text="Slashdot" xmlUrl="http://rss.slashdot.org/Slashdot/slashdotMain">
 	</outline>
+	<outline ns0:channelId="1" ns0:lastUpdated="2018-04-04T19:31:47" text="UMP" xmlUrl="http://www.ukrmilitary.com/feeds/posts/default?alt=rss">
+	</outline>
+
       </outline>
     </outline>
   </body>
