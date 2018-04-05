@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" media="screen" href="/~d/styles/rss1full.xsl"?><?xml-stylesheet type="text/css" media="screen" href="http://rss.slashdot.org/~d/styles/itemcontent.css"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" xmlns:admin="http://webns.net/mvcb/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:syn="http://purl.org/rss/1.0/modules/syndication/" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/">
+
+<channel rdf:about="https://slashdot.org/">
+<title>Slashdot</title>
+<link>https://slashdot.org/</link>
+<description>News for nerds, stuff that matters</description>
+<dc:language>en-us</dc:language>
+<dc:rights>Copyright 1997-2016, SlashdotMedia. All Rights Reserved.</dc:rights>
+<dc:date>2018-04-05T12:44:07+00:00</dc:date>
+<dc:publisher>Dice</dc:publisher>
+<dc:creator>help@slashdot.org</dc:creator>
+<dc:subject>Technology</dc:subject>
+<syn:updateBase>1970-01-01T00:00+00:00</syn:updateBase>
+<syn:updateFrequency>1</syn:updateFrequency>
+<syn:updatePeriod>hourly</syn:updatePeriod>
+<items>
+ <rdf:Seq>
+  <rdf:li rdf:resource="https://tech.slashdot.org/story/18/04/05/0420247/1111-cloudflares-new-dns-attracting-gigabits-per-second-of-rubbish?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://news.slashdot.org/story/18/04/05/0430212/youtube-will-increase-security-at-all-offices-worldwide-following-shooting?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://tech.slashdot.org/story/18/04/04/2233211/one-of-estonias-first-e-residents-explains-what-it-means-to-have-digital-citizenship?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://news.slashdot.org/story/18/04/04/2249206/microsoft-touts-breakthrough-in-making-chatbots-more-conversational?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://yro.slashdot.org/story/18/04/04/2155219/facebook-is-changing-the-way-it-stores-call-text-history?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://hardware.slashdot.org/story/18/04/04/2143245/google-now-purchases-more-renewable-energy-than-it-consumes-as-a-company?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://tech.slashdot.org/story/18/04/04/2130206/virgin-hyperloop-one-shows-off-new-futuristic-travel-pod?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://ask.slashdot.org/story/18/04/04/2028255/ask-slashdot-what-does-your-data-mean-to-google?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://tech.slashdot.org/story/18/04/04/2045234/facebooks-privacy-fixes-have-broken-tinder?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://yro.slashdot.org/story/18/04/04/209206/centurylink-fights-billing-fraud-lawsuit-by-claiming-that-it-has-no-customers?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://games.slashdot.org/story/18/04/04/1828243/mcafee-finds-that-gamers-are-strong-candidates-for-cybersecurity-jobs?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://tech.slashdot.org/story/18/04/04/1841236/cambridge-analytica-may-have-had-facebook-data-from-87-million-people?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://science.slashdot.org/story/18/04/04/1735223/drug-resistant-nightmare-bacteria-pose-growing-threat?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://tech.slashdot.org/story/18/04/04/171219/google-workers-urge-ceo-to-pull-out-of-pentagon-ai-project?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+  <rdf:li rdf:resource="https://linux.slashdot.org/story/18/04/04/1351239/valve-re-affirms-commitment-to-steamos-and-linux-after-hiding-steam-machines-from-store?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed" />
+ </rdf:Seq>
+</items>
+<image rdf:resource="https://a.fsdn.com/sd/topics/topicslashdot.gif" />
+<textinput rdf:resource="https://slashdot.org/search.pl" />
+<atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="self" type="application/rdf+xml" href="http://rss.slashdot.org/slashdot/slashdotMain" /><feedburner:info xmlns:feedburner="http://rssnamespace.org/feedburner/ext/1.0" uri="slashdot/slashdotmain" /><atom10:link xmlns:atom10="http://www.w3.org/2005/Atom" rel="hub" href="http://pubsubhubbub.appspot.com/" /></channel>
+<image rdf:about="https://a.fsdn.com/sd/topics/topicslashdot.gif">
+<title>Slashdot</title>
+<url>https://a.fsdn.com/sd/topics/topicslashdot.gif</url>
+<link>https://slashdot.org/</link>
+</image>
+<item rdf:about="https://tech.slashdot.org/story/18/04/05/0420247/1111-cloudflares-new-dns-attracting-gigabits-per-second-of-rubbish?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>1.1.1.1: Cloudflare's New DNS Attracting 'Gigabits Per Second' of Rubbish</title>
+<link>https://tech.slashdot.org/story/18/04/05/0420247/1111-cloudflares-new-dns-attracting-gigabits-per-second-of-rubbish?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>An anonymous reader quotes a report from ZDNet: Cloudflare's new speed and privacy enhancing domain name system (DNS) servers, launched on Sunday, are also part of an experiment being conducted in partnership with the Asia Pacific Network Information Center (APNIC). The experiment aims to understand how DNS can be improved in terms of performance, security, and privacy. "We are now critically reliant on the integrity of the DNS, yet the details of the way it operates still remains largely opaque," wrote APNIC's chief scientist Geoff Huston in a blog post. "We are aware that the DNS has been used to generate malicious denial of service attacks, and we are keen to understand if there are simple and widely deployable measures that can be taken to mitigate such attacks. The DNS relies on caching to operate efficiently and quickly, but we are still unsure as to how well caching actually performs. We are also unclear how much of the DNS is related to end user or application requirements for name resolution, and how much is related to the DNS chattering to itself."
+ 
+The Cloudflare-APNIC experiment uses two IPv4 address ranges, 1.1.1/24 and 1.0.0/24, which have been reserved for research use. Cloudflare's new DNS uses two addresses within those ranges, 1.1.1.1 and 1.0.0.1. These address ranges were originally configured as "dark traffic addresses", and some years ago APNIC partnered with Google to analyze the unsolicited traffic directed at them. There was a lot of it. "Our initial work with it certainly showed it to be an unusually strong attractor for bad traffic. At the time we stopped doing it with Google, it was over 50 gigabits per second. Quite frankly, few folk can handle that much noise," Huston told ZDNet on Wednesday. By putting Cloudflare's DNS on these research addresses, APNIC gets to see the noise as well as the DNS traffic -- or at least "a certain factored amount" of it -- for research purposes.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=1.1.1.1%3A+Cloudflare's+New+DNS+Attracting+'Gigabits+Per+Second'+of+Rubbish%3A+http%3A%2F%2Fbit.ly%2F2Emc4Uu"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Ftech.slashdot.org%2Fstory%2F18%2F04%2F05%2F0420247%2F1111-cloudflares-new-dns-attracting-gigabits-per-second-of-rubbish%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://tech.slashdot.org/story/18/04/05/0420247/1111-cloudflares-new-dns-attracting-gigabits-per-second-of-rubbish?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://tech.slashdot.org/story/18/04/05/0420247/1111-cloudflares-new-dns-attracting-gigabits-per-second-of-rubbish?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11946769&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>BeauHD</dc:creator>
+<dc:date>2018-04-05T10:00:00+00:00</dc:date>
+<dc:subject>network</dc:subject>
+<slash:department>dirty-hacks</slash:department>
+<slash:section>technology</slash:section>
+<slash:comments>37</slash:comments>
+<slash:hit_parade>37,35,20,18,10,4,1</slash:hit_parade>
+</item>
+<item rdf:about="https://news.slashdot.org/story/18/04/05/0430212/youtube-will-increase-security-at-all-offices-worldwide-following-shooting?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>YouTube Will Increase Security At All Offices Worldwide Following Shooting</title>
+<link>https://news.slashdot.org/story/18/04/05/0430212/youtube-will-increase-security-at-all-offices-worldwide-following-shooting?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>Following the shooting at YouTube's headquarters in San Bruno, California, yesterday, the company has announced plans to increase security at all of its offices worldwide. YouTube says this is intended to "make them more secure not only in the near term, but long-term." The Verge reports: The move reflects a growing concern in Silicon Valley that the effects of increasingly toxic and partisan online behavior may translate into violent offline actions. YouTube's statement was released through Google's Twitter account for communications; it's not clear whether Google itself will be implementing stronger security measures beyond YouTube. The shooter, 39-year-old Nasim Aghdam of San Diego, died yesterday of a self-inflicted gunshot wound after shooting and injuring three employees. From police reports, testimony from Aghdam's family members, and extensive traces of the woman's online behavior on YouTube and other platforms, we now know that Aghdam was disgruntled over the demonetizing of her videos and harm to her financial well-being.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=YouTube+Will+Increase+Security+At+All+Offices+Worldwide+Following+Shooting%3A+http%3A%2F%2Fbit.ly%2F2EjHDyn"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Fnews.slashdot.org%2Fstory%2F18%2F04%2F05%2F0430212%2Fyoutube-will-increase-security-at-all-offices-worldwide-following-shooting%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://news.slashdot.org/story/18/04/05/0430212/youtube-will-increase-security-at-all-offices-worldwide-following-shooting?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://news.slashdot.org/story/18/04/05/0430212/youtube-will-increase-security-at-all-offices-worldwide-following-shooting?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11946809&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>BeauHD</dc:creator>
+<dc:date>2018-04-05T07:00:00+00:00</dc:date>
+<dc:subject>youtube</dc:subject>
+<slash:department>cause-and-effect</slash:department>
+<slash:section>news</slash:section>
+<slash:comments>130</slash:comments>
+<slash:hit_parade>130,121,56,42,10,4,3</slash:hit_parade>
+</item>
+<item rdf:about="https://tech.slashdot.org/story/18/04/04/2233211/one-of-estonias-first-e-residents-explains-what-it-means-to-have-digital-citizenship?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>One of Estonia's First 'e-Residents' Explains What It Means To Have Digital Citizenship</title>
+<link>https://tech.slashdot.org/story/18/04/04/2233211/one-of-estonias-first-e-residents-explains-what-it-means-to-have-digital-citizenship?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>An anonymous reader shares a report from Quartz, written by Estonian e-Resident April Rinne: In 2014, Estonia, a country previously known as much for its national singing revolution as anything else, became the first country in the world to launch an e-Residency program. Once admitted, e-Residents can conduct business worldwide as if they were from Estonia, which is a member of the EU. They are given government-issued digital IDs, can open Estonian bank and securities accounts, form and register Estonian companies, and have a front-row seat as nascent concepts of digital and virtual citizenship evolve. There is no requirement to have a physical presence in Estonia. [...] Three years in, what I find most incredible about e-Residency is that it actually works.
+ 
+E-Residency was appealing to me for several reasons (none of which include dodging the law, taxes, or other civic responsibilities). I have Finnish heritage and for many years was intrigued by Finland's "smaller neighbor." And, I'd just joined an Estonian startup as an advisor. Becoming an e-Resident would allow me to receive payment from clients in Euros from any company without worrying about currency fluctuations, and to own shares in the company (previously this would have required various administrative work-arounds). [...] At a basic level, e-Residency makes working overall simpler and, ideally, more streamlined. This plays out in many ways, depending on the type of worker or organization. For example, many bona fide small- and mid-sized companies in other regions simply could not get access to European markets. The costs of entry and other requirements made it prohibitively cumbersome. E-Residency gives them a new avenue to do this; they still have to prove their merits, but the playing field is more level. For independent entrepreneurs, especially those working in different countries, Estonia makes the entire process of establishing and maintaining a small business easier, faster and more affordable. In my case, I'm able to transact, bank, and sign documents easily. I still maintain my U.S. presence -- because a non-trivial amount of my portfolio is in the U.S., and I maintain a range of local commitments and community -- but many of my fellow e-Residents have shifted their entire enterprise to Estonia. In conclusion, Rinne notes the imperfections of the residency: "multiple times I had to disable firewalls to get digital services to work, and the e-Residency team discovered a potential bug in late 2017 which led them to deactivate all ID cards until they could be updated through the internet." All in all the experience has been "useful beyond measure," Rinne writes. "It has enabled me to re-think not only how I work, but also the many ways in which the world of work itself is changing and emerging opportunities for the future."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=One+of+Estonia's+First+'e-Residents'+Explains+What+It+Means+To+Have+Digital+Citizenship%3A+http%3A%2F%2Fbit.ly%2F2GAT5M0"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Ftech.slashdot.org%2Fstory%2F18%2F04%2F04%2F2233211%2Fone-of-estonias-first-e-residents-explains-what-it-means-to-have-digital-citizenship%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://tech.slashdot.org/story/18/04/04/2233211/one-of-estonias-first-e-residents-explains-what-it-means-to-have-digital-citizenship?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://tech.slashdot.org/story/18/04/04/2233211/one-of-estonias-first-e-residents-explains-what-it-means-to-have-digital-citizenship?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11946227&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>BeauHD</dc:creator>
+<dc:date>2018-04-05T03:30:00+00:00</dc:date>
+<dc:subject>internet</dc:subject>
+<slash:department>show-and-tell</slash:department>
+<slash:section>technology</slash:section>
+<slash:comments>48</slash:comments>
+<slash:hit_parade>48,48,28,23,12,6,2</slash:hit_parade>
+</item>
+<item rdf:about="https://news.slashdot.org/story/18/04/04/2249206/microsoft-touts-breakthrough-in-making-chatbots-more-conversational?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Microsoft Touts Breakthrough In Making Chatbots More Conversational</title>
+<link>https://news.slashdot.org/story/18/04/04/2249206/microsoft-touts-breakthrough-in-making-chatbots-more-conversational?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>In a blog post today, Microsoft said that it has created what it believes is the "first technological breakthrough" toward making conversations with chatbots more like speaking to another person. Windows Central reports: Microsoft says that it has figured out how to make chatbots talk and listen at the same time, allowing them to operate in "full duplex," to use telecommunications jargon. The company says this allows chatbots or assistants to have a flowing conversation with humans, much more akin to how people talk to one another. That stands in contrast to how digital assistants and bots currently work, where only one side can talk at any given time. The technology is already up and running in Xiaolce, Microsoft's AI chatbot currently operating in China. Using "full duplex voice sense," as Microsoft calls it, Xiaolce can more quickly predict what the person it is speaking to will say. "That helps her make decisions about both how and when to respond to someone who is chatting with her, a skill set that is very natural to people but not yet common in chatbots," Microsoft says. Another bonus of the breakthrough is that people interacting with chatbots don't have to use a "wake word" every time they speak during a conversation.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=Microsoft+Touts+Breakthrough+In+Making+Chatbots+More+Conversational%3A+http%3A%2F%2Fbit.ly%2F2EkTvjl"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Fnews.slashdot.org%2Fstory%2F18%2F04%2F04%2F2249206%2Fmicrosoft-touts-breakthrough-in-making-chatbots-more-conversational%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://news.slashdot.org/story/18/04/04/2249206/microsoft-touts-breakthrough-in-making-chatbots-more-conversational?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://news.slashdot.org/story/18/04/04/2249206/microsoft-touts-breakthrough-in-making-chatbots-more-conversational?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11946249&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>BeauHD</dc:creator>
+<dc:date>2018-04-05T00:10:00+00:00</dc:date>
+<dc:subject>communications</dc:subject>
+<slash:department>big-step-forward</slash:department>
+<slash:section>news</slash:section>
+<slash:comments>72</slash:comments>
+<slash:hit_parade>72,71,45,33,10,5,3</slash:hit_parade>
+</item>
+<item rdf:about="https://yro.slashdot.org/story/18/04/04/2155219/facebook-is-changing-the-way-it-stores-call-text-history?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Facebook Is Changing the Way It Stores Call, Text History</title>
+<link>https://yro.slashdot.org/story/18/04/04/2155219/facebook-is-changing-the-way-it-stores-call-text-history?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>Facebook issued a blog post today detailing the changes it has made to how it manages users' data. Among the new changes is a tweak to how Facebook collects and stores call and text history. Engadget reports: For those using Messenger or Facebook Lite on Android, an opt-in feature compiles users' call and text history, which the company says is used to help it surface the contacts you talk to most frequently. In its blog post today, Facebook said that it has reviewed the feature and can confirm that it doesn't actually collect the content of any messages. Additionally, going forward, it will delete logs older than a year and only the data required for the feature's functionality will be collected, meaning no extra data, such as call times, will be stored. The collection of such data became an issue last month, when software developer Dylan McKay discovered the logs after downloading a copy of his account data. Facebook initially said that it was an opt-in feature. It also said that the call and text history data were never sold. You can see how to turn off this feature here for Messenger and here for Facebook Lite.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=Facebook+Is+Changing+the+Way+It+Stores+Call%2C+Text+History%3A+http%3A%2F%2Fbit.ly%2F2Jgd1Bj"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Fyro.slashdot.org%2Fstory%2F18%2F04%2F04%2F2155219%2Ffacebook-is-changing-the-way-it-stores-call-text-history%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://yro.slashdot.org/story/18/04/04/2155219/facebook-is-changing-the-way-it-stores-call-text-history?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://yro.slashdot.org/story/18/04/04/2155219/facebook-is-changing-the-way-it-stores-call-text-history?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11946169&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>BeauHD</dc:creator>
+<dc:date>2018-04-04T23:30:00+00:00</dc:date>
+<dc:subject>privacy</dc:subject>
+<slash:department>cause-and-effect</slash:department>
+<slash:section>yro</slash:section>
+<slash:comments>42</slash:comments>
+<slash:hit_parade>42,41,28,21,11,6,1</slash:hit_parade>
+</item>
+<item rdf:about="https://hardware.slashdot.org/story/18/04/04/2143245/google-now-purchases-more-renewable-energy-than-it-consumes-as-a-company?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Google Now Purchases More Renewable Energy Than It Consumes As a Company</title>
+<link>https://hardware.slashdot.org/story/18/04/04/2143245/google-now-purchases-more-renewable-energy-than-it-consumes-as-a-company?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>In a blog post today, Google announced that it now purchases more renewable energy than it consumers as a company. "Google began these efforts in 2017, with the goal of purchasing as much renewable energy as it uses across its 13 data centers and all of its office complexes," reports The Verge. From the report: To be clear, Google is not powering all of its energy consumption with renewable energy. It's matching what it consumes with equal amounts of purchased renewable energy. For every kilowatt-hour of electricity consumed, it buys a kilowatt-hour from a wind or solar farm built specifically for Google. The company says that its total purchase of energy from sources like wind and solar now exceeds the amount of electricity used by its operations. Google says it currently has contracts to purchase three gigawatts of output from renewable energy projects, and while it says "it's not yet possible to 'power' a company of our scale by 100 percent renewable energy," these purchases do have a positive impact. Google says it's helping spur development of clean energy projects, encouraging other companies to follow suit.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=Google+Now+Purchases+More+Renewable+Energy+Than+It+Consumes+As+a+Company%3A+http%3A%2F%2Fbit.ly%2F2GBcvjW"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Fhardware.slashdot.org%2Fstory%2F18%2F04%2F04%2F2143245%2Fgoogle-now-purchases-more-renewable-energy-than-it-consumes-as-a-company%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://hardware.slashdot.org/story/18/04/04/2143245/google-now-purchases-more-renewable-energy-than-it-consumes-as-a-company?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://hardware.slashdot.org/story/18/04/04/2143245/google-now-purchases-more-renewable-energy-than-it-consumes-as-a-company?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11946141&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>BeauHD</dc:creator>
+<dc:date>2018-04-04T22:50:00+00:00</dc:date>
+<dc:subject>power</dc:subject>
+<slash:department>there's-more-where-that-came-from</slash:department>
+<slash:section>hardware</slash:section>
+<slash:comments>62</slash:comments>
+<slash:hit_parade>62,61,42,38,10,5,4</slash:hit_parade>
+</item>
+<item rdf:about="https://tech.slashdot.org/story/18/04/04/2130206/virgin-hyperloop-one-shows-off-new-futuristic-travel-pod?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Virgin Hyperloop One Shows Off New Futuristic Travel Pod</title>
+<link>https://tech.slashdot.org/story/18/04/04/2130206/virgin-hyperloop-one-shows-off-new-futuristic-travel-pod?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>An anonymous reader quotes a report from CNET: It's an interesting time for Virgin Hyperloop One, which saw one of its board members arrested on fraud and embezzlement charges in Russia last week and three other high-profile directors departing the board, according to Bloomberg. But that hasn't stopped the futuristic-transport startup from showing off its latest pod prototype, first for the Crown Prince of Saudi Arabia and now for the rest of us via the video above. The charges faced by Russian billionaire and board member Ziyavudin Magomedov are reportedly unrelated to Virgin Hyperloop One, and he is appealing the arrest. The video from Virgin above appears to show a full-size pod prototype on an enclosed test track at the company's test facility in Nevada. How fast it's going is hard to say. So far we've seen the company achieve speeds of 240 miles per hour in tests, or roughly a third of the speed it hopes to eventually achieve.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=Virgin+Hyperloop+One+Shows+Off+New+Futuristic+Travel+Pod%3A+http%3A%2F%2Fbit.ly%2F2Jm139c"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Ftech.slashdot.org%2Fstory%2F18%2F04%2F04%2F2130206%2Fvirgin-hyperloop-one-shows-off-new-futuristic-travel-pod%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://tech.slashdot.org/story/18/04/04/2130206/virgin-hyperloop-one-shows-off-new-futuristic-travel-pod?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://tech.slashdot.org/story/18/04/04/2130206/virgin-hyperloop-one-shows-off-new-futuristic-travel-pod?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11946105&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>BeauHD</dc:creator>
+<dc:date>2018-04-04T22:10:00+00:00</dc:date>
+<dc:subject>transportation</dc:subject>
+<slash:department>shiny-and-new</slash:department>
+<slash:section>technology</slash:section>
+<slash:comments>54</slash:comments>
+<slash:hit_parade>54,54,37,27,3,1,0</slash:hit_parade>
+</item>
+<item rdf:about="https://ask.slashdot.org/story/18/04/04/2028255/ask-slashdot-what-does-your-data-mean-to-google?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Ask Slashdot: What Does Your Data Mean To Google?</title>
+<link>https://ask.slashdot.org/story/18/04/04/2028255/ask-slashdot-what-does-your-data-mean-to-google?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>shanen writes: Due to the recent kerfuffles, I decided to try again to see what Google had on me. This time I succeeded and failed, in contrast to the previous pure failures. Yes, I did find Google's takeout website and downloaded all of "my data," but no, it means nothing to me. Here are a few sub-questions I couldn't answer: 1. Much more data than I ever created, so where did the rest come from? 2. How does the data relate to the characteristic vector that Google uses to characterize me? 3. What tools do Googlers use to make sense of the data? Lots more questions, but those are the ones that are most bugging me right now. Question 2. is probably heaviest among them, since I've read that the vector has 700 dimensions... So do you have any answers? Or better questions? Or your own takeout experiences to share?
+ Oh yeah, one more thing. Based on my own troubled experience with the download process, it is clear that Google doesn't really want us to download the so-called "our own" data. My Question 4. is now: "What is Google hiding about me from me?"&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=Ask+Slashdot%3A+What+Does+Your+Data+Mean+To+Google%3F%3A+http%3A%2F%2Fbit.ly%2F2EkndVL"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Fask.slashdot.org%2Fstory%2F18%2F04%2F04%2F2028255%2Fask-slashdot-what-does-your-data-mean-to-google%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://ask.slashdot.org/story/18/04/04/2028255/ask-slashdot-what-does-your-data-mean-to-google?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://ask.slashdot.org/story/18/04/04/2028255/ask-slashdot-what-does-your-data-mean-to-google?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11946013&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>BeauHD</dc:creator>
+<dc:date>2018-04-04T21:30:00+00:00</dc:date>
+<dc:subject>google</dc:subject>
+<slash:department>privacy-matters</slash:department>
+<slash:section>askslashdot</slash:section>
+<slash:comments>66</slash:comments>
+<slash:hit_parade>66,65,43,39,8,3,3</slash:hit_parade>
+</item>
+<item rdf:about="https://tech.slashdot.org/story/18/04/04/2045234/facebooks-privacy-fixes-have-broken-tinder?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Facebook's Privacy Fixes Have Broken Tinder</title>
+<link>https://tech.slashdot.org/story/18/04/04/2045234/facebooks-privacy-fixes-have-broken-tinder?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>Since the recent Cambridge Analytica data privacy scandal, Facebook has been rolling out more security and data privacy updates. "Today, however, the company announced sweeping changes to many of its most prominent APIs, restricting develop access in a number of crucial ways," reports The Verge. "Soon after, Tinder users started noting on Twitter that they had been kicked off the dating app and couldn't log back on, as those who used Facebook Login were caught in an infinite loop that appears to be related to an unknown bug." From the report: The app has been bringing up an error message to booted users, titled Facebook Permissions, stating that users need to provide more Facebook permissions in order to create or use a Tinder account. If users tap "Ask me," which is the only given option, the app requests they log into Facebook once more and the loop starts again. Roderick Hsiao, a senior software engineer at Tinder, tweeted that users could still access the service through its web browser while engineers worked on fixing the mobile client.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=Facebook's+Privacy+Fixes+Have+Broken+Tinder%3A+http%3A%2F%2Fbit.ly%2F2Ek356i"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Ftech.slashdot.org%2Fstory%2F18%2F04%2F04%2F2045234%2Ffacebooks-privacy-fixes-have-broken-tinder%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://tech.slashdot.org/story/18/04/04/2045234/facebooks-privacy-fixes-have-broken-tinder?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://tech.slashdot.org/story/18/04/04/2045234/facebooks-privacy-fixes-have-broken-tinder?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11946031&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>BeauHD</dc:creator>
+<dc:date>2018-04-04T20:50:00+00:00</dc:date>
+<dc:subject>facebook</dc:subject>
+<slash:department>stuck-in-purgatory</slash:department>
+<slash:section>technology</slash:section>
+<slash:comments>62</slash:comments>
+<slash:hit_parade>62,60,28,22,10,8,4</slash:hit_parade>
+</item>
+<item rdf:about="https://yro.slashdot.org/story/18/04/04/209206/centurylink-fights-billing-fraud-lawsuit-by-claiming-that-it-has-no-customers?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>CenturyLink Fights Billing-Fraud Lawsuit By Claiming That It Has No Customers</title>
+<link>https://yro.slashdot.org/story/18/04/04/209206/centurylink-fights-billing-fraud-lawsuit-by-claiming-that-it-has-no-customers?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>An anonymous reader quotes a report from Ars Technica: CenturyLink is trying to force customers into arbitration in order to avoid a class-action lawsuit from subscribers who say they've been charged for services they didn't order. To do so, CenturyLink has come up with a surprising argument -- the company says it doesn't have any customers. While the customers sued CenturyLink itself, the company says the customers weren't actually customers of CenturyLink. Instead, CenturyLink says they were customers of 10 subsidiaries spread through the country. CenturyLink basically doesn't exist as a service provider -- according to a brief CenturyLink filed Monday.
+ 
+"That sole defendant, CenturyLink, Inc., is a parent holding company that has no customers, provides no services, and engaged in none of the acts or transactions about which Plaintiffs complain," CenturyLink wrote. "There is no valid basis for Defendant to be a party in this Proceeding: Plaintiffs contracted with the Operating Companies to purchase, use, and pay for the services at issue, not with CenturyLink, Inc." CenturyLink says those operating companies should be able to intervene in the case and "enforce class-action waivers," which would force the customers to pursue their claims via arbitration instead of in a class-action lawsuit. By suing CenturyLink instead of the subsidiaries, "it may be that Plaintiffs are hoping to avoid the arbitration and class-action waiver provisions," CenturyLink wrote.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=CenturyLink+Fights+Billing-Fraud+Lawsuit+By+Claiming+That+It+Has+No+Customers%3A+http%3A%2F%2Fbit.ly%2F2Gxt0NM"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Fyro.slashdot.org%2Fstory%2F18%2F04%2F04%2F209206%2Fcenturylink-fights-billing-fraud-lawsuit-by-claiming-that-it-has-no-customers%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://yro.slashdot.org/story/18/04/04/209206/centurylink-fights-billing-fraud-lawsuit-by-claiming-that-it-has-no-customers?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://yro.slashdot.org/story/18/04/04/209206/centurylink-fights-billing-fraud-lawsuit-by-claiming-that-it-has-no-customers?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11945985&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>BeauHD</dc:creator>
+<dc:date>2018-04-04T20:10:00+00:00</dc:date>
+<dc:subject>court</dc:subject>
+<slash:department>not-expected</slash:department>
+<slash:section>yro</slash:section>
+<slash:comments>149</slash:comments>
+<slash:hit_parade>149,146,105,87,26,11,7</slash:hit_parade>
+</item>
+<item rdf:about="https://games.slashdot.org/story/18/04/04/1828243/mcafee-finds-that-gamers-are-strong-candidates-for-cybersecurity-jobs?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>McAfee Finds That Gamers Are Strong Candidates for Cybersecurity Jobs</title>
+<link>https://games.slashdot.org/story/18/04/04/1828243/mcafee-finds-that-gamers-are-strong-candidates-for-cybersecurity-jobs?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>To beat cybercriminals, McAfee suggests in a new report that gamers may be the key candidates for cybersecurity jobs. From a report: The Santa Clara, California-based cybersecurity company said it did a survey of 300 senior security managers and 650 security professionals at major corporations. And 78 percent of respondents said that the current generation entering the work force -- those that grew up playing video games -- are stronger candidates for cybersecurity roles. The report suggests that gamers, those engaged and immersed in online competitions, may be the logical next step to plugging the skills gap. 92 percent of respondents believe that gaming affords players experience and skills critical to cybersecurity threat hunting: logic, perseverance, an understanding of how to approach adversaries and a fresh outlook compared to traditional cybersecurity hires. Three-quarters of senior managers say they would consider hiring a gamer even if that person had no specific cybersecurity training or experience. 72 percent of respondents say hiring experienced video gamers into the IT department seems like a good way to plug the cybersecurity skills gap.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=McAfee+Finds+That+Gamers+Are+Strong+Candidates+for+Cybersecurity+Jobs%3A+http%3A%2F%2Fbit.ly%2F2JiCLgt"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Fgames.slashdot.org%2Fstory%2F18%2F04%2F04%2F1828243%2Fmcafee-finds-that-gamers-are-strong-candidates-for-cybersecurity-jobs%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://games.slashdot.org/story/18/04/04/1828243/mcafee-finds-that-gamers-are-strong-candidates-for-cybersecurity-jobs?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://games.slashdot.org/story/18/04/04/1828243/mcafee-finds-that-gamers-are-strong-candidates-for-cybersecurity-jobs?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11945793&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>msmash</dc:creator>
+<dc:date>2018-04-04T19:22:00+00:00</dc:date>
+<dc:subject>security</dc:subject>
+<slash:department>how-about-that</slash:department>
+<slash:section>games</slash:section>
+<slash:comments>61</slash:comments>
+<slash:hit_parade>61,59,35,27,9,6,3</slash:hit_parade>
+</item>
+<item rdf:about="https://tech.slashdot.org/story/18/04/04/1841236/cambridge-analytica-may-have-had-facebook-data-from-87-million-people?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Cambridge Analytica May Have Had Facebook Data From 87 Million People</title>
+<link>https://tech.slashdot.org/story/18/04/04/1841236/cambridge-analytica-may-have-had-facebook-data-from-87-million-people?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>Cambridge Analytica may have had data from more unwitting Facebook usersthan originally thought. From a report: Facebook now says that the data firm, which collected data about users without their permission, may have collected data on as many as 87 million people. Original reports from the New York Times pegged that number at closer to 50 million people. "In total, we believe the Facebook information of up to 87 million people -- mostly in the U.S." may have been improperly shared with Cambridge Analytica by apps that they or their friends used," Facebook CTO Mike Schroepfer wrote in a blog post Wednesday. From Facebook's blog post, "Given the scale and sophistication of the activity we've seen, we believe most people on Facebook could have had their public profile scraped in this way. "&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=Cambridge+Analytica+May+Have+Had+Facebook+Data+From+87+Million+People%3A+http%3A%2F%2Fbit.ly%2F2GBQSj6"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Ftech.slashdot.org%2Fstory%2F18%2F04%2F04%2F1841236%2Fcambridge-analytica-may-have-had-facebook-data-from-87-million-people%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://tech.slashdot.org/story/18/04/04/1841236/cambridge-analytica-may-have-had-facebook-data-from-87-million-people?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://tech.slashdot.org/story/18/04/04/1841236/cambridge-analytica-may-have-had-facebook-data-from-87-million-people?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11945833&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>msmash</dc:creator>
+<dc:date>2018-04-04T18:42:00+00:00</dc:date>
+<dc:subject>facebook</dc:subject>
+<slash:department>breaking-news</slash:department>
+<slash:section>technology</slash:section>
+<slash:comments>108</slash:comments>
+<slash:hit_parade>108,106,65,51,11,4,2</slash:hit_parade>
+</item>
+<item rdf:about="https://science.slashdot.org/story/18/04/04/1735223/drug-resistant-nightmare-bacteria-pose-growing-threat?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Drug-Resistant 'Nightmare Bacteria' Pose Growing Threat</title>
+<link>https://science.slashdot.org/story/18/04/04/1735223/drug-resistant-nightmare-bacteria-pose-growing-threat?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>"Nightmare bacteria" with unusual resistance to antibiotics of last resort were found more than 200 times in the United States last year in a first-of-a-kind hunt to see how much of a threat these rare cases are becoming, health officials said this week. From a report: That's more than they had expected to find, and the true number is probably higher because the effort involved only certain labs in each state, officials say. The problem mostly strikes people in hospitals and nursing homes who need IVs and other tubes that can get infected. In many cases, others in close contact with these patients also harbored the superbugs even though they weren't sick -- a risk for further spread. Some of the sick patients had traveled for surgery or other health care to another country where drug-resistant germs are more common, and the superbug infections were discovered after they returned to the U.S.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=Drug-Resistant+'Nightmare+Bacteria'+Pose+Growing+Threat%3A+http%3A%2F%2Fbit.ly%2F2GxoP4z"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Fscience.slashdot.org%2Fstory%2F18%2F04%2F04%2F1735223%2Fdrug-resistant-nightmare-bacteria-pose-growing-threat%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://science.slashdot.org/story/18/04/04/1735223/drug-resistant-nightmare-bacteria-pose-growing-threat?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://science.slashdot.org/story/18/04/04/1735223/drug-resistant-nightmare-bacteria-pose-growing-threat?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11945719&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>msmash</dc:creator>
+<dc:date>2018-04-04T18:00:00+00:00</dc:date>
+<dc:subject>medicine</dc:subject>
+<slash:department>tread-carefully</slash:department>
+<slash:section>science</slash:section>
+<slash:comments>82</slash:comments>
+<slash:hit_parade>82,72,36,29,7,3,1</slash:hit_parade>
+</item>
+<item rdf:about="https://tech.slashdot.org/story/18/04/04/171219/google-workers-urge-ceo-to-pull-out-of-pentagon-ai-project?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Google Workers Urge CEO To Pull Out of Pentagon AI Project</title>
+<link>https://tech.slashdot.org/story/18/04/04/171219/google-workers-urge-ceo-to-pull-out-of-pentagon-ai-project?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>Thousands of Google employees, including dozens of senior engineers, have signed a letter protesting the company's involvement in a Pentagon program that uses artificial intelligence to interpret video imagery and could be used to improve the targeting of drone strikes (Editor's note: the link may be paywalled; alternative source). From a report: The letter, which is circulating inside Google and has garnered more than 3,100 signatures, reflects a culture clash between Silicon Valley and the federal government that is likely to intensify as cutting-edge artificial intelligence is increasingly employed for military purposes. "We believe that Google should not be in the business of war," says the letter, addressed to Sundar Pichai, the company's chief executive. It asks that Google pull out of Project Maven, a Pentagon pilot program, and announce a policy that it will not "ever build warfare technology." That kind of idealistic stance, while certainly not shared by all Google employees, comes naturally to a company whose motto is "Don't be evil," a phrase invoked in the protest letter. But it is distinctly foreign to Washington's massive defense industry and certainly to the Pentagon, where the defense secretary, Jim Mattis, has often said a central goal is to increase the "lethality" of the United States military.&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=Google+Workers+Urge+CEO+To+Pull+Out+of+Pentagon+AI+Project%3A+http%3A%2F%2Fbit.ly%2F2Ek5vBJ"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Ftech.slashdot.org%2Fstory%2F18%2F04%2F04%2F171219%2Fgoogle-workers-urge-ceo-to-pull-out-of-pentagon-ai-project%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://tech.slashdot.org/story/18/04/04/171219/google-workers-urge-ceo-to-pull-out-of-pentagon-ai-project?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://tech.slashdot.org/story/18/04/04/171219/google-workers-urge-ceo-to-pull-out-of-pentagon-ai-project?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11945657&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>msmash</dc:creator>
+<dc:date>2018-04-04T17:20:00+00:00</dc:date>
+<dc:subject>google</dc:subject>
+<slash:department>don't-be-evil</slash:department>
+<slash:section>technology</slash:section>
+<slash:comments>209</slash:comments>
+<slash:hit_parade>209,205,100,79,28,14,6</slash:hit_parade>
+</item>
+<item rdf:about="https://linux.slashdot.org/story/18/04/04/1351239/valve-re-affirms-commitment-to-steamos-and-linux-after-hiding-steam-machines-from-store?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed">
+<title>Valve Re-affirms Commitment To SteamOS and Linux After Hiding Steam Machines from Store</title>
+<link>https://linux.slashdot.org/story/18/04/04/1351239/valve-re-affirms-commitment-to-steamos-and-linux-after-hiding-steam-machines-from-store?utm_source=rss1.0mainlinkanon&amp;utm_medium=feed</link>
+<description>An anonymous reader writes: Valve recently removed Steam Machines from the Steam Store navigation menus which naturally led people to believe that Valve was giving up on that initiative, also leading to concern about its operating system, SteamOS. In a statement posted on its blog today, the firm said that it's still committed to SteamOS and Linux. It said the main reason for removing Steam Machines from the navigation menu was due to the low amount of traffic the page was getting. In a statement, Valve said, "We've noticed that what started out as a routine cleanup of the Steam Store navigation turned into a story about the delisting of Steam Machines. That section of the Steam Store is still available, but was removed from the main navigation bar based on user traffic. Given that this change has sparked a lot of interest, we thought it'd make sense to address some of the points we've seen people take away from it."&lt;p&gt;&lt;div class="share_submission" style="position:relative;"&gt;
+&lt;a class="slashpop" href="http://twitter.com/home?status=Valve+Re-affirms+Commitment+To+SteamOS+and+Linux+After+Hiding+Steam+Machines+from+Store%3A+http%3A%2F%2Fbit.ly%2F2GwhW3i"&gt;&lt;img src="https://a.fsdn.com/sd/twitter_icon_large.png"&gt;&lt;/a&gt;
+&lt;a class="slashpop" href="http://www.facebook.com/sharer.php?u=https%3A%2F%2Flinux.slashdot.org%2Fstory%2F18%2F04%2F04%2F1351239%2Fvalve-re-affirms-commitment-to-steamos-and-linux-after-hiding-steam-machines-from-store%3Futm_source%3Dslashdot%26utm_medium%3Dfacebook"&gt;&lt;img src="https://a.fsdn.com/sd/facebook_icon_large.png"&gt;&lt;/a&gt;
+
+&lt;a class="nobg" href="http://plus.google.com/share?url=https://linux.slashdot.org/story/18/04/04/1351239/valve-re-affirms-commitment-to-steamos-and-linux-after-hiding-steam-machines-from-store?utm_source=slashdot&amp;amp;utm_medium=googleplus" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"&gt;&lt;img src="https://www.gstatic.com/images/icons/gplus-16.png" alt="Share on Google+"/&gt;&lt;/a&gt;
+
+
+
+&lt;/div&gt;&lt;/p&gt;&lt;p&gt;&lt;a href="https://linux.slashdot.org/story/18/04/04/1351239/valve-re-affirms-commitment-to-steamos-and-linux-after-hiding-steam-machines-from-store?utm_source=rss1.0moreanon&amp;amp;utm_medium=feed"&gt;Read more of this story&lt;/a&gt; at Slashdot.&lt;/p&gt;&lt;iframe src="https://slashdot.org/slashdot-it.pl?op=discuss&amp;amp;id=11945257&amp;amp;smallembed=1" style="height: 300px; width: 100%; border: none;"&gt;&lt;/iframe&gt;</description>
+<dc:creator>msmash</dc:creator>
+<dc:date>2018-04-04T16:40:00+00:00</dc:date>
+<dc:subject>linux</dc:subject>
+<slash:department>change-of-heart</slash:department>
+<slash:section>linux</slash:section>
+<slash:comments>77</slash:comments>
+<slash:hit_parade>77,72,46,43,11,4,3</slash:hit_parade>
+</item>
+<textinput rdf:about="https://slashdot.org/search.pl">
+<title>Search Slashdot</title>
+<description>Search Slashdot stories</description>
+<name>query</name>
+<link>https://slashdot.org/search.pl</link>
+</textinput>
+</rdf:RDF>

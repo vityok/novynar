@@ -41,7 +41,6 @@ public class Novinar
         throws Exception
     {
         System.out.println("Novinar core shutting down");
-        storeConfig();
         dbend.close();
     }
 
@@ -50,8 +49,8 @@ public class Novinar
      * outline.
      */
     public List<Channel> getChannelsUnder(Outline ol) {
-            // todo: traverse the tree and get all channels under this
-            // outline
+        // todo: traverse the tree and get all channels under this
+        // outline
         return getChannels();
     }
 
@@ -79,10 +78,16 @@ public class Novinar
     {
         Channel chan = ol.getChannel();
         if (chan != null) {
-            return niDAO.getNewsItemByChannel(chan);
+            return getNewsItemsFor(chan);
         } else {
             return niDAO.getNewsItemByChannels(getChannelsUnder(ol));
         }
+    }
+
+    public List<NewsItem> getNewsItemsFor(Channel chan)
+        throws Exception
+    {
+        return niDAO.getNewsItemByChannel(chan);
     }
 
     public void insertOrUpdateItem(Channel chan, NewsItem newsItem)
@@ -96,14 +101,21 @@ public class Novinar
     {
         reader.loadFeeds();
     }
+
     public void loadFeed(Channel chan)
         throws Exception
     {
         reader.loadFeed(chan);
     }
 
-    public void loadConfig() { oman.loadConfig(); }
-    public void storeConfig() { oman.storeConfig(); }
+    public void loadConfig() {
+        oman.loadConfig();
+    }
+    public void storeConfig() {
+        oman.storeConfig();
+    }
 
-    public Outline getRootOutline () { return oman.getRootOutline(); }
+    public Outline getRootOutline () {
+        return oman.getRootOutline();
+    }
 }

@@ -7,7 +7,9 @@
   <body>
     <outline rssowl:id="7" rssowl:isSet="true" text="My Feeds">
       <outline text="Science">
-	<outline text="Slashdot" xmlUrl="http://rss.slashdot.org/Slashdot/slashdotMain">
+	<outline text="Slashdot" xmlUrl="file:test/resources/slashdot-rdf.xml">
+	</outline>
+	<outline text="UMP" xmlUrl="file:test/resources/ump-atom.xml">
 	</outline>
       </outline>
     </outline>

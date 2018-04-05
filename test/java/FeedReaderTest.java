@@ -1,5 +1,7 @@
 import java.io.File;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,9 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.Novinar;
+import org.bb.vityok.novinar.NewsItem;
 
-@DisplayName("Test the OPML manager")
-class OmanTest
+@DisplayName("Test the FeedReader")
+class FeedReaderTest
     extends BaseTest
 {
     @BeforeEach
@@ -23,17 +26,14 @@ class OmanTest
     }
 
     @Test
-    void loadOPMLData() {
-        assertNotNull(novinar.getRootOutline());
-        assertNotNull(novinar.getChannels());
-    }
-
-    @Test
-    void channelIdGeneration() {
+    void updateFeeds()
+        throws Exception
+    {
+        novinar.loadFeeds();
         for (Channel chan : novinar.getChannels()) {
             System.out.println("channel: " + chan);
+            List<NewsItem> items = novinar.getNewsItemsFor(chan);
+            assertTrue(items.size() > 0);
         }
-        assertEquals(novinar.getChannelCounter(),
-                     novinar.getChannels().size());
     }
 }

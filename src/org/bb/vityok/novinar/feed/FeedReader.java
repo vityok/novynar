@@ -1,7 +1,9 @@
 package org.bb.vityok.novinar.feed;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.File;
+import java.io.FileInputStream;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -36,15 +38,14 @@ public class FeedReader
         this.novinar = novinar;
     }
 
-
-    public Document loadFeed(Channel chan)
-	throws Exception
+    /** Opens connection to a remote resource and returns the input
+     * stream.
+     */
+    public InputStream openRemoteFeed(String url)
+        throws Exception
     {
-        System.out.println("loading items for the channel: " + chan);
-        String location = chan.getLink();
-        String url = chan.getLink();
+        String location = url;
         URL base, next;
-
         while (true) {
             URL feedURL = new URL(url);
             HttpURLConnection con = (HttpURLConnection) feedURL.openConnection();
@@ -73,26 +74,72 @@ public class FeedReader
                     url      = next.toExternalForm();
                     continue;
                 case HttpURLConnection.HTTP_OK:
-                    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                    Document doc = dBuilder.parse(con.getInputStream());
-                    doc.getDocumentElement().normalize();
-
-                    // optional, but recommended read this:
-                    // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-                    System.out.println("Root element :[" + doc.getDocumentElement().getNodeName() + "]");
-                    if ("rdf:RDF".equals(doc.getDocumentElement().getNodeName())) {
-                        System.out.println("Processing RDF feed");
-                        RDF.getInstance().processFeed(chan, doc, novinar);
-                        chan.updatedNow();
-                        return doc;
-                    } else {
-                        System.out.println("FeedReader doesn't know how to handle this type of feeds. Inspect: " + url);
-                        return null;
-                    }
+                    InputStream is = con.getInputStream();
+                    return is;
                 }
         }
     }
+
+    /** Opens input stream from the local file (for testing purposes
+     * primarily).
+     */
+    public InputStream openLocalFeed(String path)
+        throws Exception
+    {
+        File file = new File(path);
+        return new FileInputStream(file);
+    }
+
+    public Document loadFeed(Channel chan)
+	throws Exception
+    {
+        System.out.println("loading items for the channel: " + chan);
+
+        String url = chan.getLink();
+        URL feedURL = new URL(url);
+        InputStream is = null;
+        switch (feedURL.getProtocol())
+            {
+            case "file":
+                {
+                    is = openLocalFeed(feedURL.getPath());
+                    break;
+                }
+            case "http":
+            case "https":
+                {
+                    is = openRemoteFeed(url);
+                    break;
+                }
+            }
+        // Input stream for reading feed data obtained, handle it
+        if (is == null) {
+            System.out.println("FeedReader failed to open: " + url);
+            return null;
+        } else {
+            // Parse XML data into a DOM document/tree
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(is);
+            doc.getDocumentElement().normalize();
+
+            // optional, but recommended read this:
+            // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+            System.out.println("Root element :[" + doc.getDocumentElement().getNodeName() + "]");
+            if ("rdf:RDF".equals(doc.getDocumentElement().getNodeName())) {
+                System.out.println("Processing RDF feed");
+                RDF.getInstance().processFeed(chan, doc, novinar);
+                chan.updatedNow();
+                is.close();
+                return doc;
+            } else {
+                System.out.println("FeedReader doesn't know how to handle this type of feeds. Inspect: " + url);
+                is.close();
+                return null;
+            }
+        }
+    }
+
 
     /** Refresh/download all feeds from all known channels. */
     public void loadFeeds()

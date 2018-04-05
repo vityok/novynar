@@ -306,6 +306,7 @@ public class NovinarApp extends Application {
     public void stop() {
 	System.out.println("Graceful shutdown. Bye-bye");
         try {
+            novinar.storeConfig();
             novinar.close();
         } catch (Exception e) {
             System.out.println("Graceful shutdown. failed: " + e);

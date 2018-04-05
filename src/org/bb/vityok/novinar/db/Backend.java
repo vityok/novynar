@@ -22,7 +22,7 @@ public class Backend
     private final String protocol = "jdbc:derby:";
 
     public static final String DEFAULT_DB_NAME = "novynarDB";
-    
+
     private String dbName;
 
     private Connection conn;
@@ -77,11 +77,8 @@ public class Backend
          * in an array list for convenience.
          */
         conn = null;
-        ArrayList<Statement> statements = new ArrayList<Statement>(); // list of Statements, PreparedStatements
-        PreparedStatement psInsert;
-        PreparedStatement psUpdate;
+
         Statement s;
-        ResultSet rs = null;
 
         try {
 
@@ -100,72 +97,31 @@ public class Backend
 	    conn = DriverManager.getConnection(protocol + dbName
 					       + ";create=true", null);
 
-	    System.out.println("Connected to and created database " + dbName);
+	    System.out.println("Connected to the database " + dbName);
 
-	    /* Creating a statement object that we can use for running various
-	     * SQL statements commands against the database.*/
 	    s = conn.createStatement();
 
-	    // check if we've got a fresh databse or it is already a
-	    // populated one
-	    PreparedStatement psCheckTables = conn.prepareStatement("SELECT tablename FROM sys.systables WHERE tablename='news_item'");
-	    ResultSet rsCheckTables = psCheckTables.executeQuery();
-	    if (!rsCheckTables.next()) {
-		// the database is empty, populate it with required
-		// tables and other data structures
-		s.execute("CREATE TABLE channel (channel_id INT NOT NULL PRIMARY KEY "
-			  + "  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
-			  + "title VARCHAR(1024), "
-			  + "link VARCHAR(2048), "
-			  + "description VARCHAR(4096), "
-			  + "latest_refresh TIMESTAMP" // last time this channel feed has been downloaded
-			  + ")");
+            // try creating the news_item table and quietly ignore the SQLException if it already exists
+            s.execute("CREATE TABLE news_item("
+                      + "news_item_id INT NOT NULL PRIMARY KEY "
+                      + "  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
+                      + "channel_id INT NOT NULL, "
+                      + "title VARCHAR(1024), "
+                      + "link VARCHAR(2048), "
+                      + "description VARCHAR(12288), "
+                      + "creator VARCHAR(256), "
+                      + "date TIMESTAMP, "
+                      + "subject VARCHAR(6144)"
+                      +")");
+            System.out.println("Created tables CHANNEL and NEWS_ITEM");
 
-		s.execute("CREATE TABLE news_item("
-			  + "news_item_id INT NOT NULL PRIMARY KEY "
-			  + "  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
-			  + "channel_id INT NOT NULL, "
-			  + "title VARCHAR(1024), "
-			  + "link VARCHAR(2048), "
-			  + "description VARCHAR(12288), "
-			  + "creator VARCHAR(256), "
-			  + "date TIMESTAMP, "
-			  + "subject VARCHAR(6144)"
-			  // + "FOREIGN KEY (channel_id)"
-			  // + "  REFERENCES channel (channel_id)"
-			  +")");
-		System.out.println("Created tables CHANNEL and NEWS_ITEM");
-	    }
 	} catch (SQLException sqle) {
-	    printSQLException(sqle);
-	} finally {
-            // release all open resources to avoid unnecessary memory usage
-
-            // ResultSet
-            try {
-                if (rs != null) {
-                    rs.close();
-                    rs = null;
-                }
-            } catch (SQLException sqle) {
+            if (!sqle.getSQLState().equals("X0Y32")) {
+                // X0Y32 means that this table already exists,
+                // complain only if something bad happened
                 printSQLException(sqle);
             }
-
-            // Statements and PreparedStatements
-            int i = 0;
-            while (!statements.isEmpty()) {
-                // PreparedStatement extend Statement
-                Statement st = (Statement)statements.remove(i);
-                try {
-                    if (st != null) {
-                        st.close();
-                        st = null;
-                    }
-                } catch (SQLException sqle) {
-                    printSQLException(sqle);
-                }
-            }
-        }
+	}
     }
 
     /**

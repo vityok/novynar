@@ -12,14 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.bb.vityok.novinar.Novinar;
 
 @DisplayName("Smoke Test: check if everything works")
-class SmokeTest {
-
-    public static final File opmlFile = new File("test/resources/opml-file.opml");
-    Novinar novinar = null;
-
+class SmokeTest
+    extends BaseTest
+{
     @BeforeEach
     void setup() {
-        novinar = new Novinar(opmlFile, "testDB");
+        configure();
     }
 
     @Test
