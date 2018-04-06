@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 
 import java.util.List;
+import java.util.LinkedList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -32,10 +33,15 @@ public class FeedReader
 {
 
     private Novinar novinar;
+    private List<FeedParser> parsers;
 
     public FeedReader(Novinar novinar)
     {
         this.novinar = novinar;
+        parsers = new LinkedList<>();
+        parsers.add(new RDF(novinar));
+        parsers.add(new RSS(novinar));
+        parsers.add(new Atom(novinar));
     }
 
     /** Opens connection to a remote resource and returns the input
@@ -126,19 +132,21 @@ public class FeedReader
             // optional, but recommended read this:
             // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
             System.out.println("Root element :[" + doc.getDocumentElement().getNodeName() + "]");
-            if ("rdf:RDF".equals(doc.getDocumentElement().getNodeName())) {
-                System.out.println("Processing RDF feed");
-                RDF.getInstance().processFeed(chan, doc, novinar);
-                chan.updatedNow();
-                is.close();
-                return doc;
-            } else {
-                System.out.println("FeedReader doesn't know how to handle this type of feeds. Inspect: " + url);
-                is.close();
-                return null;
+            for (FeedParser parser : parsers) {
+                if (parser.accepts(doc)) {
+                    System.out.println("Processing feed with " + parser);
+                    parser.processFeed(chan, doc);
+                    chan.updatedNow();
+                    is.close();
+                    return doc;
+                }
             }
+
+            System.out.println("FeedReader doesn't know how to handle this type of feeds. Inspect: " + url);
+            is.close();
+            return null;
         }
-    }
+    } // end loadFeed
 
 
     /** Refresh/download all feeds from all known channels. */

@@ -9,7 +9,7 @@
       <outline text="Science">
 	<outline text="Slashdot" xmlUrl="file:test/resources/slashdot-rdf.xml">
 	</outline>
-	<outline text="UMP" xmlUrl="file:test/resources/ump-atom.xml">
+	<outline text="UMP" xmlUrl="file:test/resources/ump-rss.xml">
 	</outline>
       </outline>
     </outline>

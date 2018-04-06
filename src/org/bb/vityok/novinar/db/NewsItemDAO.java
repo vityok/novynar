@@ -1,5 +1,11 @@
 package org.bb.vityok.novinar.db;
 
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
+import java.nio.charset.StandardCharsets;
+
 import java.util.List;
 import java.util.LinkedList;
 
@@ -39,8 +45,8 @@ public class NewsItemDAO
 	cs.setString(1, item.getLink());
 	ResultSet rscs = cs.executeQuery();
 	if (!rscs.next()) {
-	    PreparedStatement ps = conn.prepareStatement("INSERT INTO news_item(title, link, description, creator, date, subject, channel_id)"
-							 + " VALUES (?, ?, ?, ?, ?, ?, ?)");
+	    PreparedStatement ps = conn.prepareStatement("INSERT INTO news_item(title, link, description, creator, date, subject, channel_id, is_read)"
+							 + " VALUES (?, ?, ?, ?, ?, ?, ?, 0)");
 	    ps.setString(1, item.getTitle());
 	    ps.setString(2, item.getLink());
 	    ps.setString(3, item.getDescription());
@@ -51,6 +57,19 @@ public class NewsItemDAO
 	    ps.executeUpdate();
 	    System.out.println("inserted a new item: " + item.getTitle());
 	}
+    }
+
+    public String readStringFromAsciiString(InputStream is)
+        throws Exception
+    {
+        // see https://stackoverflow.com/a/35446009
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = is.read(buffer)) != -1) {
+            result.write(buffer, 0, length);
+        }
+        return result.toString(StandardCharsets.UTF_8.name());
     }
 
 

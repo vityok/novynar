@@ -106,12 +106,17 @@ public class Backend
                       + "news_item_id INT NOT NULL PRIMARY KEY "
                       + "  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
                       + "channel_id INT NOT NULL, "
-                      + "title VARCHAR(1024), "
+                      + "title VARCHAR(2048), "
                       + "link VARCHAR(2048), "
-                      + "description VARCHAR(12288), "
-                      + "creator VARCHAR(256), "
+                      /* some websites generate items with way too
+                       * much markup to fit into a VARCHAR or even a
+                       * LONG VARCHAR */
+                      + "description CHARACTER LARGE OBJECT (100 K), "
+                      + "creator VARCHAR(1024), "
                       + "date TIMESTAMP, "
-                      + "subject VARCHAR(6144)"
+                      + "subject VARCHAR(6144), "
+                      /* is set to 1 when marked as read */
+                      + "is_read SMALLINT "
                       +")");
             System.out.println("Created tables CHANNEL and NEWS_ITEM");
 

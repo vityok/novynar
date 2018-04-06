@@ -15,14 +15,27 @@ import org.bb.vityok.novinar.Channel;
  * Format specification is available at: http://web.resource.org/rss/1.0/spec
  */
 public class RDF
+    extends FeedParser
 {
-    private static final RDF instance = new RDF();
 
-    protected RDF() { }
+    public RDF(Novinar novinar) { super(novinar); }
 
-    public static RDF getInstance() { return instance; }
+    /** Check if the given document can be parsed by this parser.
+     *
+     * @arg doc DOM representation of the feed contents.
+     * @return true if the given document can be processed by this parser.
+     * @see processFeed
+     */
+    public boolean accepts(Document doc) {
+        String nodeName = doc.getDocumentElement().getNodeName();
+        if (nodeName != null && !(nodeName.isEmpty())) {
+            return nodeName.equals("rdf:RDF");
+        } else {
+            return false;
+        }
+    }
 
-    public void processFeed(Channel chan, Document doc, Novinar novinar)
+    public void processFeed(Channel chan, Document doc)
 	throws Exception
     {
 	Element docElement = doc.getDocumentElement();
