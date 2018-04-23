@@ -7,6 +7,7 @@ import javafx.application.Platform;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ListChangeListener;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,17 +16,25 @@ import javafx.geometry.Insets;
 
 import javafx.scene.Scene;
 import javafx.scene.Node;
+
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+
 import javafx.stage.Stage;
 
 import javafx.scene.text.Font;
@@ -176,6 +185,20 @@ public class NovinarApp extends Application {
 		    selectedNewsItem(newSelection);
 		}
 	    });
+
+        itemsTable.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(final KeyEvent keyEvent) {
+                    final NewsItem selectedItem = itemsTable.getSelectionModel().getSelectedItem();
+
+                    if (selectedItem != null) {
+                        if (keyEvent.getCode().equals(KeyCode.DELETE)) {
+                            itemsTable.getItems().remove(itemsTable.getItems().indexOf(selectedItem));
+                        }
+                    }
+                }
+            } );
+
 	VBox.setVgrow(itemsTable, Priority.ALWAYS);
 
         final VBox vbox = new VBox();
@@ -188,13 +211,12 @@ public class NovinarApp extends Application {
 
 
     private void updateItemsTable() {
-	try {
-	    novinar.loadFeeds();
-	    ObservableList<NewsItem> items = FXCollections.observableArrayList(novinar.getNewsItems());
-	    itemsTable.setItems(items);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
+        try {
+            novinar.loadFeeds();
+            updateItemsTable(novinar.getRootOutline());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /** Select only items from the channels selected by the user in
@@ -204,6 +226,24 @@ public class NovinarApp extends Application {
         try {
             ObservableList<NewsItem> items = FXCollections.observableArrayList(novinar.getNewsItemsFor(ol));
             itemsTable.setItems(items);
+
+            // track changes to the list of news items, namely, when a
+            // user "removes" selected items
+            items.addListener(new ListChangeListener<NewsItem>() {
+                    @Override
+                    public void onChanged(ListChangeListener.Change<? extends NewsItem> c) {
+                        while (c.next()) {
+                            if (c.wasRemoved()) {
+                                for (NewsItem item : c.getRemoved()) {
+                                    try {
+                                        novinar.removeNewsItem(item);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                    }});
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -292,10 +332,9 @@ public class NovinarApp extends Application {
 	// populate items table with the items
 	updateItemsTable();
 	selectedNewsItem(null);
-	// root.setRight(addFlowPane());
         Scene scene = new Scene(root);
 
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("Novinar news reader");
         primaryStage.setScene(scene);
 
         primaryStage.setMaximized(true);

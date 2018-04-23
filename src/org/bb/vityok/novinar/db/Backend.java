@@ -116,7 +116,9 @@ public class Backend
                       + "date TIMESTAMP, "
                       + "subject VARCHAR(6144), "
                       /* is set to 1 when marked as read */
-                      + "is_read SMALLINT "
+                      + "is_read SMALLINT DEFAULT 0, "
+                      /* is set to 1 when marked as removed */
+                      + "is_removed SMALLINT DEFAULT 0 "
                       +")");
             System.out.println("Created tables CHANNEL and NEWS_ITEM");
 

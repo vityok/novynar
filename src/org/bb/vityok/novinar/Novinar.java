@@ -56,7 +56,21 @@ public class Novinar
 
     public int getChannelCounter () { return oman.getChannelCounter(); }
 
-    public void removeChannel(Channel chan) { }
+    /** Removes channel information from the OPML directory and all
+     * its news items from the database.
+     */
+    public void removeChannel(Channel chan) {
+    }
+
+    /** Marks the given news item as removed. The item is not removed
+     * from the database as it could potentially be restored upon
+     * channel refresh, but is marked as such.
+     */
+    public void removeNewsItem(NewsItem item)
+        throws Exception
+    {
+        niDAO.removeNewsItem(item);
+    }
 
     public List<NewsItem> getNewsItems()
         throws Exception
