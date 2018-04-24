@@ -3,6 +3,7 @@ package org.bb.vityok.novinar;
 import java.io.File;
 
 import java.util.List;
+import java.util.LinkedList;
 
 import org.bb.vityok.novinar.db.Backend;
 import org.bb.vityok.novinar.db.NewsItemDAO;
@@ -44,14 +45,35 @@ public class Novinar
         dbend.close();
     }
 
-    public List<Channel> getChannels() { return oman.getChannels(); }
+    public List<Channel> getChannels() {
+        return oman.getChannels();
+    }
+
+
     /** Returns the list of channels located under the given "folder"
      * outline.
+     *
+     * Runs a recursive depth-first traversal of the OPML tree
+     * starting from the given outline node.
+     *
+     * It doesn't guard against return stack exhaustion as it is
+     * expected that the trees it will run on will not be very
+     * deep/high. Also it is assumed that it will be run on trees,
+     * ie. graphs without cycles.
      */
     public List<Channel> getChannelsUnder(Outline ol) {
-        // todo: traverse the tree and get all channels under this
-        // outline
-        return getChannels();
+        List<Channel> channels = new LinkedList<>();
+        List<Outline> children = ol.getChildren();
+
+        for (Outline child : children) {
+            Channel childChannel = child.getChannel();
+            if (childChannel != null) {
+                channels.add(childChannel);
+            } else if (child.hasChildren()) {
+                channels.addAll(getChannelsUnder(child));
+            }
+        }
+        return channels;
     }
 
     public int getChannelCounter () { return oman.getChannelCounter(); }
@@ -129,6 +151,11 @@ public class Novinar
         oman.storeConfig();
     }
 
+    /** Returns the root outline in the OPML tree.
+     *
+     * All other outlines are descendants of this one or of outlines
+     * descending from it.
+     */
     public Outline getRootOutline () {
         return oman.getRootOutline();
     }

@@ -85,13 +85,30 @@ public class NewsItemDAO
     public List<NewsItem> getNewsItemByChannel(Channel chan)
 	throws Exception
     {
+        List<Channel> channels = new LinkedList<Channel>();
+        channels.add(chan);
+        return getNewsItemByChannels(channels);
+    }
+
+    public List<NewsItem> getNewsItemByChannels(List<Channel> channels)
+	throws Exception
+    {
 	Connection conn = dbend.getConnection();
-        try (PreparedStatement ps = conn.prepareStatement("SELECT news_item_id, " +
-                                                          " title, link, description, creator, " +
-                                                          " date, subject FROM news_item " +
-                                                          " WHERE channel_id=? AND is_removed=0")
-             ) {
-            ps.setInt(1, chan.getChannelId());
+        List<String> channelIds = new LinkedList<String>();
+        for (Channel chan : channels) {
+            channelIds.add(Integer.toString(chan.getChannelId()));
+        }
+
+        String sql = "SELECT news_item_id, " +
+            " title, link, description, creator, date, subject " +
+            " FROM news_item " +
+            " WHERE channel_id IN " +
+            " ( " + String.join(", ", channelIds) + " ) " +
+            " AND is_removed=0 " +
+            " ORDER BY date";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            // ps.setArray(1, conn.createArrayOf("int", channelIds));
 
             List<NewsItem> list = new LinkedList<NewsItem>();
 
@@ -109,12 +126,8 @@ public class NewsItemDAO
             }
             return list;
         }
-    }
 
-    public List<NewsItem> getNewsItemByChannels(List<Channel> chans)
-	throws Exception
-    {
-        return new LinkedList<>();
+
     }
 
     /** Mark the given item as removed in the database.

@@ -36,4 +36,21 @@ class OmanTest
         assertEquals(novinar.getChannelCounter(),
                      novinar.getChannels().size());
     }
+
+    @Test
+    void treeTraversal()
+        throws Exception
+    {
+        // calculate total number of items in a "linear way"
+        int linear_items_count = 0;
+        for (Channel chan : novinar.getChannels()) {
+            linear_items_count += novinar.getNewsItemsFor(chan).size();
+        }
+
+        // now get the number of items for the root outline
+        int traverse_items_count = novinar.getNewsItemsFor(novinar.getRootOutline()).size();
+
+        // they must match
+        assertEquals(linear_items_count, traverse_items_count);
+    }
 }
