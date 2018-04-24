@@ -61,8 +61,8 @@ public class Channel
                                             .parse(tsStr))
                                 .build());
             } catch (ParseException pe) {
-                System.out.println("failed to parse Channel " + getTitle()
-                                   + " timestamp: " + tsStr);
+                Novinar.getLogger().severe("failed to parse Channel " + getTitle()
+                                           + " timestamp: " + tsStr);
             }
         }
         if (latestUpdate == null) {
@@ -103,8 +103,8 @@ public class Channel
                           OPMLManager.NOVINAR_NS,
                           OPMLManager.A_LAST_UPDATED,
                           updateTs);
-        System.out.println("updated channel: " + getTitle()
-                           + " at: " + updateTs);
+        Novinar.getLogger().info("updated channel: " + getTitle()
+                                 + " at: " + updateTs);
     }
 
     /** Mark the channel as updated just now. */

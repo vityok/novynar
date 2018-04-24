@@ -97,7 +97,7 @@ public class OPMLManager
 	    Node bodyNode = doc.getElementsByTagName("body").item(0);
 	    rootOutlineNode = getChildByName(bodyNode, "outline");
 	    rootOutline = new Outline(this, rootOutlineNode);
-	    System.out.println("Loaded OPML config from " + configFile.getPath());
+	    Novinar.getLogger().info("Loaded OPML config from " + configFile.getPath());
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}

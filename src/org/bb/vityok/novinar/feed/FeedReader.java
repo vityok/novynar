@@ -63,8 +63,8 @@ public class FeedReader
             con.setInstanceFollowRedirects(true);
 
             int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'GET' request to URL : " + feedURL);
-            System.out.println("Response Code : " + responseCode);
+            Novinar.getLogger().info("\nSending 'GET' request to URL : " + feedURL);
+            Novinar.getLogger().info("Response Code : " + responseCode);
 
             // this approach in combination with
             // con.setInstanceFollowRedirects(true) allows to follow
@@ -101,7 +101,7 @@ public class FeedReader
     public Document loadFeed(Channel chan)
 	throws Exception
     {
-        System.out.println("loading items for the channel: " + chan);
+        Novinar.getLogger().info("loading items for the channel: " + chan);
 
         try {
             String url = chan.getLink();
@@ -124,7 +124,7 @@ public class FeedReader
 
             // Input stream for reading feed data obtained, handle it
             if (is == null) {
-                System.out.println("FeedReader failed to open: " + url);
+                Novinar.getLogger().severe("FeedReader failed to open: " + url);
                 return null;
             } else {
                 // Parse XML data into a DOM document/tree
@@ -135,10 +135,10 @@ public class FeedReader
 
                 // optional, but recommended read this:
                 // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-                System.out.println("Root element :[" + doc.getDocumentElement().getNodeName() + "]");
+                Novinar.getLogger().fine("Root element :[" + doc.getDocumentElement().getNodeName() + "]");
                 for (FeedParser parser : parsers) {
                     if (parser.accepts(doc)) {
-                        System.out.println("Processing feed with " + parser);
+                        Novinar.getLogger().info("Processing feed with " + parser);
                         parser.processFeed(chan, doc);
                         chan.updatedNow();
                         is.close();
@@ -146,7 +146,7 @@ public class FeedReader
                     }
                 }
 
-                System.out.println("FeedReader doesn't know how to handle this type of feeds. Inspect: " + url);
+                Novinar.getLogger().severe("FeedReader doesn't know how to handle this type of feeds. Inspect: " + url);
                 is.close();
                 return null;
             }
@@ -163,7 +163,7 @@ public class FeedReader
 	throws Exception
     {
         List<Channel> channels = novinar.getChannels();
-        System.out.println("loading " + channels.size() + " channels");
+        Novinar.getLogger().info("loading " + channels.size() + " channels");
         for (Channel channel : channels) {
 	    loadFeed(channel);
         }

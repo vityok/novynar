@@ -10,6 +10,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import java.util.logging.Logger;
+
+
 /** Database backend for storing and processing news items.
  *
  * Uses Apache Derby database that comes embedded with the Java
@@ -26,6 +29,8 @@ public class Backend
     private String dbName;
 
     private Connection conn;
+
+    private static Logger logger = Logger.getLogger("org.bb.vityok.novinar.db");
 
     public Backend() {
         this(DEFAULT_DB_NAME);
@@ -65,7 +70,7 @@ public class Backend
 	throws Exception
     {
 
-        System.out.println("Database backend is starting in " + framework + " mode. SETUP");
+        logger.info("Database backend is starting in " + framework + " mode. SETUP");
 
         Class driver = Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
         driver.newInstance();
@@ -99,7 +104,7 @@ public class Backend
 	    conn = DriverManager.getConnection(protocol + dbName
 					       + ";create=true", null);
 
-	    System.out.println("Connected to the database " + dbName);
+	    logger.info("Connected to the database " + dbName);
 
 	    s = conn.createStatement();
 
@@ -122,7 +127,7 @@ public class Backend
                       /* is set to 1 when marked as removed */
                       + "is_removed SMALLINT DEFAULT 0 "
                       +")");
-            System.out.println("Created tables CHANNEL and NEWS_ITEM");
+            logger.severe("Created tables CHANNEL and NEWS_ITEM");
 
 	} catch (SQLException sqle) {
             if (!sqle.getSQLState().equals("X0Y32")) {
@@ -134,17 +139,18 @@ public class Backend
     }
 
     /**
-     * Reports a data verification failure to System.err with the given message.
+     * Reports a data verification failure to the Logger with the
+     * given message.
      *
      * @param message A message describing what failed.
      */
     private void reportFailure(String message) {
-        System.err.println("\nData verification failed:");
-        System.err.println('\t' + message);
+        logger.severe("\nData verification failed:" + message);
     }
 
     /**
-     * Prints details of an SQLException chain to <code>System.err</code>.
+     * Prints details of an SQLException chain to Logger.
+     *
      * Details included are SQL State, Error code, Exception message.
      *
      * @param e the SQLException from which to print details.
@@ -155,10 +161,10 @@ public class Backend
         // Exception.
         while (e != null)
 	    {
-		System.err.println("\n----- SQLException -----");
-		System.err.println("  SQL State:  " + e.getSQLState());
-		System.err.println("  Error Code: " + e.getErrorCode());
-		System.err.println("  Message:    " + e.getMessage());
+		logger.severe("\n----- SQLException -----");
+		logger.severe("  SQL State:  " + e.getSQLState());
+		logger.severe("  Error Code: " + e.getErrorCode());
+		logger.severe("  Message:    " + e.getMessage());
 		// for stack traces, refer to derby.log or uncomment this:
 		//e.printStackTrace(System.err);
 		e = e.getNextException();
@@ -199,13 +205,13 @@ public class Backend
 		if (( (se.getErrorCode() == 50000)
 		      && ("XJ015".equals(se.getSQLState()) ))) {
 		    // we got the expected exception
-		    System.out.println("Derby shut down normally");
+		    logger.info("Derby shut down normally");
 		    // Note that for single database shutdown, the expected
 		    // SQL state is "08006", and the error code is 45000.
 		} else {
 		    // if the error code or SQLState is different, we have
 		    // an unexpected exception (shutdown failed)
-		    System.err.println("Derby did not shut down normally");
+		    logger.severe("Derby did not shut down normally");
 		    printSQLException(se);
 		}
 	    }
@@ -219,5 +225,9 @@ public class Backend
 	} catch (SQLException sqle) {
 	    printSQLException(sqle);
 	}
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 }

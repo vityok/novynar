@@ -58,7 +58,7 @@ public class NewsItemDAO
                 ps.setString(6, item.getSubject());
                 ps.setInt(7, Integer.valueOf(chan.getChannelId()));
                 ps.executeUpdate();
-                System.out.println("inserted a new item: " + item.getTitle());
+                dbend.getLogger().fine("inserted a new item: " + item.getTitle());
             }
         }
     }
@@ -148,7 +148,7 @@ public class NewsItemDAO
              ) {
             ps.setInt(1, Integer.valueOf(item.getNewsItemId()));
             ps.executeUpdate();
-            System.out.println("marked item as removed: " + item.getTitle());
+            dbend.getLogger().fine("marked item as removed: " + item.getTitle());
         }
     }
 }

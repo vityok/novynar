@@ -5,6 +5,8 @@ import java.io.File;
 import java.util.List;
 import java.util.LinkedList;
 
+import java.util.logging.Logger;
+
 import org.bb.vityok.novinar.db.Backend;
 import org.bb.vityok.novinar.db.NewsItemDAO;
 
@@ -23,12 +25,14 @@ public class Novinar
     private NewsItemDAO niDAO;
     private FeedReader reader;
 
+    private static Logger logger = Logger.getLogger("org.bb.vityok.novinar");
+
     /** Constructs a new Novinar instance using default data location
      * paths or those provided in the system environment.
      */
     public Novinar() {
         this(
-             System.getProperty("org.bb.vityok.novinar.opml_file", 
+             System.getProperty("org.bb.vityok.novinar.opml_file",
                                 OPMLManager.DEFAULT_OPML_FILE_NAME),
              System.getProperty("org.bb.vityok.novinar.db_dir",
                                 Backend.DEFAULT_DB_NAME));
@@ -50,7 +54,7 @@ public class Novinar
     public void close ()
         throws Exception
     {
-        System.out.println("Novinar core shutting down");
+        getLogger().severe("Novinar core shutting down");
         dbend.close();
     }
 
@@ -168,5 +172,9 @@ public class Novinar
      */
     public Outline getRootOutline () {
         return oman.getRootOutline();
+    }
+
+    public static Logger getLogger() {
+        return logger;
     }
 }

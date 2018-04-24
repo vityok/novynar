@@ -2,6 +2,8 @@ package org.bb.vityok.novinar.ui;
 
 import java.util.List;
 
+import java.util.logging.Logger;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 
@@ -57,6 +59,9 @@ public class NovinarApp extends Application {
     private TreeView<Outline> channelsTree = null;
     private WebView itemView = null;
     private Label itemTitle = null;
+
+    private static Logger logger = Logger.getLogger("org.bb.vityok.novinar.ui");
+
 
     public static void start(String[] args) {
         launch(args);
@@ -181,7 +186,7 @@ public class NovinarApp extends Application {
             .selectedItemProperty()
             .addListener((obs, oldSelection, newSelection) -> {
 		if (newSelection != null) {
-		    System.out.println("selected: " + newSelection);
+		    logger.fine("selected: " + newSelection);
 		    selectedNewsItem(newSelection);
 		}
 	    });
@@ -284,7 +289,7 @@ public class NovinarApp extends Application {
      * outline and its children (when there are any).
      */
     private void selectedOutline(Outline ol) {
-        System.out.println("selected tree item, title=" + ol.getTitle());
+        logger.fine("selected tree item, title=" + ol.getTitle());
         updateItemsTable(ol);
     }
 
@@ -331,12 +336,12 @@ public class NovinarApp extends Application {
 
     @Override
     public void stop() {
-	System.out.println("Graceful shutdown. Bye-bye");
+	logger.info("Graceful shutdown. Bye-bye");
         try {
             novinar.storeConfig();
             novinar.close();
         } catch (Exception e) {
-            System.out.println("Graceful shutdown. failed: " + e);
+            logger.severe("Graceful shutdown. failed: " + e);
             e.printStackTrace();
         }
     }

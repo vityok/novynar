@@ -41,7 +41,7 @@ public class RDF
 	Element docElement = doc.getDocumentElement();
 	Node channelNode = docElement.getElementsByTagName("channel").item(0);
 
-	System.out.println("Channel node is: " + channelNode.getNodeName());
+	Novinar.getLogger().finer("Channel node is: " + channelNode.getNodeName());
 
 	if (channelNode.getNodeType() == Node.ELEMENT_NODE) {
 	    Element channelElement = (Element) channelNode;
@@ -49,21 +49,19 @@ public class RDF
 	    String cTitle = channelElement.getElementsByTagName("title").item(0).getTextContent();
 	    String cLink = channelElement.getElementsByTagName("link").item(0).getTextContent();
 	    String cDescription = channelElement.getElementsByTagName("description").item(0).getTextContent();
-	    System.out.println("channel title: " + cTitle);
-	    System.out.println("channel link: " + cLink);
-	    System.out.println("channel description: " + cDescription);
+	    Novinar.getLogger().info("channel title: " + cTitle);
+	    Novinar.getLogger().info("channel link: " + cLink);
+	    Novinar.getLogger().info("channel description: " + cDescription);
 
 	    NodeList itemsList = docElement.getElementsByTagName("item");
 
-	    System.out.println("got " + itemsList.getLength() + " items in description");
+	    Novinar.getLogger().info("got " + itemsList.getLength() + " items in description");
 
 	    for (int i = 0; i < itemsList.getLength(); i++) {
 		Element item = (Element) itemsList.item(i);
 		String iTitle = item.getElementsByTagName("title").item(0).getTextContent();
 		String iLink = item.getElementsByTagName("link").item(0).getTextContent();
 		String iDescription = item.getElementsByTagName("description").item(0).getTextContent();
-		// System.out.println("item title: " + iTitle);
-		// System.out.println("item link: " + iLink);
 		NewsItem newsItem = new NewsItem();
 		newsItem.setTitle(iTitle);
 		newsItem.setLink(iLink);
