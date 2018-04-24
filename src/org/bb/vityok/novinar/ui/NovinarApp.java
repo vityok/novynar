@@ -266,20 +266,8 @@ public class NovinarApp extends Application {
 	itemTitle = new Label("");
         itemTitle.setFont(new Font("Helvetica Bold", 16.0));
 
-    	// **** BUTTON
-	Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction((ActionEvent event) -> {
-            try {
-                updateItemsTable();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            System.out.println("Hello World!");
-        });
-
 	itemView = new WebView();
-	vbox.getChildren().addAll(itemTitle, itemView, btn);
+	vbox.getChildren().addAll(itemTitle, itemView);
 	return vbox;
     }
 

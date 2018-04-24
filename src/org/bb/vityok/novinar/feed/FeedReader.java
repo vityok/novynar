@@ -52,7 +52,8 @@ public class FeedReader
     {
         String location = url;
         URL base, next;
-        while (true) {
+        int attempts = 0;
+        while (attempts++ < 5) {
             URL feedURL = new URL(url);
             HttpURLConnection con = (HttpURLConnection) feedURL.openConnection();
 
@@ -84,6 +85,7 @@ public class FeedReader
                     return is;
                 }
         }
+        return null;
     }
 
     /** Opens input stream from the local file (for testing purposes
@@ -101,51 +103,58 @@ public class FeedReader
     {
         System.out.println("loading items for the channel: " + chan);
 
-        String url = chan.getLink();
-        URL feedURL = new URL(url);
-        InputStream is = null;
-        switch (feedURL.getProtocol())
-            {
-            case "file":
+        try {
+            String url = chan.getLink();
+            URL feedURL = new URL(url);
+            InputStream is = null;
+            switch (feedURL.getProtocol())
                 {
-                    is = openLocalFeed(feedURL.getPath());
-                    break;
+                case "file":
+                    {
+                        is = openLocalFeed(feedURL.getPath());
+                        break;
+                    }
+                case "http":
+                case "https":
+                    {
+                        is = openRemoteFeed(url);
+                        break;
+                    }
                 }
-            case "http":
-            case "https":
-                {
-                    is = openRemoteFeed(url);
-                    break;
-                }
-            }
-        // Input stream for reading feed data obtained, handle it
-        if (is == null) {
-            System.out.println("FeedReader failed to open: " + url);
-            return null;
-        } else {
-            // Parse XML data into a DOM document/tree
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(is);
-            doc.getDocumentElement().normalize();
 
-            // optional, but recommended read this:
-            // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-            System.out.println("Root element :[" + doc.getDocumentElement().getNodeName() + "]");
-            for (FeedParser parser : parsers) {
-                if (parser.accepts(doc)) {
-                    System.out.println("Processing feed with " + parser);
-                    parser.processFeed(chan, doc);
-                    chan.updatedNow();
-                    is.close();
-                    return doc;
-                }
-            }
+            // Input stream for reading feed data obtained, handle it
+            if (is == null) {
+                System.out.println("FeedReader failed to open: " + url);
+                return null;
+            } else {
+                // Parse XML data into a DOM document/tree
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                Document doc = dBuilder.parse(is);
+                doc.getDocumentElement().normalize();
 
-            System.out.println("FeedReader doesn't know how to handle this type of feeds. Inspect: " + url);
-            is.close();
-            return null;
+                // optional, but recommended read this:
+                // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+                System.out.println("Root element :[" + doc.getDocumentElement().getNodeName() + "]");
+                for (FeedParser parser : parsers) {
+                    if (parser.accepts(doc)) {
+                        System.out.println("Processing feed with " + parser);
+                        parser.processFeed(chan, doc);
+                        chan.updatedNow();
+                        is.close();
+                        return doc;
+                    }
+                }
+
+                System.out.println("FeedReader doesn't know how to handle this type of feeds. Inspect: " + url);
+                is.close();
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
         }
+        return null;
     } // end loadFeed
 
 

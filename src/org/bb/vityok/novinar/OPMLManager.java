@@ -33,7 +33,7 @@ import org.w3c.dom.NodeList;
  */
 public class OPMLManager
 {
-    public static final File DEFAULT_OPML_FILE = new File("backup.opml");
+    public static final String DEFAULT_OPML_FILE_NAME = "backup.opml";
 
     public static final String NOVINAR_NS = "https://bitbucket.org/vityok/novinar";
     public static final String A_CHANNEL_ID = "channelId";
@@ -45,6 +45,7 @@ public class OPMLManager
     private Document doc;
     private Node rootOutlineNode;
     private Outline rootOutline;
+    private File opmlFile;
 
     /** List of feed channels defined in the OPML file.
      *
@@ -55,10 +56,12 @@ public class OPMLManager
 
 
     public OPMLManager() {
+        opmlFile = new File(DEFAULT_OPML_FILE_NAME);
         loadConfig();
     }
-    public OPMLManager(File configFile) {
-        loadConfig(configFile);
+    public OPMLManager(String configFile) {
+        opmlFile = new File(configFile);
+        loadConfig();
     }
 
     /** Returns first child node of the given node with the specified
@@ -80,9 +83,9 @@ public class OPMLManager
      * Outline-Channels tree with relevant configuration from the
      * DOM.
      */
-    public void loadConfig() {
-        loadConfig(DEFAULT_OPML_FILE);
-    }
+     public void loadConfig() {
+         loadConfig(opmlFile);
+     }
 
     public void loadConfig(File configFile) {
         channels = new LinkedList<>();
@@ -103,7 +106,7 @@ public class OPMLManager
 
     /** Store OPML data to the DEFAULT_OPML_FILE. */
     public void storeConfig() {
-        storeConfig(DEFAULT_OPML_FILE);
+        storeConfig(opmlFile);
     }
 
 

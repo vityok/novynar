@@ -67,7 +67,9 @@ public class Backend
 
         System.out.println("Database backend is starting in " + framework + " mode. SETUP");
 
-	DriverManager.registerDriver(new org.apache.derby.jdbc.EmbeddedDriver());
+        Class driver = Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+        driver.newInstance();
+	// DriverManager.registerDriver((Driver));
 
         /* We will be using Statement and PreparedStatement objects for
          * executing SQL. These objects, as well as Connections and ResultSets,

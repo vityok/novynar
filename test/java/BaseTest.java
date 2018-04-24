@@ -21,7 +21,7 @@ import org.bb.vityok.novinar.Novinar;
 /** Common methods and variables for the Novinar tests. */
 public class BaseTest
 {
-    public static final File opmlFile = new File("test/resources/opml-file.opml");
+    public static final String OPML_FILE_NAME = "test/resources/opml-file.opml";
     public static final String DB_NAME = "testDB";
     Novinar novinar = null;
 
@@ -39,7 +39,7 @@ public class BaseTest
         }
 
         try {
-            novinar = new Novinar(opmlFile, DB_NAME);
+            novinar = new Novinar(OPML_FILE_NAME, DB_NAME);
             novinar.setup();
         } catch (Exception e) {
             e.printStackTrace();

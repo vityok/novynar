@@ -12,6 +12,9 @@ import org.bb.vityok.novinar.feed.FeedReader;
 
 /** Encapsulates feed management and news items management operations
  * into a single logical unit.
+ *
+ * User interface should use this class to operate newsfeeds, retrieve
+ * and store data.
  */
 public class Novinar
 {
@@ -20,12 +23,18 @@ public class Novinar
     private NewsItemDAO niDAO;
     private FeedReader reader;
 
+    /** Constructs a new Novinar instance using default data location
+     * paths or those provided in the system environment.
+     */
     public Novinar() {
-        this(OPMLManager.DEFAULT_OPML_FILE,
-             Backend.DEFAULT_DB_NAME);
+        this(
+             System.getProperty("org.bb.vityok.novinar.opml_file", 
+                                OPMLManager.DEFAULT_OPML_FILE_NAME),
+             System.getProperty("org.bb.vityok.novinar.db_dir",
+                                Backend.DEFAULT_DB_NAME));
     }
 
-    public Novinar(File opmlFile, String dbName) {
+    public Novinar(String opmlFile, String dbName) {
         oman = new OPMLManager(opmlFile);
         dbend = new Backend(dbName);
         niDAO = new NewsItemDAO(dbend);
@@ -45,6 +54,7 @@ public class Novinar
         dbend.close();
     }
 
+    /** Returns all channels defined in the OPML file. */
     public List<Channel> getChannels() {
         return oman.getChannels();
     }
