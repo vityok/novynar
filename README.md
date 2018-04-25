@@ -4,7 +4,8 @@ A very simple RSS news reader and agregator. Designed to be
 self-contained and without external dependencies. Relies solely on the
 standard libraries provided by the Java runtime environment.
 
-Not yet usable, in the very early stages of development.
+Despite being in the very early stages of development it is already
+somewhat usable (at least it works for me).
 
 ### Components ###
 
@@ -18,9 +19,10 @@ Check the [project page](https://bitbucket.org/vityok/novinar/overview) for ways
 
 # TODO #
 
-* don't store channel info in the db, rely on the opml file for
-  that. OPMLManager should be the one responsible for managing the
-  channel info. DB will rely on the channel IDs provided by the
-  OPMLManager
+[Check open tickets](https://bitbucket.org/vityok/novinar/issues?status=new&status=open), there are some.
 
-* add unit tests for the core api/middleware
+# Installation
+
+Currently from sources only: after producing the jar file with the Ant
+script (or Gradle if you like), launch the app with the `run.sh` shell
+script.

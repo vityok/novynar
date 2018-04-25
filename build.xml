@@ -34,6 +34,8 @@
 	   debuglevel="lines,vars,source">
       <compilerarg value="-Xlint:unchecked"/>
     </javac>
+    <copy file="${src.dir}/org/bb/vityok/novinar/ui/style.css"
+	  tofile="${classes.dir}/org/bb/vityok/novinar/ui/style.css"/>
   </target>
 
   <target name="jar" depends="compile">

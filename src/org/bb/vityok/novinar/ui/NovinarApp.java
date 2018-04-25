@@ -278,8 +278,11 @@ public class NovinarApp extends Application {
         itemLink.setFont(Font.font("Helvetica", FontWeight.LIGHT, 12));
 
 	itemView = new WebView();
-        itemView.getEngine().setJavaScriptEnabled(false);
+        WebEngine webEngine = itemView.getEngine();
+        webEngine.setJavaScriptEnabled(false);
+        webEngine.setUserStyleSheetLocation(getClass().getResource("style.css").toString());
         VBox.setVgrow(itemView, Priority.ALWAYS);
+
 	vbox.getChildren().addAll(itemTitle, itemView, itemLink);
 	return vbox;
     }
