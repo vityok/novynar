@@ -40,6 +40,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.NewsItem;
@@ -59,6 +60,7 @@ public class NovinarApp extends Application {
     private TreeView<Outline> channelsTree = null;
     private WebView itemView = null;
     private Label itemTitle = null;
+    private TextField itemLink = null;
 
     private static Logger logger = Logger.getLogger("org.bb.vityok.novinar.ui");
 
@@ -269,10 +271,16 @@ public class NovinarApp extends Application {
     private VBox buildContentPane() {
 	VBox vbox = new VBox();
 	itemTitle = new Label("");
-        itemTitle.setFont(new Font("Helvetica Bold", 16.0));
+        itemTitle.setFont(Font.font("Helvetica", FontWeight.BOLD, 18));
+        itemTitle.setWrapText(true);
+
+        itemLink = new TextField("");
+        itemLink.setFont(Font.font("Helvetica", FontWeight.LIGHT, 12));
 
 	itemView = new WebView();
-	vbox.getChildren().addAll(itemTitle, itemView);
+        itemView.getEngine().setJavaScriptEnabled(false);
+        VBox.setVgrow(itemView, Priority.ALWAYS);
+	vbox.getChildren().addAll(itemTitle, itemView, itemLink);
 	return vbox;
     }
 
@@ -296,10 +304,11 @@ public class NovinarApp extends Application {
     /** Handle news item selection in the list of the news items. */
     private void selectedNewsItem(NewsItem item) {
 	if (item == null) {
-	    itemView.getEngine().loadContent("<h1>Title</h1>");
+	    itemView.getEngine().loadContent("<em></em>");
 	} else {
 	    itemView.getEngine().loadContent(item.getDescription());
 	    itemTitle.setText(item.getTitle());
+            itemLink.setText(item.getLink());
 	}
     }
 

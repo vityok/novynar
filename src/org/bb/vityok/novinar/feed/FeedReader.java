@@ -12,6 +12,8 @@ import java.net.URLDecoder;
 import java.util.List;
 import java.util.LinkedList;
 
+import java.util.logging.Level;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
@@ -151,8 +153,7 @@ public class FeedReader
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
-
+            Novinar.getLogger().log(Level.SEVERE, "failed to parse feed for channel: " + chan, e);
         }
         return null;
     } // end loadFeed

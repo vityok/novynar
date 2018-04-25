@@ -136,8 +136,16 @@ public class OPMLManager
         atts.setNamedItemNS(attr);
     }
 
+    /** Given a Node and an attribute name, return its contents or
+     * default value.
+     */
+    public static String getAttribute(Node node, String name, String defaultValue) {
+        NamedNodeMap atts = node.getAttributes();
+        Node att = atts.getNamedItem(name);
+        return (att == null) ? defaultValue : att.getNodeValue();
+    }
 
-    public String getAttributeNS(Node node, String namespaceURI, String name, String defaultValue) {
+    public static String getAttributeNS(Node node, String namespaceURI, String name, String defaultValue) {
         NamedNodeMap atts = node.getAttributes();
         Node att = atts.getNamedItemNS(namespaceURI, name);
         return (att == null) ? defaultValue : att.getNodeValue();

@@ -60,9 +60,19 @@ public class RSS
 
 	    for (int i = 0; i < itemsList.getLength(); i++) {
 		Element item = (Element) itemsList.item(i);
-		String iTitle = item.getElementsByTagName("title").item(0).getTextContent();
 		String iLink = item.getElementsByTagName("link").item(0).getTextContent();
 		String iDescription = item.getElementsByTagName("description").item(0).getTextContent();
+
+                // some feeds have entries without titles. For example LJ/RSS
+                String iTitle = "";
+                if (item.getElementsByTagName("title").getLength() > 0) {
+                    iTitle = item.getElementsByTagName("title").item(0).getTextContent();
+                } else {
+                    // take beginning of the description instead
+                    if (iDescription != null) {
+                        iTitle = iDescription.substring(0, Math.min(36, iDescription.length()));
+                    }
+                }
 
 		NewsItem newsItem = new NewsItem();
 		newsItem.setTitle(iTitle);
