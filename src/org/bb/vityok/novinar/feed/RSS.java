@@ -1,5 +1,12 @@
 package org.bb.vityok.novinar.feed;
 
+import java.util.Calendar;
+
+import java.util.logging.Level;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
@@ -17,6 +24,8 @@ public class RSS
     extends FeedParser
 {
 
+    public static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z");
+
     public RSS(Novinar novinar) { super(novinar); }
 
     /** Check if the given document can be parsed by this parser.
@@ -33,6 +42,19 @@ public class RSS
         } else {
             return false;
         }
+    }
+
+    public Calendar extractTimestamp(Element entry) {
+        NodeList pubDates = entry.getElementsByTagName("pubDate");
+        if (pubDates.getLength() > 0) {
+            String tsStr = pubDates.item(0).getTextContent();
+            Calendar ts= parseTimestamp(tsStr);
+            if (ts!=null) {
+                return ts;
+            }
+            Novinar.getLogger().log(Level.SEVERE, "RSS parser failed to parse timestamp: " + tsStr);
+        }
+        return new Calendar.Builder().setInstant(System.currentTimeMillis()).build();
     }
 
     @Override
@@ -71,6 +93,9 @@ public class RSS
                     // take beginning of the description instead
                     if (iDescription != null) {
                         iTitle = iDescription.substring(0, Math.min(36, iDescription.length()));
+                        if (iDescription.length() > 36) {
+                            iTitle += "...";
+                        }
                     }
                 }
 
@@ -78,6 +103,12 @@ public class RSS
 		newsItem.setTitle(iTitle);
 		newsItem.setLink(iLink);
 		newsItem.setDescription(iDescription);
+                newsItem.setDateCalendar(extractTimestamp(item));
+
+                NodeList authors = item.getElementsByTagName("author");
+                if (authors.getLength() > 0) {
+                    newsItem.setCreator(authors.item(0).getTextContent());
+                }
 		novinar.insertOrUpdateItem(chan, newsItem);
 	    }
 	}

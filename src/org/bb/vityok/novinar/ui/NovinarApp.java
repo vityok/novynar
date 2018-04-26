@@ -60,6 +60,8 @@ public class NovinarApp extends Application {
     private TreeView<Outline> channelsTree = null;
     private WebView itemView = null;
     private Label itemTitle = null;
+    private Label itemAuthor = null;
+    private Label itemTimestamp = null;
     private TextField itemLink = null;
 
     private static Logger logger = Logger.getLogger("org.bb.vityok.novinar.ui");
@@ -274,6 +276,11 @@ public class NovinarApp extends Application {
         itemTitle.setFont(Font.font("Helvetica", FontWeight.BOLD, 18));
         itemTitle.setWrapText(true);
 
+        HBox itemMetaBox = new HBox();
+        itemAuthor = new Label("Creator: ");
+        itemTimestamp = new Label("Timestamp: ");
+        itemMetaBox.getChildren().addAll(itemAuthor, itemTimestamp);
+
         itemLink = new TextField("");
         itemLink.setFont(Font.font("Helvetica", FontWeight.LIGHT, 12));
 
@@ -283,7 +290,7 @@ public class NovinarApp extends Application {
         webEngine.setUserStyleSheetLocation(getClass().getResource("style.css").toString());
         VBox.setVgrow(itemView, Priority.ALWAYS);
 
-	vbox.getChildren().addAll(itemTitle, itemView, itemLink);
+	vbox.getChildren().addAll(itemTitle, itemMetaBox, itemView, itemLink);
 	return vbox;
     }
 
@@ -311,6 +318,8 @@ public class NovinarApp extends Application {
 	} else {
 	    itemView.getEngine().loadContent(item.getDescription());
 	    itemTitle.setText(item.getTitle());
+            itemAuthor.setText("Creator: " + item.getCreator());
+            itemTimestamp.setText(" Timestamp: " + item.getDate());
             itemLink.setText(item.getLink());
 	}
     }

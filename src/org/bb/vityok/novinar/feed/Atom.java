@@ -1,5 +1,14 @@
 package org.bb.vityok.novinar.feed;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import java.util.logging.Level;
+
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
@@ -21,6 +30,13 @@ public class Atom
 {
     public static final String ATOM_XMLNS = "http://www.w3.org/2005/Atom";
 
+    /** In the wild wild web various timestamp formats can be
+     * seen. Here are some that I've encountered.
+     */
+    public static final SimpleDateFormat TIMESTAMP_FORMAT[] = { new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"),
+                                                                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
+                                                                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss") };
+
     public Atom(Novinar novinar) { super(novinar); }
 
     /** Check if the given document can be parsed by this parser.
@@ -41,7 +57,7 @@ public class Atom
     /** Extracts "alternate" link for the given entry.
      *
      * When no "altnernate" link is present returns "self", or any
-     * link href otherwise.
+     * link "href" otherwise.
      */
     public String getLink(Element entry) {
         NodeList linkElements = entry.getElementsByTagName("link");
@@ -65,6 +81,20 @@ public class Atom
         if (hrefAlternate != null) { return hrefAlternate; }
         if (hrefSelf != null) { return hrefSelf; }
         return hrefAny;
+    }
+
+
+    public Calendar extractTimestamp(Element entry, String name) {
+        NodeList timestamps = entry.getElementsByTagName(name);
+        if (timestamps.getLength() > 0) {
+            String tsStr = timestamps.item(0).getTextContent();
+            Calendar ts = parseTimestamp(tsStr);
+            if (ts != null) { return ts; }
+
+            Novinar.getLogger().severe("Atom parser failed to parse timestamp: " + tsStr);
+        }
+
+        return new Calendar.Builder().setInstant(System.currentTimeMillis()).build();
     }
 
 
@@ -96,10 +126,12 @@ public class Atom
                 // todo: there might be several link elements, choose the one not being rel="self"
 		String iLink = getLink(entry);
 		String iContent = entry.getElementsByTagName("content").item(0).getTextContent();
+                Calendar ts = extractTimestamp(entry, "published");
 		NewsItem newsItem = new NewsItem();
 		newsItem.setTitle(iTitle);
 		newsItem.setLink(iLink);
 		newsItem.setDescription(iContent);
+                newsItem.setDateCalendar(ts);
 		novinar.insertOrUpdateItem(chan, newsItem);
 	    }
 	}

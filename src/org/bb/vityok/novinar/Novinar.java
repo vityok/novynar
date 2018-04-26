@@ -27,6 +27,15 @@ public class Novinar
 
     private static Logger logger = Logger.getLogger("org.bb.vityok.novinar");
 
+    public enum Status {
+        READY, READING_FEEDS, STARTING
+    }
+
+    // todo: might be better to refactor into a sender-listeners
+    // scheme
+    private Status status = Status.STARTING;
+
+
     /** Constructs a new Novinar instance using default data location
      * paths or those provided in the system environment.
      */
@@ -149,7 +158,10 @@ public class Novinar
     public void loadFeeds()
         throws Exception
     {
-        reader.loadFeeds();
+        // todo: reader.start() to spawn a background thread once code
+        // is ready. might be better to communicate with the reader
+        // thread via a task queue
+        reader.run();
     }
 
     public void loadFeed(Channel chan)
@@ -176,5 +188,13 @@ public class Novinar
 
     public static Logger getLogger() {
         return logger;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 }

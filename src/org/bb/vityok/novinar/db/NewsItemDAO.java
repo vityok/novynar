@@ -133,7 +133,8 @@ public class NewsItemDAO
     /** Mark the given item as removed in the database.
      *
      * The record remains in the database, but its <tt>is_removed</tt>
-     * flag is set to 1.
+     * flag is set to 1 and description with title are set to NULL to
+     * hopefully save space in the database files.
      *
      * Periodic house-keeping by purging old and removed news items
      * from the database will be implemented in a separate method.
@@ -144,7 +145,8 @@ public class NewsItemDAO
 	Connection conn = dbend.getConnection();
 
         try (PreparedStatement ps = conn.prepareStatement("UPDATE news_item SET " +
-                                                          " is_removed=1 WHERE news_item_id=?")
+                                                          " is_removed=1, description=NULL, title=NULL " +
+                                                          " WHERE news_item_id=?")
              ) {
             ps.setInt(1, Integer.valueOf(item.getNewsItemId()));
             ps.executeUpdate();

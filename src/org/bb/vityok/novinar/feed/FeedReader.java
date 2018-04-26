@@ -32,6 +32,7 @@ import org.bb.vityok.novinar.db.NewsItemDAO;
  * RSS, RSS+RDF, etc).
  */
 public class FeedReader
+    extends Thread
 {
 
     private Novinar novinar;
@@ -39,6 +40,7 @@ public class FeedReader
 
     public FeedReader(Novinar novinar)
     {
+        super("Feeds reader thread");
         this.novinar = novinar;
         parsers = new LinkedList<>();
         parsers.add(new RDF(novinar));
@@ -133,10 +135,11 @@ public class FeedReader
                 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
                 Document doc = dBuilder.parse(is);
-                doc.getDocumentElement().normalize();
 
                 // optional, but recommended read this:
                 // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+                doc.getDocumentElement().normalize();
+
                 Novinar.getLogger().fine("Root element :[" + doc.getDocumentElement().getNodeName() + "]");
                 for (FeedParser parser : parsers) {
                     if (parser.accepts(doc)) {
@@ -163,10 +166,22 @@ public class FeedReader
     public void loadFeeds()
 	throws Exception
     {
+        novinar.setStatus(Novinar.Status.READING_FEEDS);
         List<Channel> channels = novinar.getChannels();
         Novinar.getLogger().info("loading " + channels.size() + " channels");
         for (Channel channel : channels) {
 	    loadFeed(channel);
+        }
+        novinar.setStatus(Novinar.Status.READY);
+    }
+
+    // todo: the thread must hang in background, periodically checking
+    // for the channels that have to be updated
+    public void run() {
+        try {
+            loadFeeds();
+        } catch (Exception e) {
+            Novinar.getLogger().log(Level.SEVERE, "failed while loading feeds", e);
         }
     }
 }
