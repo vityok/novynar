@@ -33,15 +33,23 @@ public abstract class FeedParser
     public static final SimpleDateFormat TIMESTAMP_FORMATS[] = { new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"),
                                                                  new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
                                                                  new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"),
+                                                                 new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:sszzzzz"), // 2018-04-30T12:00:00+00:00
                                                                  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
-                                                                 new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z")
+                                                                 new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z"),
+                                                                 new SimpleDateFormat("MM/dd/yyyy hh:mm aa") // 04/25/2018 13:42 PM
+
     };
 
+    /** Attempts to parse the given timestamp using TIMESTAMP_FORMATS.
+     *
+     * @return a Calendar object upon a success, null otherwise.
+     */
     public Calendar parseTimestamp(String timestamp) {
         for (int i = 0; i < TIMESTAMP_FORMATS.length; i++) {
             ParsePosition pp = new ParsePosition(0);
+            TIMESTAMP_FORMATS[i].setLenient(true);
             Date date = TIMESTAMP_FORMATS[i].parse(timestamp, pp);
-            if (date != null) {
+            if (date != null && pp.getErrorIndex() < 0) {
                 Calendar ts= new Calendar.Builder()
                     .setInstant(date)
                     .build();

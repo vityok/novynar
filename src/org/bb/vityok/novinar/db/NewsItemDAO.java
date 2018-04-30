@@ -6,8 +6,11 @@ import java.io.ByteArrayOutputStream;
 
 import java.nio.charset.StandardCharsets;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.LinkedList;
+
+import java.util.logging.Level;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,23 +45,25 @@ public class NewsItemDAO
 	Connection conn = dbend.getConnection();
 	// check if such item already exists in the database before
 	// insert
-	try (PreparedStatement cs = conn.prepareStatement("SELECT link FROM news_item WHERE link=?")
-             ) {
+        String sqlSel = "SELECT link FROM news_item WHERE link=?";
+	try (PreparedStatement cs = conn.prepareStatement(sqlSel)) {
             cs.setString(1, item.getLink());
             ResultSet rscs = cs.executeQuery();
             if (!rscs.next()) {
-                PreparedStatement ps = conn.prepareStatement("INSERT INTO news_item(title, link, description, " +
-                                                             " creator, date, subject, channel_id)" +
-                                                             " VALUES (?, ?, ?, ?, ?, ?, ?)");
-                ps.setString(1, item.getTitle());
-                ps.setString(2, item.getLink());
-                ps.setString(3, item.getDescription());
-                ps.setString(4, item.getCreator());
-                ps.setTimestamp(5, new Timestamp(item.getDateCalendar().getTimeInMillis()));
-                ps.setString(6, item.getSubject());
-                ps.setInt(7, Integer.valueOf(chan.getChannelId()));
-                ps.executeUpdate();
-                dbend.getLogger().fine("inserted a new item: " + item.getTitle());
+                String sqlIns = "INSERT INTO news_item(title, link, description, " +
+                    " creator, date, subject, channel_id)" +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement ps = conn.prepareStatement(sqlIns)) {
+                    ps.setString(1, item.getTitle());
+                    ps.setString(2, item.getLink());
+                    ps.setString(3, item.getDescription());
+                    ps.setString(4, item.getCreator());
+                    ps.setTimestamp(5, new Timestamp(item.getDateCalendar().getTimeInMillis()));
+                    ps.setString(6, item.getSubject());
+                    ps.setInt(7, Integer.valueOf(chan.getChannelId()));
+                    ps.executeUpdate();
+                    dbend.getLogger().fine("inserted a new item: " + item.getTitle());
+                }
             }
         }
     }
@@ -100,7 +105,7 @@ public class NewsItemDAO
         }
 
         String sql = "SELECT news_item_id, " +
-            " title, link, description, creator, date, subject " +
+            " title, link, description, creator, date, subject, is_read " +
             " FROM news_item " +
             " WHERE channel_id IN " +
             " ( " + String.join(", ", channelIds) + " ) " +
@@ -122,6 +127,7 @@ public class NewsItemDAO
                 item.setCreator(rs.getString("creator"));
                 item.setDate(rs.getString("date"));
                 item.setSubject(rs.getString("subject"));
+                item.setIsRead(rs.getInt("is_read") == 1 );
                 list.add(item);
             }
             return list;
@@ -153,4 +159,74 @@ public class NewsItemDAO
             dbend.getLogger().fine("marked item as removed: " + item.getTitle());
         }
     }
+
+
+    public void markItemAsRead(NewsItem item, boolean read)
+        throws Exception
+    {
+	Connection conn = dbend.getConnection();
+
+        String sql = "UPDATE news_item SET " +
+            " is_read=? " +
+            " WHERE news_item_id=?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, Integer.valueOf(read ? 1 : 0));
+            ps.setInt(2, Integer.valueOf(item.getNewsItemId()));
+            ps.executeUpdate();
+            dbend.getLogger().fine("marked item as read: " + item.getTitle());
+        }
+    }
+
+
+    private int querySingleInt(String sql) {
+	Connection conn = dbend.getConnection();
+        int count = -1;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException sqle) {
+            dbend.getLogger().log(Level.SEVERE, "failed to query: " + sql, sqle);
+        }
+
+        return count;
+    }
+
+    public int getTotalNewsItemsCount()
+    {
+        return querySingleInt("SELECT COUNT(*) AS count FROM news_item");
+    }
+
+    public int getUnreadNewsItemsCount()
+    {
+        return querySingleInt("SELECT COUNT(*) AS count FROM news_item WHERE is_read=0 AND is_removed=0");
+    }
+    public int getRemovedNewsItemsCount()
+    {
+        return querySingleInt("SELECT COUNT(*) AS count FROM news_item WHERE is_removed=1");
+    }
+
+    /** Purge news items for this channel preceding the given
+     * timestamp from the database.
+     */
+    public void cleanupChannel(Channel chan, Calendar ts) {
+	Connection conn = dbend.getConnection();
+
+        String sql = "DELETE FROM news_item "
+            + " WHERE is_removed=1 " // user doesn't see these items
+            + " AND channel_id=? "
+            + " AND date < ?";
+	try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, chan.getChannelId());
+            ps.setTimestamp(2, new Timestamp(ts.getTimeInMillis()));
+            ps.executeUpdate();
+        } catch (SQLException sqle) {
+            dbend.getLogger().log(Level.SEVERE, "failed to cleanup: " + sql, sqle);
+        }
+    }
+
 }

@@ -1,0 +1,21 @@
+.table-row-cell:even {
+  -fx-background-color: rgb(216, 224, 230);
+
+}/*
+.table-row-cell:odd {
+  -fx-background-color: white;
+
+}*/
+
+.table-row-cell:selected:focused
+{
+  -fx-background-color: Navy;
+  -fx-text-fill: -fx-text-base-color;
+}
+/* styling the read and unread news items */
+.table-row-cell:readItem {
+  -fx-font-weight: normal;
+}
+.table-row-cell:unreadItem {
+  -fx-font-weight: bold;
+}

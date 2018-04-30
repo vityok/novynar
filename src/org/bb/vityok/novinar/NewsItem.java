@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import java.util.Calendar;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -18,6 +19,7 @@ public class NewsItem
     private SimpleStringProperty creator = new SimpleStringProperty();
     private SimpleStringProperty date = new SimpleStringProperty();
     private SimpleStringProperty subject = new SimpleStringProperty();
+    private SimpleBooleanProperty isRead = new SimpleBooleanProperty();
     private Calendar cDate;
 
     public NewsItem () {
@@ -55,4 +57,11 @@ public class NewsItem
 
     public String getSubject() { return subject.get(); }
     public void setSubject(String subject) { this.subject.set(subject); }
+
+    public boolean getIsRead() { return isRead.get(); }
+    public void setIsRead(boolean isRead) {
+        this.isRead.set(isRead);
+    }
+
+    public SimpleBooleanProperty isReadProperty() { return isRead; }
 }

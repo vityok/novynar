@@ -52,10 +52,13 @@ public class RSS
             if (ts!=null) {
                 return ts;
             }
-            Novinar.getLogger().log(Level.SEVERE, "RSS parser failed to parse timestamp: " + tsStr);
+            Novinar.getLogger().severe("failed to parse timestamp: " + tsStr);
+        } else {
+            Novinar.getLogger().severe("failed to extract timestamp: " + entry.getTagName());
         }
         return new Calendar.Builder().setInstant(System.currentTimeMillis()).build();
     }
+
 
     @Override
     public void processFeed(Channel chan, Document doc)
@@ -80,11 +83,13 @@ public class RSS
 
 	    Novinar.getLogger().info("got " + itemsList.getLength() + " items in description");
 
+            Calendar oldestTimestamp = null;
+
 	    for (int i = 0; i < itemsList.getLength(); i++) {
 		Element item = (Element) itemsList.item(i);
 		String iLink = item.getElementsByTagName("link").item(0).getTextContent();
 		String iDescription = item.getElementsByTagName("description").item(0).getTextContent();
-
+                Calendar iTs = extractTimestamp(item);
                 // some feeds have entries without titles. For example LJ/RSS
                 String iTitle = "";
                 if (item.getElementsByTagName("title").getLength() > 0) {
@@ -103,7 +108,12 @@ public class RSS
 		newsItem.setTitle(iTitle);
 		newsItem.setLink(iLink);
 		newsItem.setDescription(iDescription);
-                newsItem.setDateCalendar(extractTimestamp(item));
+                newsItem.setDateCalendar(iTs);
+
+                if (oldestTimestamp == null
+                    || iTs.before(oldestTimestamp)) {
+                    oldestTimestamp = iTs;
+                }
 
                 NodeList authors = item.getElementsByTagName("author");
                 if (authors.getLength() > 0) {
@@ -111,6 +121,8 @@ public class RSS
                 }
 		novinar.insertOrUpdateItem(chan, newsItem);
 	    }
+
+            novinar.cleanupChannel(chan, oldestTimestamp);
 	}
     }
 }

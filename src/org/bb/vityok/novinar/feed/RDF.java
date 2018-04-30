@@ -52,7 +52,7 @@ public class RDF
      * date element.
      */
     public Calendar extractTimestamp(Element entry) {
-        NodeList timestamps = entry.getElementsByTagNameNS(DC_NS, "date");
+        NodeList timestamps = entry.getElementsByTagName("dc:date");
         if (timestamps.getLength() > 0) {
             String tsStr = timestamps.item(0).getTextContent();
             Calendar ts = parseTimestamp(tsStr);
@@ -60,7 +60,9 @@ public class RDF
                 return ts;
             }
 
-            Novinar.getLogger().log(Level.SEVERE, "failed to parse timestamp" + tsStr);
+            Novinar.getLogger().log(Level.SEVERE, "failed to parse timestamp: " + tsStr);
+        } else {
+            Novinar.getLogger().log(Level.SEVERE, "failed to extract timestamp: " + entry.getTagName());
         }
         return new Calendar.Builder().setInstant(System.currentTimeMillis()).build();
     }
@@ -88,24 +90,34 @@ public class RDF
 
 	    Novinar.getLogger().info("got " + itemsList.getLength() + " items in description");
 
+            Calendar oldestTimestamp = null;
+
 	    for (int i = 0; i < itemsList.getLength(); i++) {
 		Element item = (Element) itemsList.item(i);
 		String iTitle = item.getElementsByTagName("title").item(0).getTextContent();
 		String iLink = item.getElementsByTagName("link").item(0).getTextContent();
 		String iDescription = item.getElementsByTagName("description").item(0).getTextContent();
+                Calendar iTs = extractTimestamp(item);
 		NewsItem newsItem = new NewsItem();
 		newsItem.setTitle(iTitle);
 		newsItem.setLink(iLink);
 		newsItem.setDescription(iDescription);
-                newsItem.setDateCalendar(extractTimestamp(item));
+                newsItem.setDateCalendar(iTs);
 
-                NodeList creators = item.getElementsByTagNameNS(DC_NS, "creator");
+                if (oldestTimestamp == null
+                    || iTs.before(oldestTimestamp)) {
+                    oldestTimestamp = iTs;
+                }
+
+                NodeList creators = item.getElementsByTagName("dc:creator");
                 if (creators.getLength() > 0) {
                     String iCreator = creators.item(0).getTextContent();
                     newsItem.setCreator(iCreator);
                 }
 		novinar.insertOrUpdateItem(chan, newsItem);
 	    }
+
+            novinar.cleanupChannel(chan, oldestTimestamp);
 	}
     }
 }

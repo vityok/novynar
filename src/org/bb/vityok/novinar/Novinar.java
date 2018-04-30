@@ -1,11 +1,17 @@
 package org.bb.vityok.novinar;
 
+import java.io.IOException;
 import java.io.File;
 
+import java.text.SimpleDateFormat;
+
+import java.util.Calendar;
 import java.util.List;
 import java.util.LinkedList;
 
 import java.util.logging.Logger;
+import java.util.logging.FileHandler;
+import java.util.logging.SimpleFormatter;
 
 import org.bb.vityok.novinar.db.Backend;
 import org.bb.vityok.novinar.db.NewsItemDAO;
@@ -20,6 +26,8 @@ import org.bb.vityok.novinar.feed.FeedReader;
  */
 public class Novinar
 {
+    public static final SimpleDateFormat TS_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     private OPMLManager oman;
     private Backend dbend;
     private NewsItemDAO niDAO;
@@ -48,6 +56,13 @@ public class Novinar
     }
 
     public Novinar(String opmlFile, String dbName) {
+        try {
+            FileHandler fh = new FileHandler("novinar.log");
+            fh.setFormatter(new SimpleFormatter());
+            logger.addHandler(fh);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         oman = new OPMLManager(opmlFile);
         dbend = new Backend(dbName);
         niDAO = new NewsItemDAO(dbend);
@@ -155,6 +170,20 @@ public class Novinar
         niDAO.insertOrUpdateItem(chan, newsItem);
     }
 
+    public int getTotalNewsItemsCount() { return niDAO.getTotalNewsItemsCount(); }
+    public int getUnreadNewsItemsCount() { return niDAO.getUnreadNewsItemsCount(); }
+    public int getRemovedNewsItemsCount() { return niDAO.getRemovedNewsItemsCount(); }
+
+    public void markNewsItemRead(NewsItem item, boolean isRead)
+        throws Exception
+    {
+        // do nothing if the old value is the same as new
+        if (isRead ^ item.getIsRead()) {
+            item.setIsRead(isRead);
+            niDAO.markItemAsRead(item, isRead);
+        }
+    }
+
     public void loadFeeds()
         throws Exception
     {
@@ -196,5 +225,17 @@ public class Novinar
 
     public Status getStatus() {
         return status;
+    }
+
+    /** Purge news items for this channel preceding the given
+     * timestamp from the database.
+     */
+    public void cleanupChannel(Channel chan, Calendar ts) {
+        if (ts != null) {
+            logger.info("cleanup for channel " + chan
+                        + " for items before: " + TS_FORMAT.format(ts.getTime()));
+
+            niDAO.cleanupChannel(chan, ts);
+        }
     }
 }

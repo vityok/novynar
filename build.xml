@@ -36,6 +36,9 @@
     </javac>
     <copy file="${src.dir}/org/bb/vityok/novinar/ui/style.css"
 	  tofile="${classes.dir}/org/bb/vityok/novinar/ui/style.css"/>
+    <copy file="${src.dir}/org/bb/vityok/novinar/ui/novinar.css"
+	  tofile="${classes.dir}/org/bb/vityok/novinar/ui/novinar.css"/>
+
   </target>
 
   <target name="jar" depends="compile">

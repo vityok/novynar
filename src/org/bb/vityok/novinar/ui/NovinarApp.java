@@ -2,14 +2,19 @@ package org.bb.vityok.novinar.ui;
 
 import java.util.List;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 
+import javafx.beans.value.ChangeListener;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ListChangeListener;
+
+import javafx.css.PseudoClass;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,6 +23,7 @@ import javafx.geometry.Insets;
 
 import javafx.scene.Scene;
 import javafx.scene.Node;
+import javafx.scene.Group;
 
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -28,6 +34,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -38,9 +45,11 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.NewsItem;
@@ -54,6 +63,8 @@ import org.bb.vityok.novinar.Outline;
 public class NovinarApp extends Application {
 
     private Novinar novinar;
+
+    private Scene primaryScene;
 
     /** Table view with the current selection of news items. */
     private TableView<NewsItem> itemsTable = null;
@@ -80,9 +91,9 @@ public class NovinarApp extends Application {
         // --- Menu File
         Menu menuFile = new Menu("File");
 
-	MenuItem clear = new MenuItem("Clear");
-	clear.setOnAction((ActionEvent evt) -> box.setVisible(false));
-        menuFile.getItems().addAll(clear);
+	MenuItem info = new MenuItem("Info...");
+	info.setOnAction((ActionEvent evt) -> showInfoDialog());
+        menuFile.getItems().addAll(info);
 
 	MenuItem refresh = new MenuItem("Refresh feeds");
 	refresh.setOnAction((ActionEvent evt) -> updateItemsTable());
@@ -133,6 +144,16 @@ public class NovinarApp extends Application {
 	}
     } // end class OutlineTreeItem
 
+    public void feedsTreeCtxProperties() {
+        Outline selectedOl = channelsTree.getSelectionModel().getSelectedItem().getValue();
+        System.out.println("Menu Item Clicked!" + selectedOl);
+
+        Stage dialog = new Stage();
+        dialog.initStyle(StageStyle.UTILITY);
+        Scene scene = new Scene(new Group(new Text(25, 25, "Hello World!")));
+        dialog.setScene(scene);
+        dialog.show();
+    }
 
     /** Builds the channels tree in the left side of the window.
      *
@@ -140,7 +161,7 @@ public class NovinarApp extends Application {
      */
     public VBox buildFeedsTree() {
 	// **** FEEDS TREE
-	VBox vbox = new VBox();
+	final VBox vbox = new VBox();
 
 	novinar.loadConfig();
         // immediately store config in case if there were new channels
@@ -155,16 +176,41 @@ public class NovinarApp extends Application {
             .getSelectionModel()
             .selectedItemProperty()
             .addListener((obs, oldSelection, newSelection) -> {
-                    TreeItem<Outline> selectedItem = (TreeItem<Outline>) newSelection;
+                    TreeItem<Outline> selectedItem = newSelection;
                     Outline outline = selectedItem.getValue();
                     selectedOutline(outline);
                 });
+
+        // instantiate the context menu for the channels TreeView. It
+        // appears that clicking with the secondary mouse button on an
+        // item makes it "selected", and therefore accessible to the
+        // menu item handler code
+        MenuItem ctxNewFolder = new MenuItem("New folder...");
+        ctxNewFolder.setOnAction(ae -> feedsTreeCtxProperties());
+
+        MenuItem ctxNewChannel = new MenuItem("New channel...");
+        ctxNewChannel.setOnAction(ae -> feedsTreeCtxProperties());
+
+        MenuItem ctxRemove = new MenuItem("Remove...");
+        ctxRemove.setOnAction(ae -> feedsTreeCtxProperties());
+
+        MenuItem ctxProperties = new MenuItem("Properties...");
+        ctxProperties.setOnAction(ae -> feedsTreeCtxProperties());
+
+        ContextMenu channelsContextMenu = new ContextMenu();
+        channelsContextMenu.getItems().addAll(ctxNewFolder, ctxNewChannel,
+                                              new SeparatorMenuItem(),
+                                              ctxRemove,
+                                              new SeparatorMenuItem(),
+                                              ctxProperties);
+        channelsTree.setContextMenu(channelsContextMenu);
+
 	VBox.setVgrow(channelsTree, Priority.ALWAYS);
 
 	vbox.getChildren().addAll(channelsTree);
 
 	return vbox;
-    }
+    } // end buildFeedsTree
 
 
     /** Builds the items in the list of news items. */
@@ -172,10 +218,51 @@ public class NovinarApp extends Application {
 	itemsTable = new TableView<>();
 
         itemsTable.setEditable(false);
+        itemsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
+        // from: https://stackoverflow.com/a/27016798/ in order to
+        // mark unread news item rows with the bold font. This is
+        // accomplished by introducing two pseudo classes and
+        // activating them whenever row contents (item) or its isRead
+        // property changes
+        PseudoClass clsRead = PseudoClass.getPseudoClass("readItem");
+        PseudoClass clsUnread = PseudoClass.getPseudoClass("unreadItem");
+
+        itemsTable.setRowFactory(tv -> {
+                TableRow<NewsItem> row = new TableRow<>();
+                ChangeListener<Boolean> readListener = (obs, oldRead, newRead) -> {
+                    boolean gotRead = newRead.booleanValue();
+                    row.pseudoClassStateChanged(clsRead, gotRead);
+                    row.pseudoClassStateChanged(clsUnread, !gotRead);
+
+                };
+                row.itemProperty().addListener((obs, oldItem, newItem) -> {
+                        if (oldItem != null) {
+                            oldItem.isReadProperty().removeListener(readListener);
+                        }
+                        if (newItem != null) {
+                            newItem.isReadProperty().addListener(readListener);
+                            row.pseudoClassStateChanged(clsRead, newItem.getIsRead());
+                            row.pseudoClassStateChanged(clsUnread, !newItem.getIsRead());
+                        } else {
+                            row.pseudoClassStateChanged(clsRead, false);
+                            row.pseudoClassStateChanged(clsUnread, false);
+                        }
+                    });
+                return row ;
+            });
+
+        // create three columns by default
         TableColumn<NewsItem,String> titleCol = new TableColumn<>("Title");
+        titleCol.setPrefWidth(300);
+        titleCol.setSortable(true);
+
         TableColumn<NewsItem,String> authorCol = new TableColumn<>("Author");
+        authorCol.setPrefWidth(30);
+
         TableColumn<NewsItem,String> dateCol = new TableColumn<>("Date");
+        dateCol.setPrefWidth(100);
+        dateCol.setSortable(true);
 
 	titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
 	authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -185,6 +272,7 @@ public class NovinarApp extends Application {
 	itemsTable.getColumns().add(authorCol);
 	itemsTable.getColumns().add(dateCol);
 
+        // handle selected news items
 	itemsTable
             .getSelectionModel()
             .selectedItemProperty()
@@ -201,6 +289,7 @@ public class NovinarApp extends Application {
                     final NewsItem selectedItem = itemsTable.getSelectionModel().getSelectedItem();
 
                     if (selectedItem != null) {
+                        // handle DEL key press, todo: handle multiple selected items
                         if (keyEvent.getCode().equals(KeyCode.DELETE)) {
                             itemsTable.getItems().remove(itemsTable.getItems().indexOf(selectedItem));
                         }
@@ -216,8 +305,34 @@ public class NovinarApp extends Application {
         vbox.getChildren().add(itemsTable);
 
 	return vbox;
-    }
+    } // end buildItemsTable
 
+    private void showInfoDialog() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText("Novinar, a news reader and aggegator");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        grid.add(new Label("Channels:"), 0, 0);
+        grid.add(new Label(Integer.toString(novinar.getChannels().size())), 1, 0);
+
+        grid.add(new Label("Total news items:"), 0, 1);
+        grid.add(new Label(Integer.toString(novinar.getTotalNewsItemsCount())), 1, 1);
+
+        grid.add(new Label("Unread:"), 0, 2);
+        grid.add(new Label(Integer.toString(novinar.getUnreadNewsItemsCount())), 1, 2);
+
+        grid.add(new Label("To be removed:"), 0, 3);
+        grid.add(new Label(Integer.toString(novinar.getRemovedNewsItemsCount())), 1, 3);
+
+        alert.getDialogPane().setContent(grid);
+
+        alert.showAndWait();
+    }
 
     private void updateItemsTable() {
         try {
@@ -313,15 +428,20 @@ public class NovinarApp extends Application {
 
     /** Handle news item selection in the list of the news items. */
     private void selectedNewsItem(NewsItem item) {
-	if (item == null) {
-	    itemView.getEngine().loadContent("<em></em>");
-	} else {
-	    itemView.getEngine().loadContent(item.getDescription());
-	    itemTitle.setText(item.getTitle());
-            itemAuthor.setText("Creator: " + item.getCreator());
-            itemTimestamp.setText(" Timestamp: " + item.getDate());
-            itemLink.setText(item.getLink());
-	}
+        try {
+            if (item == null) {
+                itemView.getEngine().loadContent("<em></em>");
+            } else {
+                itemView.getEngine().loadContent(item.getDescription());
+                itemTitle.setText(item.getTitle());
+                itemAuthor.setText("Creator: " + item.getCreator());
+                itemTimestamp.setText(" Timestamp: " + item.getDate());
+                itemLink.setText(item.getLink());
+                novinar.markNewsItemRead(item, true);
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "failed to load news item", e);
+        }
     }
 
 
@@ -346,10 +466,11 @@ public class NovinarApp extends Application {
 	// populate items table with the items
 	updateItemsTable();
 	selectedNewsItem(null);
-        Scene scene = new Scene(root);
+        primaryScene = new Scene(root);
+        primaryScene.getStylesheets().add(getClass().getResource("novinar.css").toExternalForm());
 
         primaryStage.setTitle("Novinar news reader");
-        primaryStage.setScene(scene);
+        primaryStage.setScene(primaryScene);
 
         primaryStage.setMaximized(true);
         primaryStage.show();

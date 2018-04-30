@@ -91,7 +91,9 @@ public class Atom
             Calendar ts = parseTimestamp(tsStr);
             if (ts != null) { return ts; }
 
-            Novinar.getLogger().severe("Atom parser failed to parse timestamp: " + tsStr);
+            Novinar.getLogger().severe("failed to parse timestamp: " + tsStr);
+        } else {
+            Novinar.getLogger().severe("failed to extract timestamp: " + entry.getTagName());
         }
 
         return new Calendar.Builder().setInstant(System.currentTimeMillis()).build();
@@ -120,20 +122,28 @@ public class Atom
 
 	    Novinar.getLogger().info("got " + entriesList.getLength() + " entries");
 
+            Calendar oldestTimestamp = null;
+
 	    for (int i = 0; i < entriesList.getLength(); i++) {
 		Element entry = (Element) entriesList.item(i);
 		String iTitle = entry.getElementsByTagName("title").item(0).getTextContent();
                 // todo: there might be several link elements, choose the one not being rel="self"
 		String iLink = getLink(entry);
 		String iContent = entry.getElementsByTagName("content").item(0).getTextContent();
-                Calendar ts = extractTimestamp(entry, "published");
+                Calendar iTs = extractTimestamp(entry, "published");
 		NewsItem newsItem = new NewsItem();
 		newsItem.setTitle(iTitle);
 		newsItem.setLink(iLink);
 		newsItem.setDescription(iContent);
-                newsItem.setDateCalendar(ts);
+                newsItem.setDateCalendar(iTs);
 		novinar.insertOrUpdateItem(chan, newsItem);
+
+                if (oldestTimestamp == null
+                    || iTs.before(oldestTimestamp)) {
+                    oldestTimestamp = iTs;
+                }
 	    }
+            novinar.cleanupChannel(chan, oldestTimestamp);
 	}
     }
 }
