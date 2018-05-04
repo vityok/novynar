@@ -1,6 +1,7 @@
 package org.bb.vityok.novinar.ui;
 
 import java.util.List;
+import java.util.Optional;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,14 +52,17 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+import javafx.util.Pair;
+
 import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.NewsItem;
 import org.bb.vityok.novinar.Novinar;
 import org.bb.vityok.novinar.Outline;
 
 
-/** Primary UI controller that implements the glue binding all
- * components of the application together.
+/** Primary UI controller.
+ *
+ * Relies on the Novinar class for business logic.
  */
 public class NovinarApp extends Application {
 
@@ -122,7 +126,7 @@ public class NovinarApp extends Application {
     public class OutlineTreeItem extends TreeItem<Outline> {
 	public OutlineTreeItem(Outline ol) {
 	    super(ol);
-	    buildChildren();
+	    rebuildChildren();
 	}
 
         @Override
@@ -130,19 +134,24 @@ public class NovinarApp extends Application {
 	    return ((Outline) getValue()).toString();
 	}
 
-	private void buildChildren() {
+	private ObservableList<TreeItem<Outline>> buildChildren() {
 	    Outline ol = getValue();
 	    if (ol != null && ol.hasChildren()) {
+                ObservableList<TreeItem<Outline>> children = FXCollections.observableArrayList();
 		List<Outline> outlines = ol.getChildren();
-		if (outlines != null) {
-		    ObservableList<TreeItem<Outline>> children = FXCollections.observableArrayList();
-                    outlines.forEach((childOutline) -> {
-                        getChildren().add(new OutlineTreeItem(childOutline));
+                outlines.forEach((childOutline) -> {
+                        children.add(new OutlineTreeItem(childOutline));
                     });
-		}
+                return children;
 	    }
+            return FXCollections.emptyObservableList();
 	}
+
+        public void rebuildChildren() {
+	    getChildren().setAll(buildChildren());
+        }
     } // end class OutlineTreeItem
+
 
     public void feedsTreeCtxProperties() {
         Outline selectedOl = channelsTree.getSelectionModel().getSelectedItem().getValue();
@@ -176,9 +185,11 @@ public class NovinarApp extends Application {
             .getSelectionModel()
             .selectedItemProperty()
             .addListener((obs, oldSelection, newSelection) -> {
-                    TreeItem<Outline> selectedItem = newSelection;
-                    Outline outline = selectedItem.getValue();
-                    selectedOutline(outline);
+                    if (newSelection != null) {
+                        TreeItem<Outline> selectedItem = newSelection;
+                        Outline outline = selectedItem.getValue();
+                        selectedOutline(outline);
+                    }
                 });
 
         // instantiate the context menu for the channels TreeView. It
@@ -207,7 +218,33 @@ public class NovinarApp extends Application {
 
 	VBox.setVgrow(channelsTree, Priority.ALWAYS);
 
-	vbox.getChildren().addAll(channelsTree);
+        Button btnFolder = new Button("Folder");
+        btnFolder.setOnAction((ActionEvent e) -> showAddFolderDialog());
+
+        // add new channel
+        Button btnChannel = new Button("Channel");
+        btnChannel.setOnAction((ActionEvent e) -> showAddChannelDialog());
+
+        Button btnProperties = new Button("Properties");
+
+        Button btnRemove = new Button("Remove");
+        btnRemove.setOnAction((ActionEvent e) -> showRemoveOutlineDialog());
+
+        // todo: eventually text should be replaced with just icons
+
+        // Image imageDecline = new Image(getClass().getResourceAsStream("not.png"));
+        // Button button5 = new Button();
+        // button5.setGraphic(new ImageView(imageDecline));
+
+        ToolBar tbChannels = new ToolBar(
+                                         btnFolder,
+                                         btnChannel,
+                                         btnProperties,
+                                         new Separator(),
+                                         btnRemove
+                                         );
+
+	vbox.getChildren().addAll(tbChannels, channelsTree);
 
 	return vbox;
     } // end buildFeedsTree
@@ -307,10 +344,107 @@ public class NovinarApp extends Application {
 	return vbox;
     } // end buildItemsTable
 
+
+    private void showAddChannelDialog() {
+        Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+        dialog.setTitle("Add channel");
+        dialog.setHeaderText("Specify channel parameters");
+        // ButtonType.OK is there by default
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField fldUrl = new TextField();
+        fldUrl.setPromptText("Enter URL");
+
+        TextField fldTitle = new TextField();
+        fldTitle.setPromptText("Channel title");
+
+        grid.add(new Label("Feed URL:"), 0, 0);
+        grid.add(fldUrl, 1, 0);
+
+        grid.add(new Label("Feed title:"), 0, 1);
+        grid.add(fldTitle, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Request focus on the URL field by default.
+        Platform.runLater(() -> fldUrl.requestFocus());
+
+        dialog.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    // add a new channel under the currently selected outline
+                    OutlineTreeItem parent = (OutlineTreeItem) channelsTree.getSelectionModel().getSelectedItem();
+                    Outline ol = novinar.appendChannel(parent.getValue(), fldUrl.getText(), fldTitle.getText());
+                    parent.rebuildChildren();
+                    try {
+                        novinar.loadFeeds(ol);
+                    } catch (Exception e) {
+                        logger.log(Level.SEVERE, "failed to refresh new feed", e);
+                    }
+                }
+            });
+    }
+
+    private void showRemoveOutlineDialog() {
+        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+        dialog.setTitle("Remove entry");
+        dialog.setHeaderText("This will permanently remove information. Are you sure?");
+        // ButtonType.OK is there by default
+        // dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+
+        dialog.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    // add a new channel under the currently selected outline
+                    TreeItem<Outline> item = channelsTree.getSelectionModel().getSelectedItem();
+                    OutlineTreeItem parent = (OutlineTreeItem)item.getParent();
+                    Outline ol = item.getValue();
+                    novinar.removeOPMLEntry(ol);
+                    parent.rebuildChildren();
+                }
+            });
+    }
+
+    private void showAddFolderDialog() {
+        Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+        dialog.setTitle("Add folder");
+        dialog.setHeaderText("Folder name");
+        // ButtonType.OK is there by default
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField fldName = new TextField();
+        fldName.setPromptText("Enter name");
+
+        grid.add(new Label("Folder name:"), 0, 0);
+        grid.add(fldName, 1, 0);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Request focus on the URL field by default.
+        Platform.runLater(() -> fldName.requestFocus());
+
+        dialog.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    // add a new channel under the currently selected outline
+                    OutlineTreeItem parent = (OutlineTreeItem) channelsTree.getSelectionModel().getSelectedItem();
+                    Outline ol = novinar.appendFolder(parent.getValue(), fldName.getText());
+                    parent.rebuildChildren();
+                }
+            });
+    }
+
     private void showInfoDialog() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Information");
-        alert.setHeaderText("Novinar, a news reader and aggegator");
+        Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+        dialog.setTitle("Information");
+        dialog.setHeaderText("Novinar, a news reader and aggegator");
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -329,9 +463,9 @@ public class NovinarApp extends Application {
         grid.add(new Label("To be removed:"), 0, 3);
         grid.add(new Label(Integer.toString(novinar.getRemovedNewsItemsCount())), 1, 3);
 
-        alert.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setContent(grid);
 
-        alert.showAndWait();
+        dialog.showAndWait();
     }
 
     private void updateItemsTable() {
@@ -432,7 +566,7 @@ public class NovinarApp extends Application {
             if (item == null) {
                 itemView.getEngine().loadContent("<em></em>");
             } else {
-                itemView.getEngine().loadContent(item.getDescription());
+                itemView.getEngine().loadContent(novinar.getNewsItemDescription(item));
                 itemTitle.setText(item.getTitle());
                 itemAuthor.setText("Creator: " + item.getCreator());
                 itemTimestamp.setText(" Timestamp: " + item.getDate());
@@ -453,7 +587,7 @@ public class NovinarApp extends Application {
             novinar = new Novinar();
 	    novinar.setup();
 	} catch (Exception e) {
-	    e.printStackTrace();
+            logger.log(Level.SEVERE, "failure during initialization", e);
 	}
     }
 

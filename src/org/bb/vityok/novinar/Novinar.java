@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.LinkedList;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
@@ -33,7 +34,7 @@ public class Novinar
     private NewsItemDAO niDAO;
     private FeedReader reader;
 
-    private static Logger logger = Logger.getLogger("org.bb.vityok.novinar");
+    private static Logger logger = Logger.getLogger(Novinar.class.getName());
 
     public enum Status {
         READY, READING_FEEDS, STARTING
@@ -60,9 +61,11 @@ public class Novinar
             FileHandler fh = new FileHandler("novinar.log");
             fh.setFormatter(new SimpleFormatter());
             logger.addHandler(fh);
+            logger.setLevel(Level.FINE);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        logger.info("loading Novinar with: opml=" + opmlFile + "; db=" + dbName);
         oman = new OPMLManager(opmlFile);
         dbend = new Backend(dbName);
         niDAO = new NewsItemDAO(dbend);
@@ -72,7 +75,9 @@ public class Novinar
     public void setup ()
         throws Exception
     {
-        dbend.setup();
+        // db backend is setup in its constructor
+
+        // dbend.setup();
     }
 
     public void close ()
@@ -174,6 +179,12 @@ public class Novinar
     public int getUnreadNewsItemsCount() { return niDAO.getUnreadNewsItemsCount(); }
     public int getRemovedNewsItemsCount() { return niDAO.getRemovedNewsItemsCount(); }
 
+    public String getNewsItemDescription(NewsItem item)
+        throws Exception
+    {
+        return niDAO.getNewsItemDescription(item);
+    }
+
     public void markNewsItemRead(NewsItem item, boolean isRead)
         throws Exception
     {
@@ -197,6 +208,12 @@ public class Novinar
         throws Exception
     {
         reader.loadFeed(chan);
+    }
+
+    public void loadFeeds(Outline ol)
+        throws Exception
+    {
+        reader.loadFeed(ol.getChannel());
     }
 
     public void loadConfig() {
@@ -237,5 +254,36 @@ public class Novinar
 
             niDAO.cleanupChannel(chan, ts);
         }
+    }
+
+    public Outline appendChannel(Outline ol, String url, String title) {
+        Outline newOl = oman.appendChannel(ol, url, title);
+        return newOl;
+    }
+
+    public Outline appendFolder(Outline ol, String name) {
+        Outline newOl = oman.appendFolder(ol, name);
+        return newOl;
+    }
+
+    /** Deletes selected Outline and all its children from the OPML
+     * tree and all news items from the database.
+     */
+    public void removeOPMLEntry(Outline ol) {
+        if (ol.isFolder()) {
+            // todo: this is a folder outline and it might require
+            // some sort of a recursion
+            getChannelsUnder(ol);
+        } else {
+            // this is just a single channel entry
+            removeChannel(ol);
+        }
+    }
+
+    public void removeChannel(Outline ol) {
+        Channel channel = ol.getChannel();
+        logger.info("removing channel: " + channel);
+        oman.removeEntry(ol);
+        niDAO.removeChannelItems(channel);
     }
 }

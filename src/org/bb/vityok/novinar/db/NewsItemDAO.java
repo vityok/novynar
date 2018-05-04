@@ -44,12 +44,32 @@ public class NewsItemDAO
     {
 	Connection conn = dbend.getConnection();
 	// check if such item already exists in the database before
-	// insert
-        String sqlSel = "SELECT link FROM news_item WHERE link=?";
+	// insertion, update the item if it is not removed otherwise
+
+        String sqlSel = "SELECT link, news_item_id, is_removed FROM news_item WHERE link=?";
 	try (PreparedStatement cs = conn.prepareStatement(sqlSel)) {
             cs.setString(1, item.getLink());
             ResultSet rscs = cs.executeQuery();
-            if (!rscs.next()) {
+            boolean alreadyExists = rscs.next();
+            if (alreadyExists) {
+                int newsItemId = rscs.getInt("news_item_id");
+                boolean isRemoved = (rscs.getInt("is_removed") == 1);
+                if (!isRemoved) {
+                    String sqlUp = "UPDATE news_item SET "
+                        + " title=?, description=?, creator=?, date=?, subject=? "
+                        + " WHERE news_item_id=?";
+                    try (PreparedStatement ps = conn.prepareStatement(sqlUp)) {
+                        ps.setString(1, item.getTitle());
+                        ps.setString(2, item.getDescription());
+                        ps.setString(3, item.getCreator());
+                        ps.setTimestamp(4, new Timestamp(item.getDateCalendar().getTimeInMillis()));
+                        ps.setString(5, item.getSubject());
+                        ps.setInt(6, newsItemId);
+                        ps.executeUpdate();
+                        dbend.getLogger().fine("updated existing item: " + item.getTitle());
+                    }
+                }
+            } else {
                 String sqlIns = "INSERT INTO news_item(title, link, description, " +
                     " creator, date, subject, channel_id)" +
                     " VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -66,21 +86,7 @@ public class NewsItemDAO
                 }
             }
         }
-    }
-
-
-    public String readStringFromAsciiString(InputStream is)
-        throws Exception
-    {
-        // see https://stackoverflow.com/a/35446009
-        ByteArrayOutputStream result = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = is.read(buffer)) != -1) {
-            result.write(buffer, 0, length);
-        }
-        return result.toString(StandardCharsets.UTF_8.name());
-    }
+    } // insertOrUpdateItem
 
 
     /** Returns a list of items for the given channel.
@@ -95,13 +101,25 @@ public class NewsItemDAO
         return getNewsItemByChannels(channels);
     }
 
+
+    /** Loads news items from the database except for their
+     * descriptions.
+     *
+     * @see getNewsItemDescription
+     */
     public List<NewsItem> getNewsItemByChannels(List<Channel> channels)
 	throws Exception
     {
 	Connection conn = dbend.getConnection();
         List<String> channelIds = new LinkedList<String>();
+        List<NewsItem> newsItems = new LinkedList<NewsItem>();
+
         for (Channel chan : channels) {
             channelIds.add(Integer.toString(chan.getChannelId()));
+        }
+
+        if (channelIds.isEmpty()) {
+            return newsItems;
         }
 
         String sql = "SELECT news_item_id, " +
@@ -113,28 +131,23 @@ public class NewsItemDAO
             " ORDER BY date";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            // ps.setArray(1, conn.createArrayOf("int", channelIds));
-
-            List<NewsItem> list = new LinkedList<NewsItem>();
-
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 NewsItem item = new NewsItem();
                 item.setNewsItemId(rs.getInt("news_item_id"));
                 item.setTitle(rs.getString("title"));
                 item.setLink(rs.getString("link"));
-                item.setDescription(rs.getString("description"));
+                // item.setDescription(rs.getString("description"));
                 item.setCreator(rs.getString("creator"));
                 item.setDate(rs.getString("date"));
                 item.setSubject(rs.getString("subject"));
                 item.setIsRead(rs.getInt("is_read") == 1 );
-                list.add(item);
+                newsItems.add(item);
             }
-            return list;
+            return newsItems;
         }
-
-
     }
+
 
     /** Mark the given item as removed in the database.
      *
@@ -196,18 +209,43 @@ public class NewsItemDAO
         return count;
     }
 
+
     public int getTotalNewsItemsCount()
     {
         return querySingleInt("SELECT COUNT(*) AS count FROM news_item");
     }
 
+
     public int getUnreadNewsItemsCount()
     {
         return querySingleInt("SELECT COUNT(*) AS count FROM news_item WHERE is_read=0 AND is_removed=0");
     }
+
+
     public int getRemovedNewsItemsCount()
     {
         return querySingleInt("SELECT COUNT(*) AS count FROM news_item WHERE is_removed=1");
+    }
+
+
+    /** Loads description for the given NewsItem.
+     *
+     * This is useful for lazy loading of data.
+     */
+    public String getNewsItemDescription(NewsItem item)
+        throws Exception
+    {
+	Connection conn = dbend.getConnection();
+
+        String sql = "SELECT description FROM news_item WHERE news_item_id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, Integer.valueOf(item.getNewsItemId()));
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("description");
+            }
+        }
+        return "";
     }
 
     /** Purge news items for this channel preceding the given
@@ -229,4 +267,18 @@ public class NewsItemDAO
         }
     }
 
+    /** Deletes all news items from the database for the given
+     * channel.
+     */
+    public void removeChannelItems(Channel chan) {
+	Connection conn = dbend.getConnection();
+
+        String sql = "DELETE FROM news_item WHERE channel_id=? ";
+	try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, chan.getChannelId());
+            ps.executeUpdate();
+        } catch (SQLException sqle) {
+            dbend.getLogger().log(Level.SEVERE, "failed to remove channel items: " + sql, sqle);
+        }
+    }
 }

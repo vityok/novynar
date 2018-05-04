@@ -3,6 +3,7 @@ package org.bb.vityok.novinar;
 import java.util.List;
 import java.util.LinkedList;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -14,8 +15,11 @@ import org.w3c.dom.NodeList;
 public class Outline
 {
     private String title;
-    private Node node; // DOM node that corresponds to this outline
+    /* DOM node that corresponds to this outline */
+    private Element elt;
 
+    /* Root outline has no parents and is null */
+    private Outline parent = null;
     private List<Outline> children = null;
 
     /* Channel object if there is any, and there must be one if this
@@ -26,9 +30,10 @@ public class Outline
 
 
     /** Binds the outline with the associated DOM node. */
-    public Outline(OPMLManager oman, Node node) {
+    public Outline(OPMLManager oman, Node node, Outline parent) {
+        this.elt = (Element) node;
         this.oman = oman;
-        this.node = node;
+        this.parent = parent;
         this.title = getAttribute("text", "N/A");
         String url = getAttribute("xmlUrl", null);
 
@@ -42,8 +47,9 @@ public class Outline
         }
     }
 
-    public Node getNode() { return node; }
+    public Element getNode() { return elt; }
     public OPMLManager getOPMLManager() { return oman; }
+    public Outline getParent() { return parent; }
 
     /** Channels are leafs in the OPML tree, return the associated
      * channel object if there is any.
@@ -51,19 +57,17 @@ public class Outline
     public Channel getChannel() { return channel; }
 
     public final String getAttribute(String name, String defaultValue) {
-        NamedNodeMap atts = node.getAttributes();
-        Node att = atts.getNamedItem(name);
-        return (att == null) ? defaultValue : att.getNodeValue();
+        String attValue = elt.getAttribute(name);
+        return (attValue == null || attValue.isEmpty()) ? defaultValue : attValue;
     }
-
 
     public void setAttribute(String namespaceURI, String name, String value) {
-        oman.setAttribute(node, namespaceURI, name, value);
+        oman.setAttribute(elt, namespaceURI, name, value);
     }
 
-
     public String getAttributeNS(String namespaceURI, String name, String defaultValue) {
-        return oman.getAttributeNS(node, namespaceURI, name, defaultValue);
+        // todo: use Element.getAttributeNS method instead
+        return oman.getAttributeNS(elt, namespaceURI, name, defaultValue);
     }
 
     public String getTitle() { return title; }
@@ -78,19 +82,42 @@ public class Outline
             ( children.size() > 0 );
     }
 
+    public boolean isFolder() {
+        return channel == null;
+    }
+
+    public boolean isChannel() {
+        return channel != null;
+    }
+
     @Override
     public String toString() { return getTitle(); }
+
 
     /** Find child outline nodes and add them to the children list.
      */
     private void buildChildren() {
-        NodeList childNodes = node.getChildNodes();
+        NodeList childNodes = elt.getChildNodes();
         children = new LinkedList<>();
         for (int i = 0; i < childNodes.getLength(); i++) {
             Node childNode = childNodes.item(i);
-            if (childNode.getNodeName().equals("outline")) {
-                children.add(new Outline(oman, childNode));
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element childElement = (Element) childNode;
+                if (childElement.getTagName().equals("outline")) {
+                    addChildOutline(new Outline(oman, childNode, this));
+                }
             }
         }
     }
+
+    public void addChildOutline(Outline ol) {
+        children.add(ol);
+    }
+
+    public void removeChildOutline(Outline ol) {
+        children.remove(ol);
+        elt.removeChild(ol.getNode());
+
+    }
+
 } // end class Outline

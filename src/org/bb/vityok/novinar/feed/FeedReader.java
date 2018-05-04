@@ -106,11 +106,11 @@ public class FeedReader
 	throws Exception
     {
         Novinar.getLogger().info("loading items for the channel: " + chan);
+        InputStream is = null;
 
         try {
             String url = chan.getLink();
             URL feedURL = new URL(url);
-            InputStream is = null;
             switch (feedURL.getProtocol())
                 {
                 case "file":
@@ -157,6 +157,9 @@ public class FeedReader
             }
         } catch (Exception e) {
             Novinar.getLogger().log(Level.SEVERE, "failed to parse feed for channel: " + chan, e);
+            if (is != null) {
+                is.close();
+            }
         }
         return null;
     } // end loadFeed

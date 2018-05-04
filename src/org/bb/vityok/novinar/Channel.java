@@ -79,7 +79,7 @@ public class Channel
         OPMLManager oman = ol.getOPMLManager();
         oman.setAttribute(ol.getNode(),
                           OPMLManager.NOVINAR_NS,
-                          OPMLManager.A_CHANNEL_ID,
+                          OPMLManager.Q_CHANNEL_ID,
                           Integer.toString(channelId));
     }
 
@@ -101,7 +101,7 @@ public class Channel
         OPMLManager oman = ol.getOPMLManager();
         oman.setAttribute(ol.getNode(),
                           OPMLManager.NOVINAR_NS,
-                          OPMLManager.A_LAST_UPDATED,
+                          OPMLManager.Q_LAST_UPDATED,
                           updateTs);
         Novinar.getLogger().info("updated channel: " + getTitle()
                                  + " at: " + updateTs);
