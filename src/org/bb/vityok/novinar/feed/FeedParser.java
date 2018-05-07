@@ -35,7 +35,9 @@ public abstract class FeedParser
                                                                  new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"),
                                                                  new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:sszzzzz"), // 2018-04-30T12:00:00+00:00
                                                                  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
-                                                                 new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z"),
+                                                                 new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z"),
+                                                                 new SimpleDateFormat("EEE, dd MMM yyyy HH:mm Z"),
+                                                                 new SimpleDateFormat("EEE, dd MMM yyyy HH:mm"),
                                                                  new SimpleDateFormat("MM/dd/yyyy hh:mm aa") // 04/25/2018 13:42 PM
 
     };

@@ -23,9 +23,6 @@ import org.bb.vityok.novinar.Channel;
 public class RSS
     extends FeedParser
 {
-
-    public static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss Z");
-
     public RSS(Novinar novinar) { super(novinar); }
 
     /** Check if the given document can be parsed by this parser.

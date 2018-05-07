@@ -43,9 +43,15 @@ public class NewsItemDAO
 	throws Exception
     {
 	Connection conn = dbend.getConnection();
+
+        // truncate the description if it exceeds maximum possible description size
+        String desc = item.getDescription();
+        if (desc !=null && desc.length() >=Backend.DESCRIPTION_MAX_LENGTH) {
+            item.setDescription(desc.substring(0, Backend.DESCRIPTION_MAX_LENGTH - 5 ));
+        }
+
 	// check if such item already exists in the database before
 	// insertion, update the item if it is not removed otherwise
-
         String sqlSel = "SELECT link, news_item_id, is_removed FROM news_item WHERE link=?";
 	try (PreparedStatement cs = conn.prepareStatement(sqlSel)) {
             cs.setString(1, item.getLink());
@@ -133,7 +139,7 @@ public class NewsItemDAO
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                NewsItem item = new NewsItem();
+                NewsItem item = new LazyNewsItem(this);
                 item.setNewsItemId(rs.getInt("news_item_id"));
                 item.setTitle(rs.getString("title"));
                 item.setLink(rs.getString("link"));

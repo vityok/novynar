@@ -566,7 +566,7 @@ public class NovinarApp extends Application {
             if (item == null) {
                 itemView.getEngine().loadContent("<em></em>");
             } else {
-                itemView.getEngine().loadContent(novinar.getNewsItemDescription(item));
+                itemView.getEngine().loadContent(item.getDescription());
                 itemTitle.setText(item.getTitle());
                 itemAuthor.setText("Creator: " + item.getCreator());
                 itemTimestamp.setText(" Timestamp: " + item.getDate());

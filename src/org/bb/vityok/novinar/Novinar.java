@@ -179,11 +179,6 @@ public class Novinar
     public int getUnreadNewsItemsCount() { return niDAO.getUnreadNewsItemsCount(); }
     public int getRemovedNewsItemsCount() { return niDAO.getRemovedNewsItemsCount(); }
 
-    public String getNewsItemDescription(NewsItem item)
-        throws Exception
-    {
-        return niDAO.getNewsItemDescription(item);
-    }
 
     public void markNewsItemRead(NewsItem item, boolean isRead)
         throws Exception

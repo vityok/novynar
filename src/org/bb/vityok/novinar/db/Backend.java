@@ -26,6 +26,8 @@ public class Backend
 
     public static final String DEFAULT_DB_NAME = "novynarDB";
 
+    public static final int DESCRIPTION_MAX_LENGTH = 102400;
+
     private String dbName;
 
     private Connection conn;
