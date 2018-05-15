@@ -139,7 +139,7 @@ public class NewsItemDAO
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                NewsItem item = new LazyNewsItem(this);
+                NewsItem item = new LazyNewsItem(dbend);
                 item.setNewsItemId(rs.getInt("news_item_id"));
                 item.setTitle(rs.getString("title"));
                 item.setLink(rs.getString("link"));
@@ -234,25 +234,6 @@ public class NewsItemDAO
     }
 
 
-    /** Loads description for the given NewsItem.
-     *
-     * This is useful for lazy loading of data.
-     */
-    public String getNewsItemDescription(NewsItem item)
-        throws Exception
-    {
-	Connection conn = dbend.getConnection();
-
-        String sql = "SELECT description FROM news_item WHERE news_item_id=?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, Integer.valueOf(item.getNewsItemId()));
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getString("description");
-            }
-        }
-        return "";
-    }
 
     /** Purge news items for this channel preceding the given
      * timestamp from the database.

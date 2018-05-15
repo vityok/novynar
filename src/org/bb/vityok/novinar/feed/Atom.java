@@ -30,13 +30,6 @@ public class Atom
 {
     public static final String ATOM_XMLNS = "http://www.w3.org/2005/Atom";
 
-    /** In the wild wild web various timestamp formats can be
-     * seen. Here are some that I've encountered.
-     */
-    public static final SimpleDateFormat TIMESTAMP_FORMAT[] = { new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"),
-                                                                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
-                                                                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss") };
-
     public Atom(Novinar novinar) { super(novinar); }
 
     /** Check if the given document can be parsed by this parser.
@@ -129,7 +122,17 @@ public class Atom
 		String iTitle = entry.getElementsByTagName("title").item(0).getTextContent();
                 // todo: there might be several link elements, choose the one not being rel="self"
 		String iLink = getLink(entry);
-		String iContent = entry.getElementsByTagName("content").item(0).getTextContent();
+                // extract content
+                String iContent = "n/a";
+                NodeList contentEntries = entry.getElementsByTagName("content");
+                if (contentEntries.getLength() > 0) {
+                    iContent = contentEntries.item(0).getTextContent();
+                } else {
+                    NodeList summaryEntries = entry.getElementsByTagName("summary");
+                    if (summaryEntries.getLength() > 0) {
+                        iContent = summaryEntries.item(0).getTextContent();
+                    }
+                }
                 Calendar iTs = extractTimestamp(entry, "published");
 		NewsItem newsItem = new NewsItem();
 		newsItem.setTitle(iTitle);
