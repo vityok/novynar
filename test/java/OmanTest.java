@@ -8,10 +8,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.Novinar;
+import org.bb.vityok.novinar.Outline;
 
 @DisplayName("Test the OPML manager")
 class OmanTest
@@ -52,5 +54,27 @@ class OmanTest
 
         // they must match
         assertEquals(linear_items_count, traverse_items_count);
+    }
+
+
+    @Test
+    void outlinePropertyHandling()
+        throws Exception
+    {
+        final Outline root = novinar.getRootOutline();
+        final String propA = "update-on-boot";
+        final String propB = "update-frequency";
+
+        assertNull(root.getProperty(propA));
+        root.setProperty(propA, "yes");
+        assertNotNull(root.getProperty(propA));
+        assertTrue("yes".equals(root.getProperty(propA)));
+
+        assertNull(root.getProperty(propB));
+        assertTrue("no".equals(root.getProperty(propB, "no")));
+        root.setProperty(propB, "no");
+        assertTrue("no".equals(root.getProperty(propB)));
+        root.setProperty(propB, "yes");
+        assertTrue("yes".equals(root.getProperty(propB)));
     }
 }

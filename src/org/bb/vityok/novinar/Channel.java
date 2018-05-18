@@ -83,11 +83,20 @@ public class Channel
                           Integer.toString(channelId));
     }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { /* todo */ }
+    public String getTitle() { return ol.getTitle(); }
+    /** @todo */
+    public void setTitle(String title) { ol.setTitle(title); }
 
     public String getLink() { return link; }
-    public void setLink(String link) { /* todo */ }
+
+    /** @todo */
+    public void setLink(String link) {
+        this.link = link;
+        OPMLManager oman = ol.getOPMLManager();
+        oman.setAttribute(ol.getNode(),
+                          Outline.A_XML_URL,
+                          link);
+    }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

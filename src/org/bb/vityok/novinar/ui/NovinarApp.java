@@ -58,6 +58,7 @@ import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.NewsItem;
 import org.bb.vityok.novinar.Novinar;
 import org.bb.vityok.novinar.Outline;
+import org.bb.vityok.novinar.UpdatePeriod;
 
 
 /** Primary UI controller.
@@ -226,6 +227,7 @@ public class NovinarApp extends Application {
         btnChannel.setOnAction((ActionEvent e) -> showAddChannelDialog());
 
         Button btnProperties = new Button("Properties");
+        btnProperties.setOnAction((ActionEvent e) -> showEditChannelDialog());
 
         Button btnRemove = new Button("Remove");
         btnRemove.setOnAction((ActionEvent e) -> showRemoveOutlineDialog());
@@ -344,49 +346,126 @@ public class NovinarApp extends Application {
 	return vbox;
     } // end buildItemsTable
 
+    class ChannelPropertiesDialog extends Alert
+    {
+        final GridPane grid = new GridPane();
+        final TextField fldUrl = new TextField();
+        final TextField fldTitle = new TextField();
+        final CheckBox cbIgnoreOnBoot = new CheckBox();
+        final ComboBox<UpdatePeriod> cbxUpdatePeriod = new ComboBox<>();
 
+        public ChannelPropertiesDialog(String title) {
+            super(Alert.AlertType.INFORMATION);
+            setTitle(title);
+            setHeaderText("Specify channel parameters");
+            // ButtonType.OK is there by default
+            getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
+
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
+
+            fldUrl.setPromptText("Enter URL");
+            fldTitle.setPromptText("Channel title");
+            fldUrl.setPrefWidth(400);
+            fldTitle.setPrefWidth(400);
+
+            grid.add(new Label("Feed URL:"), 0, 0);
+            grid.add(fldUrl, 1, 0);
+
+            grid.add(new Label("Feed title:"), 0, 1);
+            grid.add(fldTitle, 1, 1);
+
+            grid.add(new Label("Ignore on boot:"), 0, 2);
+            grid.add(cbIgnoreOnBoot, 1, 2);
+
+            cbxUpdatePeriod.getItems().setAll(UpdatePeriod.values());
+            cbxUpdatePeriod.setValue(UpdatePeriod.HOURS_3);
+            grid.add(new Label("Update period:"), 0, 3);
+            grid.add(cbxUpdatePeriod, 1, 3);
+
+            getDialogPane().setContent(grid);
+
+            init();
+        }
+
+        public void init() {
+            // Request focus on the URL field by default.
+            Platform.runLater(() -> fldUrl.requestFocus());
+        }
+
+        public void execute() {
+            showAndWait().ifPresent(response -> handleResponse(response));
+        }
+
+        public void handleResponse(ButtonType result) {
+        }
+    } // end ChannelPropertiesDialog
+
+
+    /** Show dialog with the new channel properties. */
     private void showAddChannelDialog() {
-        Alert dialog = new Alert(Alert.AlertType.INFORMATION);
-        dialog.setTitle("Add channel");
-        dialog.setHeaderText("Specify channel parameters");
-        // ButtonType.OK is there by default
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-
-        TextField fldUrl = new TextField();
-        fldUrl.setPromptText("Enter URL");
-
-        TextField fldTitle = new TextField();
-        fldTitle.setPromptText("Channel title");
-
-        grid.add(new Label("Feed URL:"), 0, 0);
-        grid.add(fldUrl, 1, 0);
-
-        grid.add(new Label("Feed title:"), 0, 1);
-        grid.add(fldTitle, 1, 1);
-
-        dialog.getDialogPane().setContent(grid);
-
-        // Request focus on the URL field by default.
-        Platform.runLater(() -> fldUrl.requestFocus());
-
-        dialog.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    // add a new channel under the currently selected outline
-                    OutlineTreeItem parent = (OutlineTreeItem) channelsTree.getSelectionModel().getSelectedItem();
-                    Outline ol = novinar.appendChannel(parent.getValue(), fldUrl.getText(), fldTitle.getText());
-                    parent.rebuildChildren();
-                    try {
-                        novinar.loadFeeds(ol);
-                    } catch (Exception e) {
-                        logger.log(Level.SEVERE, "failed to refresh new feed", e);
+        final ChannelPropertiesDialog dialog = new ChannelPropertiesDialog("Add channel")
+            {
+                @Override
+                public void handleResponse(ButtonType response) {
+                    if (response == ButtonType.OK) {
+                        // add a new channel under the currently selected outline
+                        OutlineTreeItem parent = (OutlineTreeItem) channelsTree.getSelectionModel().getSelectedItem();
+                        Outline ol = novinar.appendChannel(parent.getValue(), fldUrl.getText(), fldTitle.getText());
+                        ol.setIgnoreOnBoot(cbIgnoreOnBoot.isSelected());
+                        ol.setUpdatePeriod(cbxUpdatePeriod.getValue());
+                        parent.rebuildChildren();
+                        try {
+                            novinar.loadFeeds(ol);
+                        } catch (Exception e) {
+                            logger.log(Level.SEVERE, "failed to refresh new feed", e);
+                        }
                     }
+
                 }
-            });
+            };
+
+        dialog.execute();
+    }
+
+    /** Edit properties of an existing channel. */
+    public void showEditChannelDialog() {
+        final TreeItem<Outline> item = channelsTree.getSelectionModel().getSelectedItem();
+        final Outline ol = item.getValue();
+        final Channel chan = ol.getChannel();
+
+        final ChannelPropertiesDialog dialog = new ChannelPropertiesDialog("Edit channel")
+            {
+                @Override
+                public void init() {
+                    fldUrl.setText(chan.getLink());
+                    fldTitle.setText(chan.getTitle());
+                    cbIgnoreOnBoot.setSelected(ol.getIgnoreOnBoot());
+                    cbxUpdatePeriod.setValue(ol.getUpdatePeriod());
+                }
+
+                @Override
+                public void handleResponse(ButtonType response) {
+                    if (response == ButtonType.OK) {
+                        chan.setLink(fldUrl.getText());
+                        chan.setTitle(fldTitle.getText());
+
+                        ol.setIgnoreOnBoot(cbIgnoreOnBoot.isSelected());
+                        ol.setProperty(Outline.P_UPDATE_PERIOD, cbxUpdatePeriod.getValue().getCode());
+
+                        try {
+                            novinar.loadFeeds(ol);
+                        } catch (Exception e) {
+                            logger.log(Level.SEVERE, "failed to refresh the feed", e);
+                        }
+                    }
+
+                }
+            };
+
+        dialog.execute();
+
     }
 
     private void showRemoveOutlineDialog() {
@@ -560,7 +639,11 @@ public class NovinarApp extends Application {
         updateItemsTable(ol);
     }
 
-    /** Handle news item selection in the list of the news items. */
+    /** Handle news item selection in the list of the news items.
+     *
+     * That is, do all the necessary stuff after the user clicks on
+     * the item in the list of news items.
+     */
     private void selectedNewsItem(NewsItem item) {
         try {
             if (item == null) {

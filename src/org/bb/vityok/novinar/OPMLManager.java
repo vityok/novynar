@@ -37,14 +37,16 @@ public class OPMLManager
     public static final String DEFAULT_OPML_FILE_NAME = "backup.opml";
 
     public static final String NOVINAR_NS = "https://bitbucket.org/vityok/novinar";
+    public static final String Q_NOVINAR = "novinar:";
+
     public static final String A_CHANNEL_ID = "channelId";
-    public static final String Q_CHANNEL_ID = "novinar:" + A_CHANNEL_ID;
+    public static final String Q_CHANNEL_ID = Q_NOVINAR + A_CHANNEL_ID;
 
     public static final String A_CHANNEL_COUNTER = "channelCounter";
-    public static final String Q_CHANNEL_COUNTER = "novinar:" + A_CHANNEL_COUNTER;
+    public static final String Q_CHANNEL_COUNTER = Q_NOVINAR + A_CHANNEL_COUNTER;
 
     public static final String A_LAST_UPDATED = "lastUpdated";
-    public static final String Q_LAST_UPDATED = "novinar:" + A_LAST_UPDATED;
+    public static final String Q_LAST_UPDATED = Q_NOVINAR + A_LAST_UPDATED;
 
     public static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
@@ -141,17 +143,28 @@ public class OPMLManager
 
     public void setAttribute(Node node, String name, String value) {
         NamedNodeMap atts = node.getAttributes();
-        Attr attr = getDocument().createAttribute(name);
-        attr.setValue(value);
-        atts.setNamedItemNS(attr);
+        Node attrNode = atts.getNamedItem(name);
+        if (attrNode == null) {
+            // there is no such attribute yet
+            Attr attr = node.getOwnerDocument().createAttribute(name);
+            attr.setValue(value);
+            atts.setNamedItem(attr);
+        } else {
+            attrNode.setNodeValue(value);
+        }
     }
 
     public void setAttribute(Node node, String namespaceURI, String name, String value) {
         NamedNodeMap atts = node.getAttributes();
-        Attr attr = getDocument()
-            .createAttributeNS(namespaceURI, name);
-        attr.setValue(value);
-        atts.setNamedItemNS(attr);
+        Node attrNode = atts.getNamedItemNS(namespaceURI, name);
+        if (attrNode == null) {
+            Attr attr = getDocument()
+                .createAttributeNS(namespaceURI, name);
+            attr.setValue(value);
+            atts.setNamedItemNS(attr);
+        } else {
+            attrNode.setNodeValue(value);
+        }
     }
 
     /** Given a Node and an attribute name, return its contents or
