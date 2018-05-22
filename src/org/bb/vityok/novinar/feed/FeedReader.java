@@ -9,6 +9,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.LinkedList;
 
@@ -24,6 +28,7 @@ import org.w3c.dom.Element;
 
 import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.Novinar;
+import org.bb.vityok.novinar.UpdatePeriod;
 
 import org.bb.vityok.novinar.db.NewsItemDAO;
 
@@ -107,10 +112,10 @@ public class FeedReader
     {
         Novinar.getLogger().info("loading items for the channel: " + chan);
         InputStream is = null;
+        String url = chan.getLink();
+        URL feedURL = new URL(url);
 
         try {
-            String url = chan.getLink();
-            URL feedURL = new URL(url);
             switch (feedURL.getProtocol())
                 {
                 case "file":
@@ -129,10 +134,12 @@ public class FeedReader
             // Input stream for reading feed data obtained, handle it
             if (is == null) {
                 Novinar.getLogger().severe("FeedReader failed to open: " + url);
+                chan.touch();
                 return null;
             } else {
                 // Parse XML data into a DOM document/tree
                 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                dbFactory.setNamespaceAware(true);
                 DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
                 Document doc = dBuilder.parse(is);
 
@@ -145,15 +152,14 @@ public class FeedReader
                     if (parser.accepts(doc)) {
                         Novinar.getLogger().info("Processing feed with " + parser);
                         parser.processFeed(chan, doc);
-                        chan.updatedNow();
                         is.close();
+                        chan.touch();
                         return doc;
                     }
                 }
 
                 Novinar.getLogger().severe("FeedReader doesn't know how to handle this type of feeds. Inspect: " + url);
                 is.close();
-                return null;
             }
         } catch (Exception e) {
             Novinar.getLogger().log(Level.SEVERE, "failed to parse feed for channel: " + chan, e);
@@ -161,6 +167,7 @@ public class FeedReader
                 is.close();
             }
         }
+        chan.touch();
         return null;
     } // end loadFeed
 
@@ -181,10 +188,49 @@ public class FeedReader
     // todo: the thread must hang in background, periodically checking
     // for the channels that have to be updated
     public void run() {
-        try {
-            loadFeeds();
-        } catch (Exception e) {
-            Novinar.getLogger().log(Level.SEVERE, "failed while loading feeds", e);
+        Novinar.getLogger().info("FeedReader thread is running");
+        boolean firstRound = true;
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                Instant nextRound = Instant.now().plus(UpdatePeriod.DEFAULT_UPDATE_PERIOD.getDuration());
+                Channel nextRoundChannel = null;
+
+                List<Channel> channels = novinar.getChannels();
+
+                for (Channel channel : channels) {
+                    Instant lastUpdate = channel.getLatestUpdate();
+                    UpdatePeriod updatePeriod = channel.getUpdatePeriod();
+
+                    // when this channel should be updated?
+                    Instant whenUp = lastUpdate.plus(updatePeriod.getDuration());
+
+                    Novinar.getLogger().info("channel: " + channel + " must be updated at: " + whenUp);
+                    if ( (firstRound && (! channel.getIgnoreOnBoot()))
+                         || whenUp.isBefore(Instant.now())) {
+                        loadFeed(channel);
+                    }
+
+                    Instant nextUpdate = Instant.now().plus(updatePeriod.getDuration());
+                    if (nextUpdate.isBefore(nextRound)) {
+                        nextRound = whenUp;
+                        nextRoundChannel = channel;
+                    }
+                } // finished processing channels
+
+                firstRound = false;
+                Instant now = Instant.now();
+                Duration toSleep = Duration.between(now, nextRound);
+                Novinar.getLogger().info("sleeping for: " + toSleep + " (now is: " + now
+                                         + " will wake up at: " + nextRound + ")"
+                                         + " to update: " + nextRoundChannel);
+                Thread.currentThread().sleep(toSleep.toMillis());
+            } catch (InterruptedException ie) {
+                Novinar.getLogger().log(Level.INFO, "FeedReader thread got interrupted");
+                return;
+            } catch (Exception e) {
+                Novinar.getLogger().log(Level.SEVERE, "failed while loading feeds", e);
+            }
         }
+        Novinar.getLogger().info("FeedReader thread stopped");
     }
 }

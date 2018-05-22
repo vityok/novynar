@@ -1,13 +1,8 @@
 package org.bb.vityok.novinar.feed;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.Instant;
 
 import java.util.logging.Level;
-
-import java.text.ParseException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -77,11 +72,11 @@ public class Atom
     }
 
 
-    public Calendar extractTimestamp(Element entry, String name) {
+    public Instant extractTimestamp(Element entry, String name) {
         NodeList timestamps = entry.getElementsByTagName(name);
         if (timestamps.getLength() > 0) {
             String tsStr = timestamps.item(0).getTextContent();
-            Calendar ts = parseTimestamp(tsStr);
+            Instant ts = parseTimestamp(tsStr);
             if (ts != null) { return ts; }
 
             Novinar.getLogger().severe("failed to parse timestamp: " + tsStr);
@@ -89,7 +84,7 @@ public class Atom
             Novinar.getLogger().severe("failed to extract timestamp: " + entry.getTagName());
         }
 
-        return new Calendar.Builder().setInstant(System.currentTimeMillis()).build();
+        return Instant.now();
     }
 
 
@@ -115,7 +110,7 @@ public class Atom
 
 	    Novinar.getLogger().info("got " + entriesList.getLength() + " entries");
 
-            Calendar oldestTimestamp = null;
+            Instant oldestTimestamp = null;
 
 	    for (int i = 0; i < entriesList.getLength(); i++) {
 		Element entry = (Element) entriesList.item(i);
@@ -133,7 +128,7 @@ public class Atom
                         iContent = summaryEntries.item(0).getTextContent();
                     }
                 }
-                Calendar iTs = extractTimestamp(entry, "published");
+                Instant iTs = extractTimestamp(entry, "published");
 		NewsItem newsItem = new NewsItem();
 		newsItem.setTitle(iTitle);
 		newsItem.setLink(iLink);
@@ -142,7 +137,7 @@ public class Atom
 		novinar.insertOrUpdateItem(chan, newsItem);
 
                 if (oldestTimestamp == null
-                    || iTs.before(oldestTimestamp)) {
+                    || iTs.isBefore(oldestTimestamp)) {
                     oldestTimestamp = iTs;
                 }
 	    }

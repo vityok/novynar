@@ -1,11 +1,8 @@
 package org.bb.vityok.novinar.feed;
 
-import java.util.Calendar;
+import java.time.Instant;
 
 import java.util.logging.Level;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -41,19 +38,19 @@ public class RSS
         }
     }
 
-    public Calendar extractTimestamp(Element entry) {
+    public Instant extractTimestamp(Element entry) {
         NodeList pubDates = entry.getElementsByTagName("pubDate");
         if (pubDates.getLength() > 0) {
             String tsStr = pubDates.item(0).getTextContent();
-            Calendar ts= parseTimestamp(tsStr);
-            if (ts!=null) {
+            Instant ts = parseTimestamp(tsStr);
+            if (ts != null) {
                 return ts;
             }
             Novinar.getLogger().severe("failed to parse timestamp: " + tsStr);
         } else {
             Novinar.getLogger().severe("failed to extract timestamp: " + entry.getTagName());
         }
-        return new Calendar.Builder().setInstant(System.currentTimeMillis()).build();
+        return Instant.now();
     }
 
 
@@ -80,13 +77,25 @@ public class RSS
 
 	    Novinar.getLogger().info("got " + itemsList.getLength() + " items in description");
 
-            Calendar oldestTimestamp = null;
+            Instant oldestTimestamp = null;
 
 	    for (int i = 0; i < itemsList.getLength(); i++) {
 		Element item = (Element) itemsList.item(i);
-		String iLink = item.getElementsByTagName("link").item(0).getTextContent();
-		String iDescription = item.getElementsByTagName("description").item(0).getTextContent();
-                Calendar iTs = extractTimestamp(item);
+		String iLink = "";
+                if (item.getElementsByTagNameNS(FEEDBURNER_NS, "origLink").getLength() > 0) {
+                    iLink = item.getElementsByTagNameNS(FEEDBURNER_NS, "origLink").item(0).getTextContent();
+                } else {
+                    iLink = item.getElementsByTagName("link").item(0).getTextContent();
+                }
+		String iDescription = "";
+                if (item.getElementsByTagName("description").getLength() > 0) {
+                    iDescription = item.getElementsByTagName("description").item(0).getTextContent();
+                } else if (item.getElementsByTagNameNS(CONTENT_NS, "encoded").getLength() > 0) {
+                    iDescription = item.getElementsByTagNameNS(CONTENT_NS, "encoded").item(0).getTextContent();
+                } else {
+                    Novinar.getLogger().severe("failed to extract description: " + item);
+                }
+                Instant iTs = extractTimestamp(item);
                 // some feeds have entries without titles. For example LJ/RSS
                 String iTitle = "";
                 if (item.getElementsByTagName("title").getLength() > 0) {
@@ -108,7 +117,7 @@ public class RSS
                 newsItem.setDateCalendar(iTs);
 
                 if (oldestTimestamp == null
-                    || iTs.before(oldestTimestamp)) {
+                    || iTs.isBefore(oldestTimestamp)) {
                     oldestTimestamp = iTs;
                 }
 

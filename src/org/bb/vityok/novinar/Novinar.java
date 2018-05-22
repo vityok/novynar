@@ -5,7 +5,8 @@ import java.io.File;
 
 import java.text.SimpleDateFormat;
 
-import java.util.Calendar;
+import java.time.Instant;
+
 import java.util.List;
 import java.util.LinkedList;
 
@@ -80,11 +81,17 @@ public class Novinar
         // dbend.setup();
     }
 
+    /** Shutdown Novinar core.
+     *
+     * Close and free database resources, stop running threads.
+     */
     public void close ()
         throws Exception
     {
         getLogger().severe("Novinar core shutting down");
+        reader.interrupt();
         dbend.close();
+        getLogger().severe("Novinar core shut down");
     }
 
     /** Returns all channels defined in the OPML file. */
@@ -190,13 +197,16 @@ public class Novinar
         }
     }
 
-    public void loadFeeds()
+    public synchronized void loadFeeds()
         throws Exception
     {
         // todo: reader.start() to spawn a background thread once code
         // is ready. might be better to communicate with the reader
         // thread via a task queue
-        reader.run();
+        // reader.loadFeeds();
+        if (!reader.isAlive()) {
+            reader.start();
+        }
     }
 
     public void loadFeed(Channel chan)
@@ -242,10 +252,10 @@ public class Novinar
     /** Purge news items for this channel preceding the given
      * timestamp from the database.
      */
-    public void cleanupChannel(Channel chan, Calendar ts) {
+    public void cleanupChannel(Channel chan, Instant ts) {
         if (ts != null) {
             logger.info("cleanup for channel " + chan
-                        + " for items before: " + TS_FORMAT.format(ts.getTime()));
+                        + " for items before: " + ts);
 
             niDAO.cleanupChannel(chan, ts);
         }

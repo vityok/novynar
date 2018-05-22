@@ -1,11 +1,8 @@
 package org.bb.vityok.novinar.feed;
 
-import java.util.Calendar;
+import java.time.Instant;
 
 import java.util.logging.Level;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -24,11 +21,6 @@ import org.bb.vityok.novinar.Channel;
 public class RDF
     extends FeedParser
 {
-    // Dublin core xmlns
-    public static final String DC_NS = "http://purl.org/dc/elements/1.1/";
-    public static final String RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-    public static final String RSS_RDF_NS = "http://purl.org/rss/1.0/";
-    public static final String SYN_NS = "http://purl.org/rss/1.0/modules/syndication/";
 
     public RDF(Novinar novinar) { super(novinar); }
 
@@ -51,11 +43,11 @@ public class RDF
     /** Tries to extract entry timestamp as specified in a Dublic Core
      * date element.
      */
-    public Calendar extractTimestamp(Element entry) {
+    public Instant extractTimestamp(Element entry) {
         NodeList timestamps = entry.getElementsByTagName("dc:date");
         if (timestamps.getLength() > 0) {
             String tsStr = timestamps.item(0).getTextContent();
-            Calendar ts = parseTimestamp(tsStr);
+            Instant ts = parseTimestamp(tsStr);
             if (ts != null) {
                 return ts;
             }
@@ -64,7 +56,7 @@ public class RDF
         } else {
             Novinar.getLogger().log(Level.SEVERE, "failed to extract timestamp: " + entry.getTagName());
         }
-        return new Calendar.Builder().setInstant(System.currentTimeMillis()).build();
+        return Instant.now();
     }
 
 
@@ -90,14 +82,22 @@ public class RDF
 
 	    Novinar.getLogger().info("got " + itemsList.getLength() + " items in description");
 
-            Calendar oldestTimestamp = null;
+            Instant oldestTimestamp = null;
 
 	    for (int i = 0; i < itemsList.getLength(); i++) {
 		Element item = (Element) itemsList.item(i);
 		String iTitle = item.getElementsByTagName("title").item(0).getTextContent();
 		String iLink = item.getElementsByTagName("link").item(0).getTextContent();
-		String iDescription = item.getElementsByTagName("description").item(0).getTextContent();
-                Calendar iTs = extractTimestamp(item);
+		String iDescription = "";
+                if (item.getElementsByTagName("description").getLength() > 0) {
+                    iDescription = item.getElementsByTagName("description").item(0).getTextContent();
+                } else if (item.getElementsByTagNameNS(CONTENT_NS, "encoded").getLength() > 0) {
+                    iDescription = item.getElementsByTagNameNS(CONTENT_NS, "encoded").item(0).getTextContent();
+                } else {
+                    Novinar.getLogger().severe("failed to extract description: " + item);
+                }
+
+                Instant iTs = extractTimestamp(item);
 		NewsItem newsItem = new NewsItem();
 		newsItem.setTitle(iTitle);
 		newsItem.setLink(iLink);
@@ -105,7 +105,7 @@ public class RDF
                 newsItem.setDateCalendar(iTs);
 
                 if (oldestTimestamp == null
-                    || iTs.before(oldestTimestamp)) {
+                    || iTs.isBefore(oldestTimestamp)) {
                     oldestTimestamp = iTs;
                 }
 

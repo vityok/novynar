@@ -220,7 +220,9 @@ public class Outline
 
     public UpdatePeriod getUpdatePeriod() {
         String str = getProperty(Outline.P_UPDATE_PERIOD, null);
-        if (str == null) { return UpdatePeriod.DEFAULT_UPDATE_PERIOD; }
+        if (str == null) {
+            return UpdatePeriod.DEFAULT_UPDATE_PERIOD;
+        }
         return UpdatePeriod.fromString(str);
     }
 

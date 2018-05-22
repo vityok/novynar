@@ -1,15 +1,17 @@
 package org.bb.vityok.novinar;
 
-import java.util.Calendar;
+import java.io.Serializable;
+
+import java.text.ParseException;
+
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 import java.util.List;
 
 import org.w3c.dom.Node;
 
-import java.io.Serializable;
-
-import java.util.Calendar;
-
-import java.text.ParseException;
 
 /** Representation of a news feed channel.
  *
@@ -26,7 +28,7 @@ public class Channel
     private String title;
     private String link;
     private String description;
-    private Calendar latestUpdate;  // last time the channel has been updated
+    private Instant latestUpdate;  // last time the channel has been updated
     private List<NewsItem> items;
 
     /** Outline that corresponds to this channel object. */
@@ -56,18 +58,15 @@ public class Channel
         latestUpdate = null;
         if (tsStr != null) {
             try {
-                latestUpdate = (new Calendar.Builder()
-                                .setInstant(OPMLManager.TIMESTAMP_FORMAT
-                                            .parse(tsStr))
-                                .build());
-            } catch (ParseException pe) {
+                latestUpdate = Instant.parse(tsStr);
+            } catch (DateTimeParseException pe) {
                 Novinar.getLogger().severe("failed to parse Channel " + getTitle()
                                            + " timestamp: " + tsStr);
             }
         }
         if (latestUpdate == null) {
             // couldn't parse it from the XML
-            latestUpdate = new Calendar.Builder().setInstant(0).build();
+            latestUpdate = Instant.EPOCH;
         }
     } // end Channel
 
@@ -101,12 +100,13 @@ public class Channel
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Calendar getLatestUpdate() {
+    public Instant getLatestUpdate() {
         return latestUpdate;
     }
-    public void setLatestUpdate(Calendar cal) {
-        String updateTs = OPMLManager.TIMESTAMP_FORMAT.format(cal.getTime());
-        this.latestUpdate = cal;
+    public void setLatestUpdate(Instant inst) {
+        this.latestUpdate = inst;
+        String updateTs = latestUpdate.toString();
+
         OPMLManager oman = ol.getOPMLManager();
         oman.setAttribute(ol.getNode(),
                           OPMLManager.NOVINAR_NS,
@@ -116,12 +116,19 @@ public class Channel
                                  + " at: " + updateTs);
     }
 
-    /** Mark the channel as updated just now. */
-    public void updatedNow() {
-	setLatestUpdate(new Calendar.Builder()
-                             .setInstant(System.currentTimeMillis())
-                             .build());
+    /** Mark the channel as updated just now.
+     *
+     * Like the Unix <tt>touch</tt> program does to the files.
+     */
+    public void touch() {
+	setLatestUpdate(Instant.now());
     }
+
+    public boolean getIgnoreOnBoot() {
+        return ol.getIgnoreOnBoot();
+    }
+
+    public UpdatePeriod getUpdatePeriod() { return ol.getUpdatePeriod(); }
 
     @Override
     public String toString() {

@@ -6,7 +6,8 @@ import java.io.ByteArrayOutputStream;
 
 import java.nio.charset.StandardCharsets;
 
-import java.util.Calendar;
+import java.time.Instant;
+
 import java.util.List;
 import java.util.LinkedList;
 
@@ -68,7 +69,7 @@ public class NewsItemDAO
                         ps.setString(1, item.getTitle());
                         ps.setString(2, item.getDescription());
                         ps.setString(3, item.getCreator());
-                        ps.setTimestamp(4, new Timestamp(item.getDateCalendar().getTimeInMillis()));
+                        ps.setTimestamp(4, new Timestamp(item.getDateCalendar().toEpochMilli()));
                         ps.setString(5, item.getSubject());
                         ps.setInt(6, newsItemId);
                         ps.executeUpdate();
@@ -84,7 +85,7 @@ public class NewsItemDAO
                     ps.setString(2, item.getLink());
                     ps.setString(3, item.getDescription());
                     ps.setString(4, item.getCreator());
-                    ps.setTimestamp(5, new Timestamp(item.getDateCalendar().getTimeInMillis()));
+                    ps.setTimestamp(5, new Timestamp(item.getDateCalendar().toEpochMilli()));
                     ps.setString(6, item.getSubject());
                     ps.setInt(7, Integer.valueOf(chan.getChannelId()));
                     ps.executeUpdate();
@@ -238,7 +239,7 @@ public class NewsItemDAO
     /** Purge news items for this channel preceding the given
      * timestamp from the database.
      */
-    public void cleanupChannel(Channel chan, Calendar ts) {
+    public void cleanupChannel(Channel chan, Instant ts) {
 	Connection conn = dbend.getConnection();
 
         String sql = "DELETE FROM news_item "
@@ -247,7 +248,7 @@ public class NewsItemDAO
             + " AND date < ?";
 	try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, chan.getChannelId());
-            ps.setTimestamp(2, new Timestamp(ts.getTimeInMillis()));
+            ps.setTimestamp(2, new Timestamp(ts.toEpochMilli()));
             ps.executeUpdate();
         } catch (SQLException sqle) {
             dbend.getLogger().log(Level.SEVERE, "failed to cleanup: " + sql, sqle);

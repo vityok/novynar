@@ -2,7 +2,7 @@ package org.bb.vityok.novinar;
 
 import java.io.File;
 
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -48,7 +48,8 @@ public class OPMLManager
     public static final String A_LAST_UPDATED = "lastUpdated";
     public static final String Q_LAST_UPDATED = Q_NOVINAR + A_LAST_UPDATED;
 
-    public static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    //new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    public static final DateTimeFormatter TIMESTAMP_FORMAT = DateTimeFormatter.ISO_INSTANT;
 
     private Document doc;
     private Node rootOutlineNode;
@@ -67,6 +68,7 @@ public class OPMLManager
         opmlFile = new File(DEFAULT_OPML_FILE_NAME);
         loadConfig();
     }
+
     public OPMLManager(String configFile) {
         opmlFile = new File(configFile);
         loadConfig();
