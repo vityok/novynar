@@ -165,6 +165,16 @@ public class NovinarApp extends Application {
         dialog.show();
     }
 
+    /** Refresh the selected feed or feeds in the selected folder. */
+    public void feedsTreeCtxRefresh() {
+        Outline ol = channelsTree.getSelectionModel().getSelectedItem().getValue();
+        try {
+            novinar.loadFeedsBg(ol);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "failed to refresh new feed", e);
+        }
+    }
+
     /** Builds the channels tree in the left side of the window.
      *
      * Uses Outline class as a data model.
@@ -197,6 +207,9 @@ public class NovinarApp extends Application {
         // appears that clicking with the secondary mouse button on an
         // item makes it "selected", and therefore accessible to the
         // menu item handler code
+        MenuItem ctxRefresh = new MenuItem("Refresh");
+        ctxRefresh.setOnAction(ae -> feedsTreeCtxRefresh());
+
         MenuItem ctxNewFolder = new MenuItem("New folder...");
         ctxNewFolder.setOnAction(ae -> feedsTreeCtxProperties());
 
@@ -210,7 +223,10 @@ public class NovinarApp extends Application {
         ctxProperties.setOnAction(ae -> feedsTreeCtxProperties());
 
         ContextMenu channelsContextMenu = new ContextMenu();
-        channelsContextMenu.getItems().addAll(ctxNewFolder, ctxNewChannel,
+        channelsContextMenu.getItems().addAll(ctxRefresh,
+                                              new SeparatorMenuItem(),
+                                              ctxNewFolder,
+                                              ctxNewChannel,
                                               new SeparatorMenuItem(),
                                               ctxRemove,
                                               new SeparatorMenuItem(),

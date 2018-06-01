@@ -17,6 +17,9 @@ import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.Novinar;
 import org.bb.vityok.novinar.NewsItem;
 
+import org.bb.vityok.novinar.feed.RSS;
+
+
 @DisplayName("Test the FeedReader")
 class FeedReaderTest
     extends BaseTest
@@ -26,7 +29,7 @@ class FeedReaderTest
         configure();
     }
 
-    @Test
+    /*    @Test */
     void updateFeeds()
         throws Exception
     {
@@ -46,5 +49,15 @@ class FeedReaderTest
                     assertFalse(item.getDescription().isEmpty());
                 });
         }
+    }
+
+    @Test
+    void parseTimeStamps()
+    {
+        assertNotNull(RSS.parseTimestamp("Fri, 25 May 2018 10:20:32 PDT"));
+        assertNotNull(RSS.parseTimestamp("Wed, 30 May 2018 01:00:25 PDT"));
+        assertNotNull(RSS.parseTimestamp("Tue, 28 Nov 2017 03:00 EST"));
+        assertNotNull(RSS.parseTimestamp("Wed, 09 May 2018 (All day)"));
+        assertNotNull(RSS.parseTimestamp("05/30/2018 20:41 PM"));
     }
 }

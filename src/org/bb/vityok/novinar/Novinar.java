@@ -10,6 +10,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.LinkedList;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
+    
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.FileHandler;
@@ -28,14 +32,15 @@ import org.bb.vityok.novinar.feed.FeedReader;
  */
 public class Novinar
 {
-    public static final SimpleDateFormat TS_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    // public static final SimpleDateFormat TS_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static Logger logger = Logger.getLogger(Novinar.class.getName());
 
     private OPMLManager oman;
     private Backend dbend;
     private NewsItemDAO niDAO;
     private FeedReader reader;
 
-    private static Logger logger = Logger.getLogger(Novinar.class.getName());
+    private ExecutorService taskRunner;
 
     public enum Status {
         READY, READING_FEEDS, STARTING
@@ -71,6 +76,8 @@ public class Novinar
         dbend = new Backend(dbName);
         niDAO = new NewsItemDAO(dbend);
         reader = new FeedReader(this);
+
+        taskRunner = Executors.newSingleThreadExecutor();
     }
 
     public void setup ()
@@ -91,6 +98,19 @@ public class Novinar
         getLogger().severe("Novinar core shutting down");
         reader.interrupt();
         dbend.close();
+
+        try {
+            taskRunner.shutdown();
+            taskRunner.awaitTermination(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            getLogger().severe("tasks interrupted");
+        } finally {
+            if (!taskRunner.isTerminated()) {
+                getLogger().severe("cancel non-finished tasks");
+            }
+            taskRunner.shutdownNow();
+        }
+
         getLogger().severe("Novinar core shut down");
     }
 
@@ -115,13 +135,19 @@ public class Novinar
         List<Channel> channels = new LinkedList<>();
         List<Outline> children = ol.getChildren();
 
-        for (Outline child : children) {
-            Channel childChannel = child.getChannel();
-            if (childChannel != null) {
-                channels.add(childChannel);
-            } else if (child.hasChildren()) {
-                channels.addAll(getChannelsUnder(child));
+        if (ol.getChannel() == null) {
+            // we do have a folder, descend
+            for (Outline child : children) {
+                Channel childChannel = child.getChannel();
+                if (childChannel != null) {
+                    channels.add(childChannel);
+                } else if (child.hasChildren()) {
+                    channels.addAll(getChannelsUnder(child));
+                }
             }
+        } else {
+            // we were given a leaf-channel, nowhere to descend node
+            channels.add(ol.getChannel());
         }
         return channels;
     }
@@ -215,10 +241,27 @@ public class Novinar
         reader.loadFeed(chan);
     }
 
+    /** Loads feeds for the given channel outline or channels in the
+     * folder.
+     */
     public void loadFeeds(Outline ol)
         throws Exception
     {
-        reader.loadFeed(ol.getChannel());
+        List<Channel> channels = getChannelsUnder(ol);
+        for (Channel chan : channels) {
+            reader.loadFeed(chan);
+        }
+    }
+
+    public void loadFeedsBg(final Outline ol)
+    {
+        taskRunner.submit(() -> {
+                try {
+                    loadFeeds(ol);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "failure loading feed: " + ol, e);
+                }
+            });
     }
 
     public void loadConfig() {

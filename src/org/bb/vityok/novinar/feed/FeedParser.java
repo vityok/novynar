@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.text.ParsePosition;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -13,6 +16,7 @@ import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.Novinar;
 
 /** Base class for concrete feed parsers. */
+// ./gradlew test --tests FeedReaderTest
 public abstract class FeedParser
 {
     // Dublin core xmlns
@@ -43,9 +47,13 @@ public abstract class FeedParser
                                                                   DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"),
                                                                   DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssz"), // 2018-04-30T12:00:00+00:00
                                                                   DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
+                                                                  // RFC_1123 date-time with a zone name other than GMT
                                                                   DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z"),
+                                                                  DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z"),
                                                                   DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm Z"),
+                                                                  DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm z"),
                                                                   DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm"),
+                                                                  DateTimeFormatter.ofPattern("EEE, dd MMM yyyy"),
                                                                   DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a"), // 04/25/2018 13:42 PM
                                                                   DateTimeFormatter.ISO_LOCAL_DATE_TIME,
                                                                   DateTimeFormatter.ISO_OFFSET_DATE_TIME,
@@ -55,17 +63,36 @@ public abstract class FeedParser
                                                                   DateTimeFormatter.RFC_1123_DATE_TIME
     };
 
+    private final static String ALL_DAY = " (All day)";
+
+    public static final DateTimeFormatter DAY_FORMAT = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy");
+
     /** Attempts to parse the given timestamp using TIMESTAMP_FORMATS.
      *
      * @return a Calendar object upon a success, null otherwise.
      */
-    public Instant parseTimestamp(String timestamp) {
-        for (int i = 0; i < TIMESTAMP_FORMATS.length; i++) {
+    public static Instant parseTimestamp(String timestamp) {
+        String ts = timestamp;
+
+        if (timestamp.endsWith(ALL_DAY)
+            && timestamp.length() > ALL_DAY.length()) {
+            // if the date-time is incomplete and only date is present
             try {
-                Instant ts = TIMESTAMP_FORMATS[i].parse(timestamp, Instant::from);
-                return ts;
+                ts = timestamp.substring(0, timestamp.length() - ALL_DAY.length());
+                LocalDate ld = LocalDate.parse(ts, DAY_FORMAT);
+                Instant iTs = ld.atStartOfDay().toInstant(ZoneOffset.UTC);
+                return iTs;
             } catch (DateTimeParseException pe) {
-                continue;
+                pe.printStackTrace();
+            }
+        } else {
+            for (int i = 0; i < TIMESTAMP_FORMATS.length; i++) {
+                try {
+                    Instant iTs = TIMESTAMP_FORMATS[i].parse(timestamp, Instant::from);
+                    return iTs;
+                } catch (DateTimeParseException pe) {
+                    continue;
+                }
             }
         }
         return null;
