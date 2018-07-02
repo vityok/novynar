@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,6 +34,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
 import javafx.scene.layout.GridPane;
@@ -78,7 +80,10 @@ public class NovinarApp extends Application {
     private Label itemTitle = null;
     private Label itemAuthor = null;
     private Label itemTimestamp = null;
+    // contains URL of the currently viewed item
     private TextField itemLink = null;
+    // The "visit" link next to the link text
+    private Hyperlink itemLinkLink = null;
 
     private static Logger logger = Logger.getLogger("org.bb.vityok.novinar.ui");
 
@@ -94,7 +99,8 @@ public class NovinarApp extends Application {
 	MenuBar menuBar = new MenuBar();
 
         // --- Menu File
-        Menu menuFile = new Menu("File");
+        Menu menuFile = new Menu("_File");
+	menuFile.setAccelerator(KeyCombination.keyCombination("ALT+F"));
 
 	MenuItem info = new MenuItem("Info...");
 	info.setOnAction((ActionEvent evt) -> showInfoDialog());
@@ -117,6 +123,7 @@ public class NovinarApp extends Application {
         menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
 
 	box.getChildren().addAll(menuBar);
+	HBox.setHgrow(menuBar, Priority.ALWAYS);
 	return box;
     }
 
@@ -309,7 +316,7 @@ public class NovinarApp extends Application {
 
         // create three columns by default
         TableColumn<NewsItem,String> titleCol = new TableColumn<>("Title");
-        titleCol.setPrefWidth(300);
+        titleCol.setPrefWidth(350);
         titleCol.setSortable(true);
 
         TableColumn<NewsItem,String> authorCol = new TableColumn<>("Author");
@@ -607,9 +614,9 @@ public class NovinarApp extends Application {
         SplitPane centerPane = new SplitPane();
 
         centerPane.getItems().addAll(buildFeedsTree(),
-                                  buildItemsTable(),
-                                  buildContentPane());
-        centerPane.setDividerPositions(0.07f, 0.32f);
+				     buildItemsTable(),
+				     buildContentPane());
+        centerPane.setDividerPositions(0.1f, 0.55f);
 	return centerPane;
     }
 
@@ -625,16 +632,41 @@ public class NovinarApp extends Application {
         itemTimestamp = new Label("Timestamp: ");
         itemMetaBox.getChildren().addAll(itemAuthor, itemTimestamp);
 
-        itemLink = new TextField("");
-        itemLink.setFont(Font.font("Helvetica", FontWeight.LIGHT, 12));
-
 	itemView = new WebView();
         WebEngine webEngine = itemView.getEngine();
         webEngine.setJavaScriptEnabled(false);
         webEngine.setUserStyleSheetLocation(getClass().getResource("style.css").toString());
         VBox.setVgrow(itemView, Priority.ALWAYS);
 
-	vbox.getChildren().addAll(itemTitle, itemMetaBox, itemView, itemLink);
+	HBox itemLinksBox = new HBox();
+        itemLink = new TextField("");
+        itemLink.setFont(Font.font("Helvetica", FontWeight.LIGHT, 12));
+	// select all itemLink text upon text field activation (either
+	// with the mouse click or keyboard navigation)
+	itemLink.focusedProperty().addListener(new ChangeListener<Boolean>() {
+		@Override
+		public void changed(ObservableValue ov, Boolean t, Boolean t1) {
+
+		    Platform.runLater(new Runnable() {
+			    @Override
+			    public void run() {
+				if (itemLink.isFocused() && !itemLink.getText().isEmpty()) {
+				    itemLink.selectAll();
+				}
+			    }
+			});
+		}
+	    });
+
+	itemLinkLink = new Hyperlink();
+	itemLinkLink.setText("Visit");
+	itemLinkLink.setOnAction((ActionEvent evt) -> {
+		itemView.getEngine().load(itemLink.getText());
+	    });
+	itemLinksBox.getChildren().addAll(itemLink, itemLinkLink);
+	HBox.setHgrow(itemLink, Priority.ALWAYS);
+
+	vbox.getChildren().addAll(itemTitle, itemMetaBox, itemView, itemLinksBox);
 	return vbox;
     }
 
