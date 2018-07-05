@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-    
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.FileHandler;
@@ -32,14 +32,26 @@ import org.bb.vityok.novinar.feed.FeedReader;
  */
 public class Novinar
 {
-    // public static final SimpleDateFormat TS_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static Logger logger = Logger.getLogger(Novinar.class.getName());
+
+    /** System property defining location of the news items
+     * database. */
+    public static final String PROP_DB_DIR = "org.bb.vityok.novinar.db_dir";
+
+    /** System property defining location of the OPML file with the
+     * feeds directory. */
+    public static final String PROP_OPML_FILE = "org.bb.vityok.novinar.opml_file";
+
+    private static final Logger logger = Logger.getLogger(Novinar.class.getName());
 
     private OPMLManager oman;
     private Backend dbend;
     private NewsItemDAO niDAO;
     private FeedReader reader;
 
+    // used to run jobs/tasks in background, for example the periodic
+    // channel updater thread or single channel refresh tasks. At the
+    // momen at leas one task runs forever: the background refresh
+    // thread
     private ExecutorService taskRunner;
 
     public enum Status {
@@ -56,9 +68,9 @@ public class Novinar
      */
     public Novinar() {
         this(
-             System.getProperty("org.bb.vityok.novinar.opml_file",
+             System.getProperty(PROP_OPML_FILE,
                                 OPMLManager.DEFAULT_OPML_FILE_NAME),
-             System.getProperty("org.bb.vityok.novinar.db_dir",
+             System.getProperty(PROP_DB_DIR,
                                 Backend.DEFAULT_DB_NAME));
     }
 
@@ -77,7 +89,10 @@ public class Novinar
         niDAO = new NewsItemDAO(dbend);
         reader = new FeedReader(this);
 
-        taskRunner = Executors.newSingleThreadExecutor();
+        taskRunner = Executors.newFixedThreadPool(2);
+
+	// immediately start the background channel refresh thread
+	taskRunner.submit(reader);
     }
 
     public void setup ()
@@ -230,9 +245,7 @@ public class Novinar
         // is ready. might be better to communicate with the reader
         // thread via a task queue
         // reader.loadFeeds();
-        if (!reader.isAlive()) {
-            reader.start();
-        }
+        // if (!reader.isAlive()) {}
     }
 
     public void loadFeed(Channel chan)

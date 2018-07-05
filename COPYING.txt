@@ -1,0 +1,6 @@
+Copyright (c) 2018 Victor Anyakin.
+
+Distributed under the terms of the 3-clause BSD license.
+
+Portions are Copyright by other copyright holders, please refer to
+specific copyright notices where appropriate.

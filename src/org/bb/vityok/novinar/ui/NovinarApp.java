@@ -242,30 +242,34 @@ public class NovinarApp extends Application {
 
 	VBox.setVgrow(channelsTree, Priority.ALWAYS);
 
-        Button btnFolder = new Button("Folder");
+	// New folder
+        Button btnFolder = new Button();
+	Image imageFolder = new Image(getClass().getResourceAsStream("/icons/1x/twotone_create_new_folder_black_18dp.png"));
+	btnFolder.setGraphic(new ImageView(imageFolder));
         btnFolder.setOnAction((ActionEvent e) -> showAddFolderDialog());
 
         // add new channel
-        Button btnChannel = new Button("Channel");
+        Button btnChannel = new Button();
+	Image imageChannel = new Image(getClass().getResourceAsStream("/icons/1x/twotone_rss_feed_black_18dp.png"));
+	btnChannel.setGraphic(new ImageView(imageChannel));
         btnChannel.setOnAction((ActionEvent e) -> showAddChannelDialog());
 
-        Button btnProperties = new Button("Properties");
+	// Properties
+        Button btnProperties = new Button();
+	Image imageProperties = new Image(getClass().getResourceAsStream("/icons/1x/twotone_edit_black_18dp.png"));
+	btnProperties.setGraphic(new ImageView(imageProperties));
         btnProperties.setOnAction((ActionEvent e) -> showEditChannelDialog());
 
-        Button btnRemove = new Button("Remove");
+	// Remove
+        Button btnRemove = new Button();
+	Image imageRemove = new Image(getClass().getResourceAsStream("/icons/1x/twotone_delete_forever_black_18dp.png"));
+	btnRemove.setGraphic(new ImageView(imageRemove));
         btnRemove.setOnAction((ActionEvent e) -> showRemoveOutlineDialog());
-
-        // todo: eventually text should be replaced with just icons
-
-        // Image imageDecline = new Image(getClass().getResourceAsStream("not.png"));
-        // Button button5 = new Button();
-        // button5.setGraphic(new ImageView(imageDecline));
 
         ToolBar tbChannels = new ToolBar(
                                          btnFolder,
                                          btnChannel,
                                          btnProperties,
-                                         new Separator(),
                                          btnRemove
                                          );
 
@@ -361,10 +365,35 @@ public class NovinarApp extends Application {
 
 	VBox.setVgrow(itemsTable, Priority.ALWAYS);
 
+	// next item
+        Button btnNext = new Button();
+	Image imageNext = new Image(getClass().getResourceAsStream("/icons/1x/twotone_arrow_drop_down_black_18dp.png"));
+	btnNext.setGraphic(new ImageView(imageNext));
+        btnNext.setOnAction((ActionEvent e) -> { return; } );
+	
+	// previous item
+        Button btnPrev = new Button();
+	Image imagePrev = new Image(getClass().getResourceAsStream("/icons/1x/twotone_arrow_drop_up_black_18dp.png"));
+	btnPrev.setGraphic(new ImageView(imagePrev));
+        btnPrev.setOnAction((ActionEvent e) -> { return; } );
+
+	// share item
+        Button btnShare = new Button();
+	Image imageShare = new Image(getClass().getResourceAsStream("/icons/1x/twotone_share_black_18dp.png"));
+	btnShare.setGraphic(new ImageView(imageShare));
+        btnShare.setOnAction((ActionEvent e) -> { return; } );
+
+	// remove item
+        Button btnRemove = new Button();
+	Image imageRemove = new Image(getClass().getResourceAsStream("/icons/1x/twotone_delete_forever_black_18dp.png"));
+	btnRemove.setGraphic(new ImageView(imageRemove));
+        btnRemove.setOnAction((ActionEvent e) -> { return; } );
+
+        ToolBar tbItems = new ToolBar(btnNext, btnPrev, btnShare, btnRemove);
+
         final VBox vbox = new VBox();
-        vbox.setSpacing(5);
-        vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().add(itemsTable);
+        vbox.setPadding(new Insets(0, 3, 0, 3));
+        vbox.getChildren().addAll(tbItems, itemsTable);
 
 	return vbox;
     } // end buildItemsTable
@@ -616,7 +645,7 @@ public class NovinarApp extends Application {
         centerPane.getItems().addAll(buildFeedsTree(),
 				     buildItemsTable(),
 				     buildContentPane());
-        centerPane.setDividerPositions(0.1f, 0.55f);
+        centerPane.setDividerPositions(0.12f, 0.55f);
 	return centerPane;
     }
 

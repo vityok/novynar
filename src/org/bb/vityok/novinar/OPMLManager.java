@@ -160,7 +160,7 @@ public class OPMLManager
         NamedNodeMap atts = node.getAttributes();
         Node attrNode = atts.getNamedItemNS(namespaceURI, name);
         if (attrNode == null) {
-            Attr attr = getDocument()
+            Attr attr = node.getOwnerDocument()
                 .createAttributeNS(namespaceURI, name);
             attr.setValue(value);
             atts.setNamedItemNS(attr);

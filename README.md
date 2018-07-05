@@ -1,11 +1,12 @@
 # Novinar #
 
-A very simple RSS news reader and agregator. Designed to be
-self-contained and without external dependencies. Relies solely on the
-standard libraries provided by the Java runtime environment.
+Novinar (ukr. *Новинар*) - a very simple RSS news reader and
+agregator. Designed to be self-contained and without external
+dependencies. Relies solely on the standard libraries provided by the
+JavaSE runtime environment.
 
 Despite being in the very early stages of development it is already
-somewhat usable (at least it works for me).
+usable (at least it works for me).
 
 ### Components ###
 
