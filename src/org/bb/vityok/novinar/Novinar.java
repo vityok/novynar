@@ -91,16 +91,13 @@ public class Novinar
 
         taskRunner = Executors.newFixedThreadPool(2);
 
-	// immediately start the background channel refresh thread
-	taskRunner.submit(reader);
     }
 
     public void setup ()
         throws Exception
     {
-        // db backend is setup in its constructor
-
-        // dbend.setup();
+	// start the background channel refresh thread
+	taskRunner.submit(reader);
     }
 
     /** Shutdown Novinar core.
@@ -132,6 +129,15 @@ public class Novinar
     /** Returns all channels defined in the OPML file. */
     public List<Channel> getChannels() {
         return oman.getChannels();
+    }
+
+    /** Returns the channel with the given id.
+     *
+     * @return Channel with the given id or <tt>null</tt> if no such
+     * channel could be found.
+     */
+    public Channel getChannelById(int channelId) {
+	return oman.getChannelById(channelId);
     }
 
 

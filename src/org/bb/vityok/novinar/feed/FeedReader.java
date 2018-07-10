@@ -202,19 +202,21 @@ public class FeedReader
                     UpdatePeriod updatePeriod = channel.getUpdatePeriod();
 
                     // when this channel should be updated?
-                    Instant whenUp = lastUpdate.plus(updatePeriod.getDuration());
+		    if (updatePeriod != UpdatePeriod.NEVER) {
+			Instant whenUp = lastUpdate.plus(updatePeriod.getDuration());
 
-                    Novinar.getLogger().info("channel: " + channel + " must be updated at: " + whenUp);
-                    if ( (firstRound && (! channel.getIgnoreOnBoot()))
-                         || whenUp.isBefore(Instant.now())) {
-                        loadFeed(channel);
-                    }
+			Novinar.getLogger().info("channel: " + channel + " must be updated at: " + whenUp);
+			if ( (firstRound && (! channel.getIgnoreOnBoot()))
+			     || whenUp.isBefore(Instant.now())) {
+			    loadFeed(channel);
+			}
 
-                    Instant nextUpdate = Instant.now().plus(updatePeriod.getDuration());
-                    if (nextUpdate.isBefore(nextRound)) {
-                        nextRound = whenUp;
-                        nextRoundChannel = channel;
-                    }
+			Instant nextUpdate = Instant.now().plus(updatePeriod.getDuration());
+			if (nextUpdate.isBefore(nextRound)) {
+			    nextRound = whenUp;
+			    nextRoundChannel = channel;
+			}
+		    }
                 } // finished processing channels
 
                 firstRound = false;

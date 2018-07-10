@@ -188,6 +188,16 @@ public class OPMLManager
         return channels;
     }
 
+    /** Returns the Channel with the given id. */
+    public Channel getChannelById(int channelId) {
+	for (Channel channel : channels) {
+	    if (channel.getChannelId() == channelId) {
+		return channel;
+	    }
+	}
+	return null;
+    }
+
     public void addChannel(Channel chan) {
         channels.add(chan);
     }

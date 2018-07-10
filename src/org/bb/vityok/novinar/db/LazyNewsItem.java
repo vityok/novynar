@@ -16,8 +16,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import org.bb.vityok.novinar.NewsItem;
-import org.bb.vityok.novinar.Novinar;
-
+import org.bb.vityok.novinar.Channel;
 
 /** This is the NewsItem bean that stores its data in the database.
  *
@@ -32,6 +31,8 @@ public class LazyNewsItem extends NewsItem
 
 {
     private Backend dbend;
+    private int channelId;
+
 
     public LazyNewsItem (Backend dbend) {
         super();

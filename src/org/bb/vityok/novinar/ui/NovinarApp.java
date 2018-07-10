@@ -1,5 +1,8 @@
 package org.bb.vityok.novinar.ui;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -243,25 +246,29 @@ public class NovinarApp extends Application {
 	VBox.setVgrow(channelsTree, Priority.ALWAYS);
 
 	// New folder
-        Button btnFolder = new Button();
+        final Button btnFolder = new Button();
+	btnFolder.setTooltip(new Tooltip("Create new folder"));
 	Image imageFolder = new Image(getClass().getResourceAsStream("/icons/1x/twotone_create_new_folder_black_18dp.png"));
 	btnFolder.setGraphic(new ImageView(imageFolder));
         btnFolder.setOnAction((ActionEvent e) -> showAddFolderDialog());
 
         // add new channel
-        Button btnChannel = new Button();
+        final Button btnChannel = new Button();
+	btnChannel.setTooltip(new Tooltip("Add new channel"));
 	Image imageChannel = new Image(getClass().getResourceAsStream("/icons/1x/twotone_rss_feed_black_18dp.png"));
 	btnChannel.setGraphic(new ImageView(imageChannel));
         btnChannel.setOnAction((ActionEvent e) -> showAddChannelDialog());
 
 	// Properties
-        Button btnProperties = new Button();
+        final Button btnProperties = new Button();
+	btnProperties.setTooltip(new Tooltip("Channel properties"));
 	Image imageProperties = new Image(getClass().getResourceAsStream("/icons/1x/twotone_edit_black_18dp.png"));
 	btnProperties.setGraphic(new ImageView(imageProperties));
         btnProperties.setOnAction((ActionEvent e) -> showEditChannelDialog());
 
 	// Remove
-        Button btnRemove = new Button();
+        final Button btnRemove = new Button();
+	btnRemove.setTooltip(new Tooltip("Remove outline"));
 	Image imageRemove = new Image(getClass().getResourceAsStream("/icons/1x/twotone_delete_forever_black_18dp.png"));
 	btnRemove.setGraphic(new ImageView(imageRemove));
         btnRemove.setOnAction((ActionEvent e) -> showRemoveOutlineDialog());
@@ -367,27 +374,40 @@ public class NovinarApp extends Application {
 
 	// next item
         Button btnNext = new Button();
+	btnNext.setTooltip(new Tooltip("Step to the next item"));
 	Image imageNext = new Image(getClass().getResourceAsStream("/icons/1x/twotone_arrow_drop_down_black_18dp.png"));
 	btnNext.setGraphic(new ImageView(imageNext));
-        btnNext.setOnAction((ActionEvent e) -> { return; } );
-	
+        btnNext.setOnAction((ActionEvent e) -> {
+		itemsTable.getSelectionModel().selectNext();
+	    });
+
 	// previous item
         Button btnPrev = new Button();
+	btnPrev.setTooltip(new Tooltip("Step to the previous item"));
 	Image imagePrev = new Image(getClass().getResourceAsStream("/icons/1x/twotone_arrow_drop_up_black_18dp.png"));
 	btnPrev.setGraphic(new ImageView(imagePrev));
-        btnPrev.setOnAction((ActionEvent e) -> { return; } );
+        btnPrev.setOnAction((ActionEvent e) -> {
+		itemsTable.getSelectionModel().selectPrevious();
+	    });
 
 	// share item
         Button btnShare = new Button();
+	btnShare.setTooltip(new Tooltip("Generate wiki ref text"));
 	Image imageShare = new Image(getClass().getResourceAsStream("/icons/1x/twotone_share_black_18dp.png"));
 	btnShare.setGraphic(new ImageView(imageShare));
-        btnShare.setOnAction((ActionEvent e) -> { return; } );
+        btnShare.setOnAction((ActionEvent e) -> showShareDialog() );
 
 	// remove item
         Button btnRemove = new Button();
+	btnRemove.setTooltip(new Tooltip("Remove item"));
 	Image imageRemove = new Image(getClass().getResourceAsStream("/icons/1x/twotone_delete_forever_black_18dp.png"));
 	btnRemove.setGraphic(new ImageView(imageRemove));
-        btnRemove.setOnAction((ActionEvent e) -> { return; } );
+        btnRemove.setOnAction((ActionEvent e) -> {
+		final NewsItem selectedItem = itemsTable.getSelectionModel().getSelectedItem();
+		if (selectedItem != null) {
+		    itemsTable.getItems().remove(itemsTable.getItems().indexOf(selectedItem));
+		}
+	    });
 
         ToolBar tbItems = new ToolBar(btnNext, btnPrev, btnShare, btnRemove);
 
@@ -597,6 +617,56 @@ public class NovinarApp extends Application {
         dialog.getDialogPane().setContent(grid);
 
         dialog.showAndWait();
+    }
+
+    class ShareNewsItemDialog extends Alert
+    {
+        final GridPane grid = new GridPane();
+	final TextArea ta = new TextArea();
+
+	public ShareNewsItemDialog(String title) {
+	    super(Alert.AlertType.INFORMATION);
+	    setTitle(title);
+	    setHeaderText("Wiki reference");
+            // ButtonType.OK is there by default, we don't need any
+            // other buttons as nothing is being done here
+
+	    DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+		.withZone(ZoneId.systemDefault());;
+
+	    final NewsItem item = itemsTable.getSelectionModel().getSelectedItem();
+	    String wikiRef = "<ref>{{cite web "
+		+ " | url = " + item.getLink()
+		+ " | title = " + item.getTitle()
+		+ " | publisher = " + novinar.getChannelById(item.getChannelId()).getTitle()
+		+ " | date = " + format.format(item.getDateCalendar())
+		+ " }}</ref>";
+	    ta.setText(wikiRef);
+	    grid.add(ta, 0, 0);
+
+            getDialogPane().setContent(grid);
+
+	    init();
+	}
+        public void init() {
+            // Request focus on the URL field by default.
+            Platform.runLater(() -> ta.requestFocus());
+        }
+
+        public void execute() {
+            showAndWait().ifPresent(response -> handleResponse(response));
+        }
+
+        public void handleResponse(ButtonType result) {
+        }
+
+    } // end ShareNewsItemDialog
+
+    /** Shows dialog with the text area with generated references for
+     * Wikipedia. */
+    public void showShareDialog() {
+	final ShareNewsItemDialog dialog = new ShareNewsItemDialog("Share item");
+	dialog.execute();
     }
 
     private void updateItemsTable() {

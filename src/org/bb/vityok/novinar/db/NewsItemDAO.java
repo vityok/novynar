@@ -21,7 +21,6 @@ import java.sql.Timestamp;
 
 import org.bb.vityok.novinar.Channel;
 import org.bb.vityok.novinar.NewsItem;
-import org.bb.vityok.novinar.OPMLManager;
 import org.bb.vityok.novinar.Channel;
 
 
@@ -85,7 +84,7 @@ public class NewsItemDAO
                     ps.setString(2, item.getLink());
                     ps.setString(3, item.getDescription());
                     ps.setString(4, item.getCreator());
-                    ps.setTimestamp(5, new Timestamp(item.getDateCalendar().toEpochMilli()));
+                    ps.setTimestamp(5, Timestamp.from(item.getDateCalendar()));
                     ps.setString(6, item.getSubject());
                     ps.setInt(7, Integer.valueOf(chan.getChannelId()));
                     ps.executeUpdate();
@@ -130,7 +129,7 @@ public class NewsItemDAO
         }
 
         String sql = "SELECT news_item_id, " +
-            " title, link, description, creator, date, subject, is_read " +
+            " title, link, description, creator, date, subject, is_read, channel_id " +
             " FROM news_item " +
             " WHERE channel_id IN " +
             " ( " + String.join(", ", channelIds) + " ) " +
@@ -146,9 +145,10 @@ public class NewsItemDAO
                 item.setLink(rs.getString("link"));
                 // item.setDescription(rs.getString("description"));
                 item.setCreator(rs.getString("creator"));
-                item.setDate(rs.getString("date"));
+                item.setDateCalendar(Instant.ofEpochMilli(rs.getTimestamp("date").getTime()));
                 item.setSubject(rs.getString("subject"));
                 item.setIsRead(rs.getInt("is_read") == 1 );
+		item.setChannelId(rs.getInt("channel_id"));
                 newsItems.add(item);
             }
             return newsItems;

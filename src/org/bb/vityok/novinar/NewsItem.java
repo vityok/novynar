@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 /** Representation of the news item from a news feed. */
+// todo: make it possible to get channel based on news item
 public class NewsItem
     implements Serializable
 {
@@ -21,6 +22,7 @@ public class NewsItem
     private SimpleStringProperty subject = new SimpleStringProperty();
     private SimpleBooleanProperty isRead = new SimpleBooleanProperty();
     private Instant cDate;
+    private int channelId;
 
     public NewsItem () {
         cDate = Instant.now();
@@ -44,8 +46,11 @@ public class NewsItem
     public String getCreator() { return creator.get(); }
     public void setCreator(String creator) { this.creator.set(creator); }
 
-    public String getDate() { return date.get(); }
+    public String getDate() { return cDate.toString(); }
     public void setDate(String date) { this.date.set(date); }
+
+    public int getChannelId() { return channelId; }
+    public void setChannelId(int channelId) { this.channelId = channelId; }
 
     public Instant getDateCalendar() {
 	return cDate;
