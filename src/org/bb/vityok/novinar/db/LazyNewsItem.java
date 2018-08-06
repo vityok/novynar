@@ -15,8 +15,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-import org.bb.vityok.novinar.NewsItem;
-import org.bb.vityok.novinar.Channel;
+import org.bb.vityok.novinar.core.Channel;
+import org.bb.vityok.novinar.core.NewsItem;
 
 /** This is the NewsItem bean that stores its data in the database.
  *

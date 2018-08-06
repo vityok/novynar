@@ -1,4 +1,4 @@
-package org.bb.vityok.novinar;
+package org.bb.vityok.novinar.core;
 
 import java.util.List;
 import java.util.LinkedList;

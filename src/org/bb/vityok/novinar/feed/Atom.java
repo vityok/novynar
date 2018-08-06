@@ -8,11 +8,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
-
-import org.bb.vityok.novinar.Novinar;
-import org.bb.vityok.novinar.NewsItem;
-import org.bb.vityok.novinar.Channel;
-import org.bb.vityok.novinar.OPMLManager;
+import org.bb.vityok.novinar.core.Channel;
+import org.bb.vityok.novinar.core.NewsItem;
+import org.bb.vityok.novinar.core.Novinar;
+import org.bb.vityok.novinar.core.OPMLManager;
 
 
 /** Parse Atom feeds as defined by the RFC 4287.

@@ -19,9 +19,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import org.bb.vityok.novinar.Channel;
-import org.bb.vityok.novinar.NewsItem;
-import org.bb.vityok.novinar.Channel;
+import org.bb.vityok.novinar.core.Channel;
+import org.bb.vityok.novinar.core.NewsItem;
 
 
 /** Implements database access operations for the NewsItem object.

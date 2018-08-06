@@ -11,9 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import org.w3c.dom.Document;
-
-import org.bb.vityok.novinar.Channel;
-import org.bb.vityok.novinar.Novinar;
+import org.bb.vityok.novinar.core.Channel;
+import org.bb.vityok.novinar.core.Novinar;
 
 /** Base class for concrete feed parsers. */
 // ./gradlew test --tests FeedReaderTest

@@ -59,11 +59,11 @@ import javafx.scene.text.Text;
 
 import javafx.util.Pair;
 
-import org.bb.vityok.novinar.Channel;
-import org.bb.vityok.novinar.NewsItem;
-import org.bb.vityok.novinar.Novinar;
-import org.bb.vityok.novinar.Outline;
-import org.bb.vityok.novinar.UpdatePeriod;
+import org.bb.vityok.novinar.core.Channel;
+import org.bb.vityok.novinar.core.NewsItem;
+import org.bb.vityok.novinar.core.Novinar;
+import org.bb.vityok.novinar.core.Outline;
+import org.bb.vityok.novinar.core.UpdatePeriod;
 
 
 /** Primary UI controller.

@@ -1,4 +1,4 @@
-package org.bb.vityok.novinar;
+package org.bb.vityok.novinar.core;
 
 import java.io.Serializable;
 
@@ -24,7 +24,7 @@ import org.w3c.dom.Node;
 public class Channel
     implements Serializable
 {
-    private int channelId;
+	private int channelId;
     private String title;
     private String link;
     private String description;
@@ -38,12 +38,12 @@ public class Channel
         this.ol = ol;
         this.link = ol.getAttribute("xmlUrl", null);
         OPMLManager oman = ol.getOPMLManager();
-        String idStr = oman.getAttributeNS(ol.getNode(),
-                                           OPMLManager.NOVINAR_NS,
-                                           OPMLManager.A_CHANNEL_ID,
-                                           null);
+        String idStr = OPMLManager.getAttributeNS(ol.getNode(),
+        		OPMLManager.NOVINAR_NS,
+        		OPMLManager.A_CHANNEL_ID,
+        		null);
         if (idStr == null) {
-            // this is an item that we didn't process yet
+        	// this is an item that we didn't process yet
             this.channelId = oman.genChannelId();
             setChannelId(channelId);
         } else {
@@ -51,10 +51,10 @@ public class Channel
         }
 
         // timestamp
-        String tsStr = oman.getAttributeNS(ol.getNode(),
-                                           OPMLManager.NOVINAR_NS,
-                                           OPMLManager.A_LAST_UPDATED,
-                                           null);
+        String tsStr = OPMLManager.getAttributeNS(ol.getNode(),
+        		OPMLManager.NOVINAR_NS,
+        		OPMLManager.A_LAST_UPDATED,
+        		null);
         latestUpdate = null;
         if (tsStr != null) {
             try {
