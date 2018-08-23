@@ -2,8 +2,6 @@ package org.bb.vityok.novinar.feed;
 
 import java.time.Instant;
 
-import java.util.logging.Level;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
@@ -19,7 +17,9 @@ import org.bb.vityok.novinar.core.Novinar;
 public class RSS
     extends FeedParser
 {
-    public RSS(Novinar novinar) { super(novinar); }
+    public RSS(Novinar novinar) {
+	super(novinar);
+    }
 
     /** Check if the given document can be parsed by this parser.
      *
@@ -37,8 +37,8 @@ public class RSS
         }
     }
 
-    public Instant extractTimestamp(Element entry) {
-        NodeList pubDates = entry.getElementsByTagName("pubDate");
+    public Instant extractTimestamp(Element item) {
+        NodeList pubDates = item.getElementsByTagName("pubDate");
         if (pubDates.getLength() > 0) {
             String tsStr = pubDates.item(0).getTextContent();
             Instant ts = parseTimestamp(tsStr);
@@ -47,11 +47,10 @@ public class RSS
             }
             Novinar.getLogger().severe("failed to parse timestamp: " + tsStr);
         } else {
-            Novinar.getLogger().severe("failed to extract timestamp: " + entry.getTagName());
+            Novinar.getLogger().severe("failed to extract timestamp: " + item.getTagName());
         }
         return Instant.now();
     }
-
 
     @Override
     public void processFeed(Channel chan, Document doc)
@@ -120,10 +119,9 @@ public class RSS
                     oldestTimestamp = iTs;
                 }
 
-                NodeList authors = item.getElementsByTagName("author");
-                if (authors.getLength() > 0) {
-                    newsItem.setCreator(authors.item(0).getTextContent());
-                }
+                String iCreator = extractCreator(item);
+                newsItem.setCreator(iCreator);
+                
 		novinar.insertOrUpdateItem(chan, newsItem);
 	    }
 

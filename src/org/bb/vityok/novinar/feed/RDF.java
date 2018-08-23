@@ -108,11 +108,8 @@ public class RDF
                     oldestTimestamp = iTs;
                 }
 
-                NodeList creators = item.getElementsByTagName("dc:creator");
-                if (creators.getLength() > 0) {
-                    String iCreator = creators.item(0).getTextContent();
-                    newsItem.setCreator(iCreator);
-                }
+                String iCreator = extractCreator(item);
+                newsItem.setCreator(iCreator);
 		novinar.insertOrUpdateItem(chan, newsItem);
 	    }
 

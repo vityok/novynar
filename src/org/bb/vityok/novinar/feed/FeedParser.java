@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.bb.vityok.novinar.core.Channel;
 import org.bb.vityok.novinar.core.Novinar;
 
@@ -41,31 +43,33 @@ public abstract class FeedParser
     public abstract boolean accepts(Document doc) throws Exception;
     public abstract void processFeed(Channel chan, Document doc) throws Exception;
 
-    public static final DateTimeFormatter TIMESTAMP_FORMATS[] = { DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"),
-                                                                  DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
-                                                                  DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"),
-                                                                  DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssz"), // 2018-04-30T12:00:00+00:00
-                                                                  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
-                                                                  // RFC_1123 date-time with a zone name other than GMT
-                                                                  DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z"),
-                                                                  DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z"),
-                                                                  DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm Z"),
-                                                                  DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm z"),
-                                                                  DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm"),
-                                                                  DateTimeFormatter.ofPattern("EEE, dd MMM yyyy"),
-                                                                  DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a"), // 04/25/2018 13:42 PM
-                                                                  DateTimeFormatter.ISO_LOCAL_DATE_TIME,
-                                                                  DateTimeFormatter.ISO_OFFSET_DATE_TIME,
-                                                                  DateTimeFormatter.ISO_ZONED_DATE_TIME,
-                                                                  DateTimeFormatter.ISO_DATE_TIME,
-                                                                  DateTimeFormatter.ISO_INSTANT,
-                                                                  DateTimeFormatter.RFC_1123_DATE_TIME
+    public static final DateTimeFormatter TIMESTAMP_FORMATS[] = {
+    		DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"),
+    		DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
+    		DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"),
+    		DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssz"), // 2018-04-30T12:00:00+00:00
+    		DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
+    		// RFC_1123 date-time with a zone name other than GMT
+    		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z"),
+    		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z"),
+    		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm Z"),
+    		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm z"),
+    		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm"),
+    		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy"),
+    		DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a"), // 04/25/2018 13:42 PM
+    		DateTimeFormatter.ISO_LOCAL_DATE_TIME,
+    		DateTimeFormatter.ISO_OFFSET_DATE_TIME,
+    		DateTimeFormatter.ISO_ZONED_DATE_TIME,
+    		DateTimeFormatter.ISO_DATE_TIME,
+    		DateTimeFormatter.ISO_INSTANT,
+    		DateTimeFormatter.RFC_1123_DATE_TIME
     };
 
     private final static String ALL_DAY = " (All day)";
 
     public static final DateTimeFormatter DAY_FORMAT = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy");
 
+    
     /** Attempts to parse the given timestamp using TIMESTAMP_FORMATS.
      *
      * @return a Calendar object upon a success, null otherwise.
@@ -94,6 +98,36 @@ public abstract class FeedParser
                 }
             }
         }
+        return null;
+    }
+    
+    /**
+     * Attempt extraction of creator/author information from the channel item.
+     * 
+     * @param item
+     * @return
+     */
+    public String extractCreator(Element item) {
+	NodeList authors = item.getElementsByTagName("author");
+        if (authors.getLength() > 0) {
+            return authors.item(0).getTextContent();
+        }
+        
+        NodeList creators = item.getElementsByTagName("creator");
+        if (creators.getLength() > 0) {
+            return creators.item(0).getTextContent();
+        }
+
+        NodeList dcCreators = item.getElementsByTagName("dc:creator");
+        if (dcCreators.getLength() > 0) {
+            return dcCreators.item(0).getTextContent();
+        }
+        
+        NodeList nsCreators = item.getElementsByTagNameNS(DC_NS, "creator");
+        if (nsCreators.getLength() > 0) {
+            return nsCreators.item(0).getTextContent();
+        }
+        
         return null;
     }
 }

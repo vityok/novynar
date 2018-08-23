@@ -139,9 +139,13 @@ public class OPMLManager
 
     }
 
-    public Outline getRootOutline() { return rootOutline; }
+    public Outline getRootOutline() {
+	return rootOutline;
+    }
 
-    public Document getDocument() { return doc; }
+    public Document getDocument() {
+	return doc;
+    }
 
     public void setAttribute(Node node, String name, String value) {
         NamedNodeMap atts = node.getAttributes();

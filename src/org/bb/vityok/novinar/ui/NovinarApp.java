@@ -41,7 +41,6 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
@@ -57,8 +56,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import javafx.util.Pair;
-
 import org.bb.vityok.novinar.core.Channel;
 import org.bb.vityok.novinar.core.NewsItem;
 import org.bb.vityok.novinar.core.Novinar;
@@ -70,8 +67,8 @@ import org.bb.vityok.novinar.core.UpdatePeriod;
  *
  * Relies on the Novinar class for business logic.
  */
-public class NovinarApp extends Application {
-
+public class NovinarApp extends Application
+{
     private Novinar novinar;
 
     private Scene primaryScene;
@@ -130,14 +127,34 @@ public class NovinarApp extends Application {
 	return box;
     }
 
+    private final Image imageProblem = new Image(getClass().getResourceAsStream("/icons/1x/twotone_report_problem_black_18dp.png"));
+    private final Image imageFeed = new Image(getClass().getResourceAsStream("/icons/1x/twotone_rss_feed_black_18dp.png"));
 
     /** Encapsulates Outline and serves as the view to
      * represent its data to the user.
      */
     public class OutlineTreeItem extends TreeItem<Outline> {
-	public OutlineTreeItem(Outline ol) {
+	private final ImageView imvProblem = new ImageView(imageProblem);
+	private final ImageView imvFeed = new ImageView(imageFeed);
+	
+	public OutlineTreeItem(Outline ol) {	    
 	    super(ol);
 	    rebuildChildren();
+	    if (ol.isChannel()) {
+		// register for various status updates
+		Channel chan = ol.getChannel();
+		final ImageView defaultIcon = chan.hasProblems() ? imvProblem : imvFeed;
+		setGraphic(defaultIcon);
+		chan.hasProblemsProperty().addListener((ObservableValue<? extends Boolean> ov,
+			Boolean oldVal, Boolean newVal) ->
+		{
+		    System.out.println("change: " + ov);
+		    // change the icon for this item. if the new value is true,
+		    // it means there are problems
+		    final ImageView newIcon = newVal ? imvProblem : imvFeed;
+		    Platform.runLater(() -> setGraphic(newIcon));
+		});
+	    }
 	}
 
         @Override
@@ -224,13 +241,13 @@ public class NovinarApp extends Application {
         ctxNewFolder.setOnAction(ae -> feedsTreeCtxProperties());
 
         MenuItem ctxNewChannel = new MenuItem("New channel...");
-        ctxNewChannel.setOnAction(ae -> feedsTreeCtxProperties());
+        ctxNewChannel.setOnAction(ae -> showAddChannelDialog());
 
         MenuItem ctxRemove = new MenuItem("Remove...");
         ctxRemove.setOnAction(ae -> feedsTreeCtxProperties());
 
         MenuItem ctxProperties = new MenuItem("Properties...");
-        ctxProperties.setOnAction(ae -> feedsTreeCtxProperties());
+        ctxProperties.setOnAction(ae -> showEditChannelDialog());
 
         ContextMenu channelsContextMenu = new ContextMenu();
         channelsContextMenu.getItems().addAll(ctxRefresh,
@@ -425,6 +442,7 @@ public class NovinarApp extends Application {
         final TextField fldTitle = new TextField();
         final CheckBox cbIgnoreOnBoot = new CheckBox();
         final ComboBox<UpdatePeriod> cbxUpdatePeriod = new ComboBox<>();
+        final Label lblProblems = new Label("Problems: ");
 
         public ChannelPropertiesDialog(String title) {
             super(Alert.AlertType.INFORMATION);
@@ -455,6 +473,8 @@ public class NovinarApp extends Application {
             cbxUpdatePeriod.setValue(UpdatePeriod.HOURS_3);
             grid.add(new Label("Update period:"), 0, 3);
             grid.add(cbxUpdatePeriod, 1, 3);
+            
+            grid.add(lblProblems, 0, 4);
 
             getDialogPane().setContent(grid);
 
@@ -515,6 +535,11 @@ public class NovinarApp extends Application {
                     fldTitle.setText(chan.getTitle());
                     cbIgnoreOnBoot.setSelected(ol.getIgnoreOnBoot());
                     cbxUpdatePeriod.setValue(ol.getUpdatePeriod());
+                    if (chan.hasProblems()) {
+                    	lblProblems.setText("Problems: " + chan.getProblems());
+                    } else {
+                    	lblProblems.setText("No problems detected so far");
+                    }
                 }
 
                 @Override

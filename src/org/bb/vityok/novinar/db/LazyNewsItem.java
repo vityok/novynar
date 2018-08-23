@@ -30,7 +30,9 @@ import org.bb.vityok.novinar.core.NewsItem;
 public class LazyNewsItem extends NewsItem
 
 {
-    private Backend dbend;
+	private static final long serialVersionUID = -2037764484243600031L;
+	
+	private Backend dbend;
     private int channelId;
 
 

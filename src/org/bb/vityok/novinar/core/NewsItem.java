@@ -13,7 +13,9 @@ import javafx.beans.property.SimpleStringProperty;
 public class NewsItem
     implements Serializable
 {
-    private SimpleIntegerProperty id = new SimpleIntegerProperty();
+	private static final long serialVersionUID = -8251368066387551468L;
+	
+	private SimpleIntegerProperty id = new SimpleIntegerProperty();
     private SimpleStringProperty title = new SimpleStringProperty();
     private SimpleStringProperty link = new SimpleStringProperty();
     private SimpleStringProperty description = new SimpleStringProperty();

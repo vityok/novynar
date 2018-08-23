@@ -3,3 +3,8 @@ testDB
 derby.log
 .gradle
 build
+bin
+.classpath
+.project
+.settings
+

@@ -2,20 +2,15 @@ package org.bb.vityok.novinar.core;
 
 import java.io.Serializable;
 
-import java.text.ParseException;
-
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import java.util.List;
-
-import org.w3c.dom.Node;
-
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 /** Representation of a news feed channel.
  *
- * It is an Outline with the feed URL attribute defined. Also it is a
+ * <p>It is an Outline with the feed URL attribute defined. Also it is a
  * leaf in the OPML tree and therefore has no children. However, it
  * might have child elements in the DOM tree that define some
  * properties, like description, that are not fit to be stored in the
@@ -24,13 +19,17 @@ import org.w3c.dom.Node;
 public class Channel
     implements Serializable
 {
-	private int channelId;
-    private String title;
+    private static final long serialVersionUID = -5268402804904404881L;
+	
+    private int channelId;
     private String link;
     private String description;
     private Instant latestUpdate;  // last time the channel has been updated
-    private List<NewsItem> items;
-
+    private String problems;
+    // utilize JavaFX beans extensions to avoid messing with the 
+    // property change listeners
+    private BooleanProperty propHasProblems = new SimpleBooleanProperty(false);
+    
     /** Outline that corresponds to this channel object. */
     private final Outline ol;
 
@@ -39,9 +38,9 @@ public class Channel
         this.link = ol.getAttribute("xmlUrl", null);
         OPMLManager oman = ol.getOPMLManager();
         String idStr = OPMLManager.getAttributeNS(ol.getNode(),
-        		OPMLManager.NOVINAR_NS,
-        		OPMLManager.A_CHANNEL_ID,
-        		null);
+        	OPMLManager.NOVINAR_NS,
+        	OPMLManager.A_CHANNEL_ID,
+        	null);
         if (idStr == null) {
         	// this is an item that we didn't process yet
             this.channelId = oman.genChannelId();
@@ -52,9 +51,9 @@ public class Channel
 
         // timestamp
         String tsStr = OPMLManager.getAttributeNS(ol.getNode(),
-        		OPMLManager.NOVINAR_NS,
-        		OPMLManager.A_LAST_UPDATED,
-        		null);
+        	OPMLManager.NOVINAR_NS,
+        	OPMLManager.A_LAST_UPDATED,
+        	null);
         latestUpdate = null;
         if (tsStr != null) {
             try {
@@ -71,18 +70,21 @@ public class Channel
     } // end Channel
 
     /** primary key */
-    public int getChannelId() { return channelId; }
+    public int getChannelId() {
+    	return channelId;
+    }
 
     /** Assign a new ID for this channel. */
     public void setChannelId(int channelId) {
         OPMLManager oman = ol.getOPMLManager();
         oman.setAttribute(ol.getNode(),
-                          OPMLManager.NOVINAR_NS,
-                          OPMLManager.Q_CHANNEL_ID,
-                          Integer.toString(channelId));
+        		OPMLManager.NOVINAR_NS,
+        		OPMLManager.Q_CHANNEL_ID,
+        		Integer.toString(channelId));
     }
 
     public String getTitle() { return ol.getTitle(); }
+    
     /** @todo */
     public void setTitle(String title) { ol.setTitle(title); }
 
@@ -97,27 +99,30 @@ public class Channel
                           link);
     }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getDescription() {
+	return description;
+    }
+    
+    public void setDescription(String description) {
+	this.description = description;
+    }
 
     public Instant getLatestUpdate() {
         return latestUpdate;
     }
-    public void setLatestUpdate(Instant inst) {
-        this.latestUpdate = inst;
-        String updateTs = latestUpdate.toString();
 
-        OPMLManager oman = ol.getOPMLManager();
-        oman.setAttribute(ol.getNode(),
-                          OPMLManager.NOVINAR_NS,
-                          OPMLManager.Q_LAST_UPDATED,
-                          updateTs);
-        Novinar.getLogger().info("updated channel: " + getTitle()
-                                 + " at: " + updateTs);
+    public void setLatestUpdate(Instant inst) {
+	this.latestUpdate = inst;
+	String updateTs = latestUpdate.toString();
+
+	OPMLManager oman = ol.getOPMLManager();
+	oman.setAttribute(ol.getNode(), OPMLManager.NOVINAR_NS, OPMLManager.Q_LAST_UPDATED, updateTs);
+	Novinar.getLogger().info("updated channel: " + getTitle() + " at: " + updateTs);
     }
 
     /** Mark the channel as updated just now.
      *
+     * <p>
      * Like the Unix <tt>touch</tt> program does to the files.
      */
     public void touch() {
@@ -128,13 +133,30 @@ public class Channel
         return ol.getIgnoreOnBoot();
     }
 
-    public UpdatePeriod getUpdatePeriod() { return ol.getUpdatePeriod(); }
+    public UpdatePeriod getUpdatePeriod() {
+    	return ol.getUpdatePeriod();
+    }
 
+    public String getProblems() {
+    	return problems;
+    }
+    
+    public void setProblems(String problems) {
+    	this.problems = problems;
+    	propHasProblems.set(hasProblems());
+    	System.out.println("___van: " + hasProblems() + " - "+ problems);
+    }
+    
+    public boolean hasProblems() {
+    	return !(problems == null || problems.isEmpty());
+    }
+    
+    public BooleanProperty hasProblemsProperty() {
+	return propHasProblems;
+    }
+    
     @Override
     public String toString() {
-        return "channel {id=" + getChannelId()
-            + " link=" + getLink()
-            + " title=" + getTitle()
-            + "}";
+	return "channel {id=" + getChannelId() + " link=" + getLink() + " title=" + getTitle() + "}";
     }
 }

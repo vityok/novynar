@@ -2,8 +2,6 @@ package org.bb.vityok.novinar.feed;
 
 import java.time.Instant;
 
-import java.util.logging.Level;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
@@ -128,11 +126,14 @@ public class Atom
                     }
                 }
                 Instant iTs = extractTimestamp(entry, "published");
+                String iCreator = extractCreator(entry);
+                
 		NewsItem newsItem = new NewsItem();
 		newsItem.setTitle(iTitle);
 		newsItem.setLink(iLink);
 		newsItem.setDescription(iContent);
                 newsItem.setDateCalendar(iTs);
+                newsItem.setCreator(iCreator);
 		novinar.insertOrUpdateItem(chan, newsItem);
 
                 if (oldestTimestamp == null

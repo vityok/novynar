@@ -83,7 +83,7 @@ public class Outline
 
     public String getAttributeNS(String namespaceURI, String name, String defaultValue) {
         // todo: use Element.getAttributeNS method instead
-        return oman.getAttributeNS(elt, namespaceURI, name, defaultValue);
+        return OPMLManager.getAttributeNS(elt, namespaceURI, name, defaultValue);
     }
 
     public String getTitle() {
@@ -152,7 +152,7 @@ public class Outline
                                                                    A_PROPERTY);
             for (int i = 0; i < properties.getLength(); i++) {
                 Node propNode = properties.item(i);
-                String propKey = oman.getAttributeNS(propNode, OPMLManager.NOVINAR_NS, A_KEY, "");
+                String propKey = OPMLManager.getAttributeNS(propNode, OPMLManager.NOVINAR_NS, A_KEY, "");
                 if (propKey.equals(key)) {
                     return propNode;
                 }
