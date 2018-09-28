@@ -2,9 +2,11 @@ package org.bb.vityok.novinar.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -28,11 +30,21 @@ public class Backend
     private Connection conn;
 
     private static Logger logger = Logger.getLogger("org.bb.vityok.novinar.db");
+    
+    
+    /** Database schema layout version supported by this backend.
+     * 
+     * Based on the value stored in the novinar_meta_inf table can be used 
+     * for graceful migration from older versions to the newer releases. 
+     */
+    public final static int SCHEMA_VERSION = 1;
 
+    /** Initialize the backend with the default database name. */
     public Backend() {
         this(DEFAULT_DB_NAME);
     }
 
+    
     public Backend(String dbName) {
         this.dbName = dbName;
 	try {
@@ -128,6 +140,26 @@ public class Backend
                 printSQLException(sqle);
             }
 	}
+    }
+    
+    /** Returns database layout schema version. 
+     * 
+     * @return database layout schema. 
+     */
+    public int getSchemaVersion() {
+	Connection conn = getConnection();
+
+        String sql = "SELECT schema_version FROM novinar_meta_inf";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+        	int schema_version = rs.getInt("schema_version");
+                return schema_version;
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "failed to load description for NewsItem: " + this, e);
+        }
+        return 0;
     }
 
     /**

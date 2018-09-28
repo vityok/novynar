@@ -443,6 +443,7 @@ public class NovinarApp extends Application
         final CheckBox cbIgnoreOnBoot = new CheckBox();
         final ComboBox<UpdatePeriod> cbxUpdatePeriod = new ComboBox<>();
         final Label lblProblems = new Label("Problems: ");
+        final Label txtProblems = new Label("");
 
         public ChannelPropertiesDialog(String title) {
             super(Alert.AlertType.INFORMATION);
@@ -475,6 +476,7 @@ public class NovinarApp extends Application
             grid.add(cbxUpdatePeriod, 1, 3);
             
             grid.add(lblProblems, 0, 4);
+            grid.add(txtProblems, 1, 4);
 
             getDialogPane().setContent(grid);
 
@@ -536,9 +538,9 @@ public class NovinarApp extends Application
                     cbIgnoreOnBoot.setSelected(ol.getIgnoreOnBoot());
                     cbxUpdatePeriod.setValue(ol.getUpdatePeriod());
                     if (chan.hasProblems()) {
-                    	lblProblems.setText("Problems: " + chan.getProblems());
+                    	txtProblems.setText("Problems: " + chan.getProblems());
                     } else {
-                    	lblProblems.setText("No problems detected so far");
+                    	txtProblems.setText("No problems detected so far");
                     }
                 }
 
@@ -705,6 +707,7 @@ public class NovinarApp extends Application
 	    final String strDate = format.format(item.getDateCalendar());
 	    final String lw = cbWrap.isSelected() ? "\n" : "";
 	    final String strPublisher = novinar.getChannelById(item.getChannelId()).getTitle();
+	    final String creator = item.getCreator();
 
 	    // guess ref name
 	    String name = "";
@@ -718,10 +721,17 @@ public class NovinarApp extends Application
 		    name = " name=\"" + strDate + "\"";
 		}
 	    }
+	    
+	    String author = "";
+	    if (creator != null && !creator.isEmpty()) {
+		author = " | author = " + creator;
+	    }
+
 	    // produce ref text
 	    String wikiRef = "<ref" + name + ">{{cite web" + lw
 		+ " | url = " + item.getLink() + lw
 		+ " | title = " + item.getTitle() + lw
+		+ author + lw
 		+ " | publisher = " + strPublisher + lw
 		+ " | date = " + strDate + lw
 		+ " }}</ref>";
