@@ -43,20 +43,35 @@ public abstract class FeedParser
     public abstract boolean accepts(Document doc) throws Exception;
     public abstract void processFeed(Channel chan, Document doc) throws Exception;
 
+    /** Set of timestamp parser patterns.
+     *
+     * <p>Malformed timestamps happen in the real world feeds all the time.
+     *
+     * <p>Patterns with manually-specified time-zones had to be added
+     * to the list. Since precise time-stamp time-zone is not as
+     * important as the fixed time-stamp itself, UTC has been chosen
+     * as default.
+     */
     public static final DateTimeFormatter TIMESTAMP_FORMATS[] = {
     		DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"),
     		DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"),
-    		DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"),
+    		DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(ZoneOffset.UTC),
     		DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssz"), // 2018-04-30T12:00:00+00:00
-    		DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
+    		DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC), // fails: 2018-10-29 15:58:00
     		// RFC_1123 date-time with a zone name other than GMT
     		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss Z"),
     		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z"),
+    		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy H:m:s z"), // Tue, 23 Oct 2018 9:21:17 CEST
     		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm Z"),
     		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm z"),
-    		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm"),
-    		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy"),
-    		DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a"), // 04/25/2018 13:42 PM
+    		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm").withZone(ZoneOffset.UTC),
+    		DateTimeFormatter.ofPattern("EEE, dd MMM yyyy").withZone(ZoneOffset.UTC),
+    		DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a").withZone(ZoneOffset.UTC),
+    		// there are web-sites that specify AM-PM part of day,
+    		// but the hour value is actually in the 24 hours
+    		// range, like: 04/25/2018 13:42 PM. Following
+    		// pattern tries to fix this
+    		DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm a").withZone(ZoneOffset.UTC),
     		DateTimeFormatter.ISO_LOCAL_DATE_TIME,
     		DateTimeFormatter.ISO_OFFSET_DATE_TIME,
     		DateTimeFormatter.ISO_ZONED_DATE_TIME,
@@ -69,41 +84,40 @@ public abstract class FeedParser
 
     public static final DateTimeFormatter DAY_FORMAT = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy");
 
-    
+
     /** Attempts to parse the given timestamp using TIMESTAMP_FORMATS.
      *
-     * @return a Calendar object upon a success, null otherwise.
+     * @return a Instant object upon a success, null otherwise.
      */
     public static Instant parseTimestamp(String timestamp) {
-        String ts = timestamp;
+	String ts = timestamp.trim();
 
-        if (timestamp.endsWith(ALL_DAY)
-            && timestamp.length() > ALL_DAY.length()) {
-            // if the date-time is incomplete and only date is present
-            try {
-                ts = timestamp.substring(0, timestamp.length() - ALL_DAY.length());
-                LocalDate ld = LocalDate.parse(ts, DAY_FORMAT);
-                Instant iTs = ld.atStartOfDay().toInstant(ZoneOffset.UTC);
-                return iTs;
-            } catch (DateTimeParseException pe) {
-                pe.printStackTrace();
-            }
-        } else {
-            for (int i = 0; i < TIMESTAMP_FORMATS.length; i++) {
-                try {
-                    Instant iTs = TIMESTAMP_FORMATS[i].parse(timestamp, Instant::from);
-                    return iTs;
-                } catch (DateTimeParseException pe) {
-                    continue;
-                }
-            }
-        }
-        return null;
+	if (timestamp.endsWith(ALL_DAY) && ts.length() > ALL_DAY.length()) {
+	    // if the date-time is incomplete and only date is present
+	    try {
+		ts = ts.substring(0, ts.length() - ALL_DAY.length());
+		LocalDate ld = LocalDate.parse(ts, DAY_FORMAT);
+		Instant iTs = ld.atStartOfDay().toInstant(ZoneOffset.UTC);
+		return iTs;
+	    } catch (DateTimeParseException pe) {
+		pe.printStackTrace();
+	    }
+	} else {
+	    for (DateTimeFormatter tsFormat : TIMESTAMP_FORMATS) {
+		try {
+		    Instant iTs = tsFormat.parse(ts, Instant::from);
+		    return iTs;
+		} catch (DateTimeParseException pe) {
+		    continue;
+		}
+	    }
+	}
+	return null;
     }
-    
+
     /**
      * Attempt extraction of creator/author information from the channel item.
-     * 
+     *
      * @param item
      * @return
      */
@@ -112,7 +126,7 @@ public abstract class FeedParser
         if (authors.getLength() > 0) {
             return authors.item(0).getTextContent();
         }
-        
+
         NodeList creators = item.getElementsByTagName("creator");
         if (creators.getLength() > 0) {
             return creators.item(0).getTextContent();
@@ -122,12 +136,12 @@ public abstract class FeedParser
         if (dcCreators.getLength() > 0) {
             return dcCreators.item(0).getTextContent();
         }
-        
+
         NodeList nsCreators = item.getElementsByTagNameNS(DC_NS, "creator");
         if (nsCreators.getLength() > 0) {
             return nsCreators.item(0).getTextContent();
         }
-        
+
         return null;
     }
 }
