@@ -232,6 +232,7 @@ public class Novinar
     public int getTotalNewsItemsCount() { return niDAO.getTotalNewsItemsCount(); }
     public int getUnreadNewsItemsCount() { return niDAO.getUnreadNewsItemsCount(); }
     public int getRemovedNewsItemsCount() { return niDAO.getRemovedNewsItemsCount(); }
+    public int getDbSchemaVersion() { return dbend.getSchemaVersion(); }
 
 
     public void markNewsItemRead(NewsItem item, boolean isRead)

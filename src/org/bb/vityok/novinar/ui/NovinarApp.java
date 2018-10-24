@@ -2,7 +2,7 @@ package org.bb.vityok.novinar.ui;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -167,6 +167,8 @@ public class NovinarApp extends Application
 	    if (ol != null && ol.hasChildren()) {
                 ObservableList<TreeItem<Outline>> children = FXCollections.observableArrayList();
 		List<Outline> outlines = ol.getChildren();
+		outlines.sort(Comparator.comparing(Outline::getTitle));
+
                 outlines.forEach((childOutline) -> {
                         children.add(new OutlineTreeItem(childOutline));
                     });
@@ -376,12 +378,14 @@ public class NovinarApp extends Application
         itemsTable.setOnKeyPressed(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(final KeyEvent keyEvent) {
-                    final NewsItem selectedItem = itemsTable.getSelectionModel().getSelectedItem();
+                    final ObservableList<NewsItem> selectedItems = itemsTable.getSelectionModel().getSelectedItems();
 
-                    if (selectedItem != null) {
+                    if (selectedItems != null && !selectedItems.isEmpty()) {
                         // handle DEL key press, todo: handle multiple selected items
                         if (keyEvent.getCode().equals(KeyCode.DELETE)) {
+                            for (NewsItem selectedItem : selectedItems) {
                             itemsTable.getItems().remove(itemsTable.getItems().indexOf(selectedItem));
+                            }
                         }
                     }
                 }
@@ -533,14 +537,16 @@ public class NovinarApp extends Application
             {
                 @Override
                 public void init() {
-                    fldUrl.setText(chan.getLink());
-                    fldTitle.setText(chan.getTitle());
+                    fldTitle.setText(ol.getTitle());
                     cbIgnoreOnBoot.setSelected(ol.getIgnoreOnBoot());
                     cbxUpdatePeriod.setValue(ol.getUpdatePeriod());
-                    if (chan.hasProblems()) {
-                    	txtProblems.setText("Problems: " + chan.getProblems());
-                    } else {
-                    	txtProblems.setText("No problems detected so far");
+                    if (ol.isChannel()) {
+                	fldUrl.setText(chan.getLink());
+                        if (chan.hasProblems()) {
+                        	txtProblems.setText("Problems: " + chan.getProblems());
+                        } else {
+                        	txtProblems.setText("No problems detected so far");
+                        }
                     }
                 }
 
@@ -640,10 +646,13 @@ public class NovinarApp extends Application
 
         grid.add(new Label("To be removed:"), 0, 3);
         grid.add(new Label(Integer.toString(novinar.getRemovedNewsItemsCount())), 1, 3);
+        
+        grid.add(new Label("DB schema version:"), 0, 4);
+        grid.add(new Label(Integer.toString(novinar.getDbSchemaVersion())), 1, 4);
 
         dialog.getDialogPane().setContent(grid);
 
-        dialog.showAndWait();
+        dialog.show();
     }
 
     /**
@@ -657,6 +666,7 @@ public class NovinarApp extends Application
 	final VBox pane = new VBox();
 	final CheckBox cbWrap = new CheckBox();
 	final CheckBox cbName = new CheckBox();
+	final CheckBox cbAuthor = new CheckBox();
 	final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 	    .withZone(ZoneId.systemDefault());;
 
@@ -694,6 +704,10 @@ public class NovinarApp extends Application
 	    cbName.setOnAction((ActionEvent evt) -> genText());
 	    grid.add(new Label("Name reference"), 0, 1);
 	    grid.add(cbName, 1, 1);
+	    
+	    cbAuthor.setOnAction((ActionEvent evt) -> genText());
+	    grid.add(new Label("Specify author"), 0, 2);
+	    grid.add(cbAuthor, 1, 2);
 
 	    pane.getChildren().addAll(ta, grid);
             getDialogPane().setContent(pane);
@@ -705,7 +719,7 @@ public class NovinarApp extends Application
 	public void genText() {
 	    final NewsItem item = itemsTable.getSelectionModel().getSelectedItem();
 	    final String strDate = format.format(item.getDateCalendar());
-	    final String lw = cbWrap.isSelected() ? "\n" : "";
+	    final String nl = cbWrap.isSelected() ? "\n" : "";
 	    final String strPublisher = novinar.getChannelById(item.getChannelId()).getTitle();
 	    final String creator = item.getCreator();
 
@@ -723,18 +737,20 @@ public class NovinarApp extends Application
 	    }
 	    
 	    String author = "";
-	    if (creator != null && !creator.isEmpty()) {
-		author = " | author = " + creator;
+	    if (cbAuthor.isSelected()
+		    && creator != null
+		    && !creator.isEmpty()) {
+		author = " | author = " + creator + nl;
 	    }
 
 	    // produce ref text
-	    String wikiRef = "<ref" + name + ">{{cite web" + lw
-		+ " | url = " + item.getLink() + lw
-		+ " | title = " + item.getTitle() + lw
-		+ author + lw
-		+ " | publisher = " + strPublisher + lw
-		+ " | date = " + strDate + lw
-		+ " }}</ref>";
+	    String wikiRef = "<ref" + name + ">{{cite web" + nl
+		+ " | url = " + item.getLink() + nl
+		+ " | title = " + item.getTitle() + nl
+		+ author
+		+ " | publisher = " + strPublisher + nl
+		+ " | date = " + strDate + nl
+		+ "}}</ref>";
 	    ta.setText(wikiRef);
 	}
 

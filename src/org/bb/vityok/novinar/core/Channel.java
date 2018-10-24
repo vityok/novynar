@@ -144,7 +144,6 @@ public class Channel
     public void setProblems(String problems) {
     	this.problems = problems;
     	propHasProblems.set(hasProblems());
-    	System.out.println("___van: " + hasProblems() + " - "+ problems);
     }
     
     public boolean hasProblems() {

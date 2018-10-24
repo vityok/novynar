@@ -2,10 +2,13 @@
 
 # script to launch the ij Apache Derby command-line tool
 
-DERBY_HOME="$JAVA_HOME/db"
-DERBY_JAR="$DERBY_HOME/lib/derby.jar:$DERBY_HOME/lib/derbytools.jar"
+if [ -z "${DERBY_HOME}" ]; then
+    DERBY_HOME="${JAVA_HOME}/db"
+fi
 
-echo "Derby is located at: $DERBY_JAR"
+DERBY_JAR="${DERBY_HOME}/lib/derby.jar:$DERBY_HOME/lib/derbytools.jar"
+
+echo "Using Derby jars location: ${DERBY_JAR}"
 
 OPML_FILE="$HOME/.novinar/feeds.opml"
 FEEDS_DB="$HOME/.novinar/feeds_db"

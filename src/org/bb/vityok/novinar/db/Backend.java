@@ -24,13 +24,6 @@ public class Backend
     public static final String DEFAULT_DB_NAME = "novynarDB";
 
     public static final int DESCRIPTION_MAX_LENGTH = 102400;
-
-    private String dbName;
-
-    private Connection conn;
-
-    private static Logger logger = Logger.getLogger("org.bb.vityok.novinar.db");
-    
     
     /** Database schema layout version supported by this backend.
      * 
@@ -38,7 +31,13 @@ public class Backend
      * for graceful migration from older versions to the newer releases. 
      */
     public final static int SCHEMA_VERSION = 1;
+ 
+    private String dbName;
 
+    private Connection conn;
+
+    private static Logger logger = Logger.getLogger("org.bb.vityok.novinar.db");
+    
     /** Initialize the backend with the default database name. */
     public Backend() {
         this(DEFAULT_DB_NAME);
@@ -80,13 +79,6 @@ public class Backend
         driver.newInstance();
 	// DriverManager.registerDriver((Driver));
 
-        /* We will be using Statement and PreparedStatement objects for
-         * executing SQL. These objects, as well as Connections and ResultSets,
-         * are resources that should be released explicitly after use, hence
-         * the try-catch-finally pattern used below.
-         * We are storing the Statement and Prepared statement object references
-         * in an array list for convenience.
-         */
         conn = null;
 
         Statement s;
@@ -109,36 +101,44 @@ public class Backend
 					       + ";create=true", null);
 
 	    logger.info("Connected to the database " + dbName);
-
+	    
 	    s = conn.createStatement();
 
             // try creating the news_item table and quietly ignore the SQLException if it already exists
             s.execute("CREATE TABLE news_item("
-                      + "news_item_id INT NOT NULL PRIMARY KEY "
-                      + "  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
-                      + "channel_id INT NOT NULL, "
-                      + "title VARCHAR(2048), "
-                      + "link VARCHAR(2048), "
-                      /* some websites generate items with way too
-                       * much markup to fit into a VARCHAR or even a
-                       * LONG VARCHAR */
-                      + "description CHARACTER LARGE OBJECT (100 K), "
-                      + "creator VARCHAR(1024), "
-                      + "date TIMESTAMP, "
-                      + "subject VARCHAR(6144), "
-                      /* is set to 1 when marked as read */
-                      + "is_read SMALLINT DEFAULT 0, "
-                      /* is set to 1 when marked as removed */
-                      + "is_removed SMALLINT DEFAULT 0 "
-                      +")");
-            logger.severe("Created tables CHANNEL and NEWS_ITEM");
-
+		    + "news_item_id INT NOT NULL PRIMARY KEY "
+		    + "  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
+		    + "channel_id INT NOT NULL, "
+                    + "title VARCHAR(2048), "
+                    + "link VARCHAR(2048), "
+                    // some websites generate items with way too much markup to fit into a VARCHAR
+                    // or even a LONG VARCHAR
+		    + "description CHARACTER LARGE OBJECT (100 K), "
+                    + "creator VARCHAR(1024), "
+                    + "date TIMESTAMP, "
+                    + "subject VARCHAR(6144), "
+		    // is set to 1 when marked as read
+		    + "is_read SMALLINT DEFAULT 0, "
+		    // is set to 1 when marked as removed. Schema v1 adds is_trash column to track
+		    // items thrown into the trash bin.
+		    //
+		    // An item that has is_trash flag set to 1 is displayed in the "Trash" folder
+		    // only. But is not displayed in the channel folder. Only when is_removed is set
+		    // to 1 the item becomes candidate for final removal from the database.
+		    + "is_removed SMALLINT DEFAULT 0 "
+                    + ")");
+            logger.severe("Created table NEWS_ITEM");
 	} catch (SQLException sqle) {
             if (!sqle.getSQLState().equals("X0Y32")) {
                 // X0Y32 means that this table already exists,
                 // complain only if something bad happened
                 printSQLException(sqle);
             }
+	}
+        
+	int schemaVersion = getSchemaVersion();
+	if (schemaVersion == 0) {
+	    upgradeSchema_NULL_v1();
 	}
     }
     
@@ -160,6 +160,46 @@ public class Backend
             logger.log(Level.SEVERE, "failed to load description for NewsItem: " + this, e);
         }
         return 0;
+    }
+
+    /**
+     * Upgrade database schema from the earliest alpha development version to the
+     * first "versioned" layout.
+     * 
+     * <p>
+     * Adds <tt>novinar_meta_inf</tt> table to store information about database
+     * layout.
+     * 
+     * <p>
+     * Adds <tt>is_trash</tt> column to the <tt>news_item</tt> table.
+     */
+    public void upgradeSchema_NULL_v1() {
+	Connection conn = getConnection();
+
+        String sqlCreate = "CREATE TABLE novinar_meta_inf (schema_version INT)";
+        try (PreparedStatement ps = conn.prepareStatement(sqlCreate)) {
+            ps.execute();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "failed to create novinar_meta_inf table: ", e);
+        }
+
+        String sqlInsert = "INSERT INTO novinar_meta_inf (schema_version) VALUES (1)";
+        try (PreparedStatement ps = conn.prepareStatement(sqlInsert)) {
+            ps.execute();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "failed to update novinar_meta_inf table: ", e);
+        }
+
+	// is set to 1 when the news item is moved to the trash bin, but is not yet a
+	// candidate for the final removal from the database
+        String sqlAlter = "ALTER TABLE news_item ADD COLUMN is_trash SMALLINT DEFAULT 0";
+        try (PreparedStatement ps = conn.prepareStatement(sqlAlter)) {
+            ps.execute();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "failed to alter news_item table: ", e);
+        }
+        
+	logger.severe("finished upgrade to the v1 database schema layout");
     }
 
     /**

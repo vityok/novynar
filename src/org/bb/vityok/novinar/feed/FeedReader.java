@@ -266,6 +266,11 @@ public class FeedReader extends Thread {
 	novinar.setStatus(Novinar.Status.READY);
     }
 
+    /**
+     * Entry point for the main background trhead periodically checking feeds and
+     * downloading new items.
+     * 
+     */
     // todo: the thread must hang in background, periodically checking
     // for the channels that have to be updated
     public void run() {
