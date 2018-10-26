@@ -1,9 +1,5 @@
 package org.bb.vityok.novinar.ui;
 
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 
 import java.util.logging.Level;
@@ -60,21 +56,22 @@ import org.bb.vityok.novinar.core.Channel;
 import org.bb.vityok.novinar.core.NewsItem;
 import org.bb.vityok.novinar.core.Novinar;
 import org.bb.vityok.novinar.core.Outline;
-import org.bb.vityok.novinar.core.UpdatePeriod;
 
 
-/** Primary UI controller.
+/**
+ * Primary UI controller.
  *
+ * <p>
  * Relies on the Novinar class for business logic.
  */
 public class NovinarApp extends Application
 {
-    private Novinar novinar;
+    Novinar novinar;
 
     private Scene primaryScene;
 
     /** Table view with the current selection of news items. */
-    private TableView<NewsItem> itemsTable = null;
+    TableView<NewsItem> itemsTable = null;
     private TreeView<Outline> channelsTree = null;
     private WebView itemView = null;
     private Label itemTitle = null;
@@ -87,11 +84,26 @@ public class NovinarApp extends Application
 
     private static Logger logger = Logger.getLogger("org.bb.vityok.novinar.ui");
 
+    // some of the icons used in the UI
+    final Image imageProblem = new Image(getClass().getResourceAsStream("/icons/1x/twotone_report_problem_black_18dp.png"));
+    final Image imageFeed = new Image(getClass().getResourceAsStream("/icons/1x/twotone_rss_feed_black_18dp.png"));
+    final Image imageTrash = new Image(getClass().getResourceAsStream("/icons/1x/twotone_delete_black_18dp.png"));
 
     public static void start(String[] args) {
         launch(args);
     }
 
+    @Override
+    public void stop() {
+	logger.info("Graceful shutdown. Bye-bye");
+        try {
+            novinar.storeConfig();
+            novinar.close();
+        } catch (Exception e) {
+            logger.severe("Graceful shutdown. failed: " + e);
+            e.printStackTrace();
+        }
+    }
 
     private HBox buildMenuBar() {
 	HBox box = new HBox();
@@ -126,62 +138,6 @@ public class NovinarApp extends Application
 	HBox.setHgrow(menuBar, Priority.ALWAYS);
 	return box;
     }
-
-    private final Image imageProblem = new Image(getClass().getResourceAsStream("/icons/1x/twotone_report_problem_black_18dp.png"));
-    private final Image imageFeed = new Image(getClass().getResourceAsStream("/icons/1x/twotone_rss_feed_black_18dp.png"));
-
-    /** Encapsulates Outline and serves as the view to
-     * represent its data to the user.
-     */
-    public class OutlineTreeItem extends TreeItem<Outline> {
-	private final ImageView imvProblem = new ImageView(imageProblem);
-	private final ImageView imvFeed = new ImageView(imageFeed);
-	
-	public OutlineTreeItem(Outline ol) {	    
-	    super(ol);
-	    rebuildChildren();
-	    if (ol.isChannel()) {
-		// register for various status updates
-		Channel chan = ol.getChannel();
-		final ImageView defaultIcon = chan.hasProblems() ? imvProblem : imvFeed;
-		setGraphic(defaultIcon);
-		chan.hasProblemsProperty().addListener((ObservableValue<? extends Boolean> ov,
-			Boolean oldVal, Boolean newVal) ->
-		{
-		    System.out.println("change: " + ov);
-		    // change the icon for this item. if the new value is true,
-		    // it means there are problems
-		    final ImageView newIcon = newVal ? imvProblem : imvFeed;
-		    Platform.runLater(() -> setGraphic(newIcon));
-		});
-	    }
-	}
-
-        @Override
-	public String toString() {
-	    return ((Outline) getValue()).toString();
-	}
-
-	private ObservableList<TreeItem<Outline>> buildChildren() {
-	    Outline ol = getValue();
-	    if (ol != null && ol.hasChildren()) {
-                ObservableList<TreeItem<Outline>> children = FXCollections.observableArrayList();
-		List<Outline> outlines = ol.getChildren();
-		outlines.sort(Comparator.comparing(Outline::getTitle));
-
-                outlines.forEach((childOutline) -> {
-                        children.add(new OutlineTreeItem(childOutline));
-                    });
-                return children;
-	    }
-            return FXCollections.emptyObservableList();
-	}
-
-        public void rebuildChildren() {
-	    getChildren().setAll(buildChildren());
-        }
-    } // end class OutlineTreeItem
-
 
     public void feedsTreeCtxProperties() {
         Outline selectedOl = channelsTree.getSelectionModel().getSelectedItem().getValue();
@@ -218,7 +174,7 @@ public class NovinarApp extends Application
 	novinar.storeConfig();
 
 	Outline root = novinar.getRootOutline();
-	TreeItem<Outline> rootItem = new OutlineTreeItem(root);
+	TreeItem<Outline> rootItem = new OutlineTreeItem(this, root);
         rootItem.setExpanded(true);
         channelsTree = new TreeView<> (rootItem);
         channelsTree
@@ -439,68 +395,6 @@ public class NovinarApp extends Application
 	return vbox;
     } // end buildItemsTable
 
-    class ChannelPropertiesDialog extends Alert
-    {
-        final GridPane grid = new GridPane();
-        final TextField fldUrl = new TextField();
-        final TextField fldTitle = new TextField();
-        final CheckBox cbIgnoreOnBoot = new CheckBox();
-        final ComboBox<UpdatePeriod> cbxUpdatePeriod = new ComboBox<>();
-        final Label lblProblems = new Label("Problems: ");
-        final Label txtProblems = new Label("");
-
-        public ChannelPropertiesDialog(String title) {
-            super(Alert.AlertType.INFORMATION);
-            setTitle(title);
-            setHeaderText("Specify channel parameters");
-            // ButtonType.OK is there by default
-            getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
-
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new Insets(20, 150, 10, 10));
-
-            fldUrl.setPromptText("Enter URL");
-            fldTitle.setPromptText("Channel title");
-            fldUrl.setPrefWidth(400);
-            fldTitle.setPrefWidth(400);
-
-            grid.add(new Label("Feed URL:"), 0, 0);
-            grid.add(fldUrl, 1, 0);
-
-            grid.add(new Label("Feed title:"), 0, 1);
-            grid.add(fldTitle, 1, 1);
-
-            grid.add(new Label("Ignore on boot:"), 0, 2);
-            grid.add(cbIgnoreOnBoot, 1, 2);
-
-            cbxUpdatePeriod.getItems().setAll(UpdatePeriod.values());
-            cbxUpdatePeriod.setValue(UpdatePeriod.HOURS_3);
-            grid.add(new Label("Update period:"), 0, 3);
-            grid.add(cbxUpdatePeriod, 1, 3);
-            
-            grid.add(lblProblems, 0, 4);
-            grid.add(txtProblems, 1, 4);
-
-            getDialogPane().setContent(grid);
-
-            init();
-        }
-
-        public void init() {
-            // Request focus on the URL field by default.
-            Platform.runLater(() -> fldUrl.requestFocus());
-        }
-
-        public void execute() {
-            showAndWait().ifPresent(response -> handleResponse(response));
-        }
-
-        public void handleResponse(ButtonType result) {
-        }
-    } // end ChannelPropertiesDialog
-
-
     /** Show dialog with the new channel properties. */
     private void showAddChannelDialog() {
         final ChannelPropertiesDialog dialog = new ChannelPropertiesDialog("Add channel")
@@ -646,7 +540,7 @@ public class NovinarApp extends Application
 
         grid.add(new Label("To be removed:"), 0, 3);
         grid.add(new Label(Integer.toString(novinar.getRemovedNewsItemsCount())), 1, 3);
-        
+
         grid.add(new Label("DB schema version:"), 0, 4);
         grid.add(new Label(Integer.toString(novinar.getDbSchemaVersion())), 1, 4);
 
@@ -655,123 +549,10 @@ public class NovinarApp extends Application
         dialog.show();
     }
 
-    /**
-     * Pop-up dialog with the wikipedia cite news/web autogenerated
-     * template.
-     */
-    class ShareNewsItemDialog extends Alert
-    {
-        final GridPane grid = new GridPane();
-	final TextArea ta = new TextArea();
-	final VBox pane = new VBox();
-	final CheckBox cbWrap = new CheckBox();
-	final CheckBox cbName = new CheckBox();
-	final CheckBox cbAuthor = new CheckBox();
-	final DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-	    .withZone(ZoneId.systemDefault());;
-
-	public ShareNewsItemDialog(String title) {
-	    super(Alert.AlertType.INFORMATION);
-	    setTitle(title);
-	    setHeaderText("Wiki reference");
-            // ButtonType.OK is there by default, we don't need any
-            // other buttons as nothing is being done here
-
-	    // select all ta (generated template text) text upon text field activation (either
-	    // with the mouse click or keyboard navigation)
-	    ta.focusedProperty().addListener(new ChangeListener<Boolean>() {
-		    @Override
-		    public void changed(ObservableValue ov, Boolean t, Boolean t1) {
-
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-				    if (ta.isFocused() && !ta.getText().isEmpty()) {
-					ta.selectAll();
-				    }
-				}
-			    });
-		    }
-		});
-	    ta.setEditable(false);
-
-	    genText();
-
-	    cbWrap.setOnAction((ActionEvent evt) -> genText());
-	    grid.add(new Label("Wrap lines"), 0, 0);
-	    grid.add(cbWrap, 1, 0);
-
-	    cbName.setOnAction((ActionEvent evt) -> genText());
-	    grid.add(new Label("Name reference"), 0, 1);
-	    grid.add(cbName, 1, 1);
-	    
-	    cbAuthor.setOnAction((ActionEvent evt) -> genText());
-	    grid.add(new Label("Specify author"), 0, 2);
-	    grid.add(cbAuthor, 1, 2);
-
-	    pane.getChildren().addAll(ta, grid);
-            getDialogPane().setContent(pane);
-	    init();
-	}
-
-	/** Actually generates the reference text and inserts it into
-	 * the textarea. */
-	public void genText() {
-	    final NewsItem item = itemsTable.getSelectionModel().getSelectedItem();
-	    final String strDate = format.format(item.getDateCalendar());
-	    final String nl = cbWrap.isSelected() ? "\n" : "";
-	    final String strPublisher = novinar.getChannelById(item.getChannelId()).getTitle();
-	    final String creator = item.getCreator();
-
-	    // guess ref name
-	    String name = "";
-	    if (cbName.isSelected()) {
-		if (strPublisher != null
-		    && strPublisher.length() < 4) { 
-		    name = " name=\""
-			+ strPublisher.toLowerCase() + "."
-			+ strDate + "\"";
-		} else {
-		    name = " name=\"" + strDate + "\"";
-		}
-	    }
-	    
-	    String author = "";
-	    if (cbAuthor.isSelected()
-		    && creator != null
-		    && !creator.isEmpty()) {
-		author = " | author = " + creator + nl;
-	    }
-
-	    // produce ref text
-	    String wikiRef = "<ref" + name + ">{{cite web" + nl
-		+ " | url = " + item.getLink() + nl
-		+ " | title = " + item.getTitle() + nl
-		+ author
-		+ " | publisher = " + strPublisher + nl
-		+ " | date = " + strDate + nl
-		+ "}}</ref>";
-	    ta.setText(wikiRef);
-	}
-
-        public void init() {
-            // Request focus on the URL field by default.
-            Platform.runLater(() -> ta.requestFocus());
-        }
-
-        public void execute() {
-            showAndWait().ifPresent(response -> handleResponse(response));
-        }
-
-        public void handleResponse(ButtonType result) {
-        }
-
-    } // end ShareNewsItemDialog
-
     /** Shows dialog with the text area with generated references for
      * Wikipedia. */
     public void showShareDialog() {
-	final ShareNewsItemDialog dialog = new ShareNewsItemDialog("Share item");
+	final ShareNewsItemDialog dialog = new ShareNewsItemDialog(this, "Share item");
 	dialog.execute();
     }
 
@@ -944,17 +725,5 @@ public class NovinarApp extends Application
 
         primaryStage.setMaximized(true);
         primaryStage.show();
-    }
-
-    @Override
-    public void stop() {
-	logger.info("Graceful shutdown. Bye-bye");
-        try {
-            novinar.storeConfig();
-            novinar.close();
-        } catch (Exception e) {
-            logger.severe("Graceful shutdown. failed: " + e);
-            e.printStackTrace();
-        }
     }
 }

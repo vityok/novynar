@@ -67,6 +67,14 @@ public class Outline
     public OPMLManager getOPMLManager() { return oman; }
     public Outline getParent() { return parent; }
 
+    /** Root outline doesn't have a parent.
+     *
+     * @return true if this is a root outline.
+     */
+    public boolean isRoot() {
+	return getParent() == null;
+    }
+
     /** Channels are leafs in the OPML tree, return the associated
      * channel object if there is any.
      */

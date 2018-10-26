@@ -284,6 +284,10 @@ public class FeedReader extends Thread {
 		List<Channel> channels = novinar.getChannels();
 
 		for (Channel channel : channels) {
+		    if (Thread.currentThread().isInterrupted()) {
+			Novinar.getLogger().info("FeedReader thread interrupted. Breaking the cycle");
+			return;
+		    }
 		    try {
 			Instant lastUpdate = channel.getLatestUpdate();
 			UpdatePeriod updatePeriod = channel.getUpdatePeriod();
