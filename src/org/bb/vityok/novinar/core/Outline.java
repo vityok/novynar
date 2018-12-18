@@ -44,6 +44,7 @@ public class Outline
 
     private OPMLManager oman;
 
+    public Outline () {}
 
     /** Binds the outline with the associated DOM node. */
     public Outline(OPMLManager oman, Node node, Outline parent) {

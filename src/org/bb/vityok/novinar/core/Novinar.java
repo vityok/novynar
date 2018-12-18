@@ -188,7 +188,7 @@ public class Novinar
     public void removeNewsItem(NewsItem item)
         throws Exception
     {
-        niDAO.removeNewsItem(item);
+        niDAO.trashNewsItem(item);
     }
 
     public List<NewsItem> getNewsItems()
@@ -216,6 +216,17 @@ public class Novinar
             return niDAO.getNewsItemByChannels(getChannelsUnder(ol));
         }
     }
+
+    /**
+     * Returns all news items that were moved to the trash bin by the
+     * user (deleted).
+     */
+    public List<NewsItem> getNewsItemsInTrash()
+        throws Exception
+    {
+	return niDAO.getNewsItemsInTrash();
+    }
+
 
     public List<NewsItem> getNewsItemsFor(Channel chan)
         throws Exception

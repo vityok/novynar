@@ -181,6 +181,8 @@ public class NovinarApp extends Application
             .getSelectionModel()
             .selectedItemProperty()
             .addListener((obs, oldSelection, newSelection) -> {
+		    // dispatch action when an outline is selected in
+		    // the channels tree
                     if (newSelection != null) {
                         TreeItem<Outline> selectedItem = newSelection;
                         Outline outline = selectedItem.getValue();
@@ -339,9 +341,10 @@ public class NovinarApp extends Application
                     if (selectedItems != null && !selectedItems.isEmpty()) {
                         // handle DEL key press, todo: handle multiple selected items
                         if (keyEvent.getCode().equals(KeyCode.DELETE)) {
-                            for (NewsItem selectedItem : selectedItems) {
-                            itemsTable.getItems().remove(itemsTable.getItems().indexOf(selectedItem));
-                            }
+			    itemsTable.getItems().removeAll(selectedItems);
+                            // for (NewsItem selectedItem : selectedItems) {
+			    // 	itemsTable.getItems().remove(itemsTable.getItems().indexOf(selectedItem));
+                            // }
                         }
                     }
                 }
@@ -556,12 +559,16 @@ public class NovinarApp extends Application
 	dialog.execute();
     }
 
+    /** Updates items in the items table whenever a new outline is
+     * selected in the channels tree.
+     */
     private void updateItemsTable() {
         try {
             novinar.loadFeeds();
             updateItemsTable(novinar.getRootOutline());
         } catch (Exception e) {
             e.printStackTrace();
+            logger.log(Level.SEVERE, "failed to refresh items table", e);
         }
     }
 
@@ -570,8 +577,13 @@ public class NovinarApp extends Application
      */
     private void updateItemsTable(Outline ol) {
         try {
-            ObservableList<NewsItem> items = FXCollections.observableArrayList(novinar.getNewsItemsFor(ol));
-            itemsTable.setItems(items);
+	    ObservableList<NewsItem> items;
+	    if (ol instanceof TrashBinOutline) {
+		items = FXCollections.observableArrayList(novinar.getNewsItemsInTrash());
+	    } else {
+		items = FXCollections.observableArrayList(novinar.getNewsItemsFor(ol));
+	    }
+	    itemsTable.setItems(items);
 
             // track changes to the list of news items, namely, when a
             // user "removes" selected items

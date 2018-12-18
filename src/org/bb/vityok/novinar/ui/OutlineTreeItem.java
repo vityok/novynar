@@ -71,7 +71,7 @@ public class OutlineTreeItem extends TreeItem<Outline> {
 
 	    if (ol.isRoot()) {
 		System.out.println("_____van: Trash bin added");
-		children.add(new TrashBinTreeItem(novinarApp));
+		children.add(new TrashBinTreeItem(novinarApp, new TrashBinOutline(null, null, null)));
 	    }
 
 	    return children;

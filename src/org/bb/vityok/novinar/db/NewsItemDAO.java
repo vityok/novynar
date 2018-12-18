@@ -51,7 +51,7 @@ public class NewsItemDAO
 
 	// check if such item already exists in the database before
 	// insertion, update the item if it is not removed otherwise
-        String sqlSel = "SELECT link, news_item_id, is_removed FROM news_item WHERE link=?";
+        String sqlSel = "SELECT link, news_item_id, is_removed, is_trash FROM news_item WHERE link=?";
 	try (PreparedStatement cs = conn.prepareStatement(sqlSel)) {
             cs.setString(1, item.getLink());
             ResultSet rscs = cs.executeQuery();
@@ -59,7 +59,8 @@ public class NewsItemDAO
             if (alreadyExists) {
                 int newsItemId = rscs.getInt("news_item_id");
                 boolean isRemoved = (rscs.getInt("is_removed") == 1);
-                if (!isRemoved) {
+                boolean isTrash = (rscs.getInt("is_trash") == 1);
+                if (!(isRemoved || isTrash)) {
                     String sqlUp = "UPDATE news_item SET "
                         + " title=?, description=?, creator=?, date=?, subject=? "
                         + " WHERE news_item_id=?";
@@ -107,8 +108,54 @@ public class NewsItemDAO
     }
 
 
+    /**
+     * Utility method for converting results of database queries into
+     * NewsItem objects.
+     */
+    protected List<NewsItem> convertNewsItemsRS(ResultSet rs)
+	throws Exception
+    {
+	List<NewsItem> newsItems = new LinkedList<NewsItem>();
+	while (rs.next()) {
+	    NewsItem item = new LazyNewsItem(dbend);
+	    item.setNewsItemId(rs.getInt("news_item_id"));
+	    item.setTitle(rs.getString("title"));
+	    item.setLink(rs.getString("link"));
+	    // item.setDescription(rs.getString("description"));
+	    item.setCreator(rs.getString("creator"));
+	    item.setDateCalendar(Instant.ofEpochMilli(rs.getTimestamp("date").getTime()));
+	    item.setSubject(rs.getString("subject"));
+	    item.setIsRead(rs.getInt("is_read") == 1 );
+	    item.setChannelId(rs.getInt("channel_id"));
+	    newsItems.add(item);
+	}
+	return newsItems;
+
+    }
+
+
+    /** @todo */
+    public List<NewsItem> getNewsItemsInTrash()
+	throws Exception
+    {
+	Connection conn = dbend.getConnection();
+        String sql = "SELECT news_item_id, " +
+            " title, link, creator, date, subject, is_read, channel_id " +
+            " FROM news_item " +
+            " WHERE is_trash=1 AND is_removed=0 " +
+            " ORDER BY date";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+	    return convertNewsItemsRS(rs);
+        }
+    }
+
+
     /** Loads news items from the database except for their
      * descriptions.
+     *
+     * <p>Items were not removed nor moved to the trash.
      *
      * @see getNewsItemDescription
      */
@@ -117,51 +164,37 @@ public class NewsItemDAO
     {
 	Connection conn = dbend.getConnection();
         List<String> channelIds = new LinkedList<String>();
-        List<NewsItem> newsItems = new LinkedList<NewsItem>();
 
         for (Channel chan : channels) {
             channelIds.add(Integer.toString(chan.getChannelId()));
         }
 
         if (channelIds.isEmpty()) {
-            return newsItems;
+            return new LinkedList<NewsItem>(); // empty Items
         }
 
         String sql = "SELECT news_item_id, " +
-            " title, link, description, creator, date, subject, is_read, channel_id " +
+            " title, link, creator, date, subject, is_read, channel_id " +
             " FROM news_item " +
             " WHERE channel_id IN " +
             " ( " + String.join(", ", channelIds) + " ) " +
-            " AND is_removed=0 " +
+            " AND is_removed=0 AND is_trash=0 " +
             " ORDER BY date";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                NewsItem item = new LazyNewsItem(dbend);
-                item.setNewsItemId(rs.getInt("news_item_id"));
-                item.setTitle(rs.getString("title"));
-                item.setLink(rs.getString("link"));
-                // item.setDescription(rs.getString("description"));
-                item.setCreator(rs.getString("creator"));
-                item.setDateCalendar(Instant.ofEpochMilli(rs.getTimestamp("date").getTime()));
-                item.setSubject(rs.getString("subject"));
-                item.setIsRead(rs.getInt("is_read") == 1 );
-		item.setChannelId(rs.getInt("channel_id"));
-                newsItems.add(item);
-            }
-            return newsItems;
+	    return convertNewsItemsRS(rs);
         }
     }
 
 
     /** Mark the given item as removed in the database.
      *
-     * The record remains in the database, but its <tt>is_removed</tt>
-     * flag is set to 1 and description with title are set to NULL to
-     * hopefully save space in the database files.
+     * <p>The record remains in the database, but its
+     * <tt>is_removed</tt> flag is set to 1 and description with title
+     * are set to NULL to hopefully save space in the database files.
      *
-     * Periodic house-keeping by purging old and removed news items
+     * <p>Periodic house-keeping by purging old and removed news items
      * from the database will be implemented in a separate method.
      */
     public void removeNewsItem(NewsItem item)
@@ -177,6 +210,36 @@ public class NewsItemDAO
             ps.executeUpdate();
             dbend.getLogger().fine("marked item as removed: " + item.getTitle());
         }
+    }
+
+    /** Marks news item as moved to trash if it wasn't before, marks
+     * as removed if it was already in the trash bin. */
+    public void trashNewsItem(NewsItem item)
+        throws Exception
+    {
+	boolean isTrashed = false;
+	Connection conn = dbend.getConnection();
+
+        String queryIsTrash = "SELECT is_trash FROM news_item WHERE news_item_id=?";
+        try (PreparedStatement ps = conn.prepareStatement(queryIsTrash)) {
+	    ps.setInt(1, Integer.valueOf(item.getNewsItemId()));
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+	    isTrashed = (rs.getInt(1) == 1);
+	}
+
+	if (isTrashed) {
+	    removeNewsItem(item);
+	} else {
+	    try (PreparedStatement ps = conn.prepareStatement("UPDATE news_item SET " +
+							      " is_trash=1 " +
+							      " WHERE news_item_id=?")
+		 ) {
+		ps.setInt(1, Integer.valueOf(item.getNewsItemId()));
+		ps.executeUpdate();
+		dbend.getLogger().fine("marked item as moved to trash: " + item.getTitle());
+	    }
+	}
     }
 
 
@@ -200,19 +263,19 @@ public class NewsItemDAO
 
     private int querySingleInt(String sql) {
 	Connection conn = dbend.getConnection();
-        int count = -1;
+        int intValue = -1;
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                count = rs.getInt(1);
+                intValue = rs.getInt(1);
             }
         } catch (SQLException sqle) {
             dbend.getLogger().log(Level.SEVERE, "failed to query: " + sql, sqle);
         }
 
-        return count;
+        return intValue;
     }
 
 
@@ -242,7 +305,7 @@ public class NewsItemDAO
 	Connection conn = dbend.getConnection();
 
         String sql = "DELETE FROM news_item "
-            + " WHERE is_removed=1 " // user doesn't see these items
+            + " WHERE is_removed=1 OR is_trash=1 " // removed items either way
             + " AND channel_id=? "
             + " AND date < ?";
 	try (PreparedStatement ps = conn.prepareStatement(sql)) {

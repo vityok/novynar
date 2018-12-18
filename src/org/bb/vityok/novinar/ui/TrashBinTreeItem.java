@@ -1,11 +1,15 @@
 package org.bb.vityok.novinar.ui;
 
+import org.w3c.dom.Node;
+
 import org.bb.vityok.novinar.core.Outline;
+import org.bb.vityok.novinar.core.OPMLManager;
+
+import javafx.collections.FXCollections;
 
 import javafx.scene.control.TreeItem;
 
 import javafx.scene.image.ImageView;
-
 
 /** This node represents the trash bin in the outlines tree.
  *
@@ -17,9 +21,9 @@ public class TrashBinTreeItem extends TreeItem<Outline> {
 
     final NovinarApp novinarApp;
     final ImageView imvTrash;
-
-    public TrashBinTreeItem(NovinarApp novinarApp) {
-	super(null);
+    
+    public TrashBinTreeItem(NovinarApp novinarApp, Outline ol) {
+	super(ol);
 	System.out.println("_____van: Trash bin <init>");
 
 	this.novinarApp = novinarApp;
@@ -27,6 +31,8 @@ public class TrashBinTreeItem extends TreeItem<Outline> {
 	imvTrash = new ImageView(novinarApp.imageTrash);
 
 	setGraphic(imvTrash);
+
+	getChildren().setAll(FXCollections.emptyObservableList());
     }
 
     @Override
