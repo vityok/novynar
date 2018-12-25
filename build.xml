@@ -11,6 +11,7 @@
 
   <property environment="env"/>
   <property name="derby.home"  value="${env.JAVA_HOME}/db"/>
+  <property name="path_to_fx.dir"  value="${env.PATH_TO_FX}"/>
 
   <target name="clean">
     <delete dir="${build.dir}"/>
@@ -31,9 +32,14 @@
 	   classpathref="build.class.path"
 	   srcdir="${src.dir}"
 	   destdir="${classes.dir}"
+	   
 	   debug="true"
 	   debuglevel="lines,vars,source">
-      <compilerarg value="-Xlint:unchecked"/>
+      <!--compilerarg value="-Xlint:unchecked"/-->
+      <compilerarg value="-Xlint:deprecation"/>
+      <compilerarg value="--module-path"/>
+      <compilerarg value="${path_to_fx.dir}"/>
+      <compilerarg value="--add-modules=javafx.controls,javafx.web"/>
     </javac>
     <copy file="${src.dir}/org/bb/vityok/novinar/ui/style.css"
 	  tofile="${classes.dir}/org/bb/vityok/novinar/ui/style.css"/>
