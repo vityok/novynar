@@ -35,8 +35,9 @@
 	   
 	   debug="true"
 	   debuglevel="lines,vars,source">
-      <!--compilerarg value="-Xlint:unchecked"/-->
-      <compilerarg value="-Xlint:deprecation"/>
+      <compilerarg value="-Xlint"/><!--
+      <compilerarg value="-Xlint:unchecked"/>
+      <compilerarg value="-Xlint:deprecation"/> -->
       <compilerarg value="--module-path"/>
       <compilerarg value="${path_to_fx.dir}"/>
       <compilerarg value="--add-modules=javafx.controls,javafx.web"/>

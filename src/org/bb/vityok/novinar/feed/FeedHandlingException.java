@@ -6,7 +6,10 @@ package org.bb.vityok.novinar.feed;
  *
  */
 public class FeedHandlingException extends Exception {
-	public FeedHandlingException(String msg) {
-		super(msg);
-	}
+
+    public static final long serialVersionUID = 1234L;
+
+    public FeedHandlingException(String msg) {
+	super(msg);
+    }
 }

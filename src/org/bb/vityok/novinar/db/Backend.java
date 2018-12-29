@@ -24,26 +24,26 @@ public class Backend
     public static final String DEFAULT_DB_NAME = "novynarDB";
 
     public static final int DESCRIPTION_MAX_LENGTH = 102400;
-    
+
     /** Database schema layout version supported by this backend.
-     * 
-     * Based on the value stored in the novinar_meta_inf table can be used 
-     * for graceful migration from older versions to the newer releases. 
+     *
+     * Based on the value stored in the novinar_meta_inf table can be used
+     * for graceful migration from older versions to the newer releases.
      */
     public final static int SCHEMA_VERSION = 1;
- 
+
     private String dbName;
 
     private Connection conn;
 
     private static Logger logger = Logger.getLogger("org.bb.vityok.novinar.db");
-    
+
     /** Initialize the backend with the default database name. */
     public Backend() {
         this(DEFAULT_DB_NAME);
     }
 
-    
+
     public Backend(String dbName) {
         this.dbName = dbName;
 	try {
@@ -75,10 +75,6 @@ public class Backend
 
         logger.info("Database backend is starting in " + framework + " mode. SETUP");
 
-        Class driver = Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
-        driver.newInstance();
-	// DriverManager.registerDriver((Driver));
-
         conn = null;
 
         Statement s;
@@ -101,7 +97,7 @@ public class Backend
 					       + ";create=true", null);
 
 	    logger.info("Connected to the database " + dbName);
-	    
+
 	    s = conn.createStatement();
 
             // try creating the news_item table and quietly ignore the SQLException if it already exists
@@ -135,16 +131,16 @@ public class Backend
                 printSQLException(sqle);
             }
 	}
-        
+
 	int schemaVersion = getSchemaVersion();
 	if (schemaVersion == 0) {
 	    upgradeSchema_NULL_v1();
 	}
     }
-    
-    /** Returns database layout schema version. 
-     * 
-     * @return database layout schema. 
+
+    /** Returns database layout schema version.
+     *
+     * @return database layout schema.
      */
     public int getSchemaVersion() {
 	Connection conn = getConnection();
@@ -165,11 +161,11 @@ public class Backend
     /**
      * Upgrade database schema from the earliest alpha development version to the
      * first "versioned" layout.
-     * 
+     *
      * <p>
      * Adds <tt>novinar_meta_inf</tt> table to store information about database
      * layout.
-     * 
+     *
      * <p>
      * Adds <tt>is_trash</tt> column to the <tt>news_item</tt> table.
      */
@@ -198,19 +194,11 @@ public class Backend
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "failed to alter news_item table: ", e);
         }
-        
+
 	logger.severe("finished upgrade to the v1 database schema layout");
     }
 
-    /**
-     * Reports a data verification failure to the Logger with the
-     * given message.
-     *
-     * @param message A message describing what failed.
-     */
-    private void reportFailure(String message) {
-        logger.severe("\nData verification failed:" + message);
-    }
+
 
     /**
      * Prints details of an SQLException chain to Logger.
@@ -256,30 +244,29 @@ public class Backend
      */
     public void close()
     {
-        if (framework.equals("embedded")) {
-	    try {
-		// the shutdown=true attribute shuts down Derby
-		DriverManager.getConnection("jdbc:derby:;shutdown=true");
+	try {
+	    // the shutdown=true attribute shuts down Derby
+	    DriverManager.getConnection("jdbc:derby:;shutdown=true");
 
-		// To shut down a specific database only, but keep the
-		// engine running (for example for connecting to other
-		// databases), specify a database in the connection URL:
-		//DriverManager.getConnection("jdbc:derby:" + dbName + ";shutdown=true");
-	    } catch (SQLException se) {
-		if (( (se.getErrorCode() == 50000)
-		      && ("XJ015".equals(se.getSQLState()) ))) {
-		    // we got the expected exception
-		    logger.info("Derby shut down normally");
-		    // Note that for single database shutdown, the expected
-		    // SQL state is "08006", and the error code is 45000.
-		} else {
-		    // if the error code or SQLState is different, we have
-		    // an unexpected exception (shutdown failed)
-		    logger.severe("Derby did not shut down normally");
-		    printSQLException(se);
-		}
+	    // To shut down a specific database only, but keep the
+	    // engine running (for example for connecting to other
+	    // databases), specify a database in the connection URL:
+	    //DriverManager.getConnection("jdbc:derby:" + dbName + ";shutdown=true");
+	} catch (SQLException se) {
+	    if (( (se.getErrorCode() == 50000)
+		  && ("XJ015".equals(se.getSQLState()) ))) {
+		// we got the expected exception
+		logger.info("Derby shut down normally");
+		// Note that for single database shutdown, the expected
+		// SQL state is "08006", and the error code is 45000.
+	    } else {
+		// if the error code or SQLState is different, we have
+		// an unexpected exception (shutdown failed)
+		logger.severe("Derby did not shut down normally");
+		printSQLException(se);
 	    }
 	}
+
 	//Connection
 	try {
 	    if (conn != null) {
@@ -290,6 +277,7 @@ public class Backend
 	    printSQLException(sqle);
 	}
     }
+
 
     public Logger getLogger() {
         return logger;
