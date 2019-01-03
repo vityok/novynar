@@ -97,7 +97,8 @@ public class Novinar
         throws Exception
     {
 	// start the background channel refresh thread
-	taskRunner.submit(reader);
+        reader.start();
+        // taskRunner.submit();
     }
 
     /** Shutdown Novinar core.
@@ -108,7 +109,7 @@ public class Novinar
         throws Exception
     {
         getLogger().severe("Novinar core shutting down");
-        reader.interrupt();
+        reader.close();
         dbend.close();
 
         try {
@@ -269,7 +270,7 @@ public class Novinar
     public void loadFeed(Channel chan)
         throws Exception
     {
-        reader.loadFeed(chan);
+        reader.submitLoadFeedTask(chan);
     }
 
     /** Loads feeds for the given channel outline or channels in the
@@ -280,7 +281,7 @@ public class Novinar
     {
         List<Channel> channels = getChannelsUnder(ol);
         for (Channel chan : channels) {
-            reader.loadFeed(chan);
+            loadFeed(chan);
         }
     }
 

@@ -77,6 +77,7 @@ public class NovinarApp extends Application
     private Label itemTitle = null;
     private Label itemAuthor = null;
     private Label itemTimestamp = null;
+    private Label currentStatus = null;
     // contains URL of the currently viewed item
     private TextField itemLink = null;
     // The "visit" link next to the link text
@@ -612,16 +613,16 @@ public class NovinarApp extends Application
         SplitPane centerPane = new SplitPane();
 
         centerPane.getItems().addAll(buildFeedsTree(),
-				     buildItemsTable(),
-				     buildContentPane());
+                                     buildItemsTable(),
+                                     buildContentPane());
         centerPane.setDividerPositions(0.12f, 0.55f);
-	return centerPane;
+        return centerPane;
     }
 
 
     private VBox buildContentPane() {
-	VBox vbox = new VBox();
-	itemTitle = new Label("");
+        VBox vbox = new VBox();
+        itemTitle = new Label("");
         itemTitle.setFont(Font.font("Helvetica", FontWeight.BOLD, 18));
         itemTitle.setWrapText(true);
 
@@ -630,48 +631,54 @@ public class NovinarApp extends Application
         itemTimestamp = new Label("Timestamp: ");
         itemMetaBox.getChildren().addAll(itemAuthor, itemTimestamp);
 
-	itemView = new WebView();
+        itemView = new WebView();
         WebEngine webEngine = itemView.getEngine();
         webEngine.setJavaScriptEnabled(false);
         webEngine.setUserStyleSheetLocation(getClass().getResource("style.css").toString());
         VBox.setVgrow(itemView, Priority.ALWAYS);
 
-	HBox itemLinksBox = new HBox();
+        HBox itemLinksBox = new HBox();
         itemLink = new TextField("");
         itemLink.setFont(Font.font("Helvetica", FontWeight.LIGHT, 12));
-	// select all itemLink text upon text field activation (either
-	// with the mouse click or keyboard navigation)
-	itemLink.focusedProperty().addListener(new ChangeListener<Boolean>() {
-		@Override
-		public void changed(ObservableValue ov, Boolean t, Boolean t1) {
+        // select all itemLink text upon text field activation (either
+        // with the mouse click or keyboard navigation)
+        itemLink.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
 
-		    Platform.runLater(new Runnable() {
-			    @Override
-			    public void run() {
-				if (itemLink.isFocused() && !itemLink.getText().isEmpty()) {
-				    itemLink.selectAll();
-				}
-			    }
-			});
-		}
-	    });
+                    Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (itemLink.isFocused() && !itemLink.getText().isEmpty()) {
+                                    itemLink.selectAll();
+                                }
+                            }
+                        });
+                }
+            });
 
-	itemLinkLink = new Hyperlink();
-	itemLinkLink.setText("Visit");
-	itemLinkLink.setOnAction((ActionEvent evt) -> {
-		itemView.getEngine().load(itemLink.getText());
-	    });
-	itemLinksBox.getChildren().addAll(itemLink, itemLinkLink);
-	HBox.setHgrow(itemLink, Priority.ALWAYS);
+        itemLinkLink = new Hyperlink();
+        itemLinkLink.setText("Visit");
+        itemLinkLink.setOnAction((ActionEvent evt) -> {
+                itemView.getEngine().load(itemLink.getText());
+            });
+        itemLinksBox.getChildren().addAll(itemLink, itemLinkLink);
+        HBox.setHgrow(itemLink, Priority.ALWAYS);
 
-	vbox.getChildren().addAll(itemTitle, itemMetaBox, itemView, itemLinksBox);
-	return vbox;
+        vbox.getChildren().addAll(itemTitle, itemMetaBox, itemView, itemLinksBox);
+        return vbox;
     }
 
 
     /** Status bar in the bottom of the main window. */
     private HBox buildStatusBar() {
         HBox statusbar = new HBox();
+
+        Label statusTitle = new Label("Status: ");
+        currentStatus = new Label("");
+
+        statusbar.getChildren().addAll(statusTitle, currentStatus);
+
         return statusbar;
     }
 
@@ -725,7 +732,7 @@ public class NovinarApp extends Application
 	BorderPane root = new BorderPane();
 	root.setTop(buildMenuBar());
 	root.setCenter(buildCenterPane());
-        root.setBottom(buildStatusBar());
+    root.setBottom(buildStatusBar());
 	// populate items table with the items
 	updateItemsTable();
 	selectedNewsItem(null);
