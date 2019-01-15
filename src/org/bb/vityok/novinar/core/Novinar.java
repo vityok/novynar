@@ -66,7 +66,8 @@ public class Novinar
     /** Constructs a new Novinar instance using default data location
      * paths or those provided in the system environment.
      */
-    public Novinar() {
+    public Novinar()
+    {
         this(
              System.getProperty(PROP_OPML_FILE,
                                 OPMLManager.DEFAULT_OPML_FILE_NAME),
@@ -74,7 +75,8 @@ public class Novinar
                                 Backend.DEFAULT_DB_NAME));
     }
 
-    public Novinar(String opmlFile, String dbName) {
+    public Novinar(String opmlFile, String dbName)
+    {
         try {
             FileHandler fh = new FileHandler("novinar.log");
             fh.setFormatter(new SimpleFormatter());
@@ -83,14 +85,13 @@ public class Novinar
         } catch (IOException e) {
             e.printStackTrace();
         }
-        logger.info("loading Novinar with: opml=" + opmlFile + "; db=" + dbName);
-        oman = new OPMLManager(opmlFile);
+        logger.severe("loading Novinar with: opml=" + opmlFile + "; db=" + dbName);
         dbend = new Backend(dbName);
-        niDAO = new NewsItemDAO(dbend);
+        niDAO = dbend.getNewsItemDAO();
+        oman = new OPMLManager(opmlFile);
         reader = new FeedReader(this);
 
         taskRunner = Executors.newFixedThreadPool(2);
-
     }
 
     public void setup ()
@@ -286,20 +287,18 @@ public class Novinar
     }
 
     public void loadFeedsBg(final Outline ol)
+        throws Exception
     {
-        taskRunner.submit(() -> {
-                try {
-                    loadFeeds(ol);
-                } catch (Exception e) {
-                    logger.log(Level.SEVERE, "failure loading feed: " + ol, e);
-                }
-            });
+        reader.loadFeeds();
     }
 
-    public void loadConfig() {
+    public void loadConfig()
+    {
         oman.loadConfig();
     }
-    public void storeConfig() {
+
+    public void storeConfig()
+    {
         oman.storeConfig();
     }
 

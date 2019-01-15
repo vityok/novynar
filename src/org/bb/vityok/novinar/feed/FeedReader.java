@@ -24,6 +24,7 @@ import java.util.LinkedList;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import java.util.logging.Level;
 
@@ -55,29 +56,46 @@ public class FeedReader extends Thread
      * passed as a stream of chars to the XML parser.
      */
     final public static char UTF8_BOM = '\uFEFF';
+    final private List<FeedParser> parsers;
+    final private ExecutorService threadPool;
 
     private Novinar novinar;
-    private List<FeedParser> parsers;
 
-    private ExecutorService threadPool = Executors.newFixedThreadPool(3);
-
-    public FeedReader(Novinar novinar) {
+    public FeedReader(Novinar novinar)
+    {
         super("Feeds reader thread");
         this.novinar = novinar;
+
         parsers = new LinkedList<>();
         parsers.add(new RDF(novinar));
         parsers.add(new RSS(novinar));
         parsers.add(new Atom(novinar));
+
+        threadPool = Executors.newFixedThreadPool(3);
+    }
+
+    public class Pair<F, S>
+    {
+        final private F first;
+        final private S second;
+        Pair(F first, S second)
+        {
+            this.first = first;
+            this.second = second;
+        }
+        public F getFirst() { return first; }
+        public S getSecond() { return second; }
     }
 
     /**
      * Opens connection to a remote resource and returns the input stream.
      */
-    public InputStream openRemoteFeed(String url) throws Exception {
+    public Pair<InputStream,String> openRemoteFeed(String url)
+        throws Exception
+    {
         String location = url;
         URL base, next;
-        int attempts = 0;
-        while (attempts++ < 5) {
+        for (int attempts = 0; attempts < 5; ++attempts) {
             URL feedURL = new URL(url);
             HttpURLConnection con = (HttpURLConnection) feedURL.openConnection();
 
@@ -104,8 +122,9 @@ public class FeedReader extends Thread
                 url = next.toExternalForm();
                 continue;
             case HttpURLConnection.HTTP_OK:
+                String preferredEncoding = con.getContentEncoding();
                 InputStream is = con.getInputStream();
-                return is;
+                return new Pair<>(is, preferredEncoding);
             }
         }
         return null;
@@ -114,7 +133,9 @@ public class FeedReader extends Thread
     /**
      * Opens input stream from the local file (for testing purposes primarily).
      */
-    public InputStream openLocalFeed(String path) throws Exception {
+    public InputStream openLocalFeed(String path)
+        throws Exception
+    {
         File file = new File(path);
         return new FileInputStream(file);
     }
@@ -167,12 +188,19 @@ public class FeedReader extends Thread
         return sb.toString();
     }
 
-    public Document loadFeed(Channel chan) throws Exception {
+    public Document loadFeed(Channel chan)
+        throws Exception
+    {
+        if (Thread.currentThread().isInterrupted()) {
+            return null;
+        }
+
         Novinar.getLogger().info("loading items for the channel: " + chan);
 
         InputStream is = null;
         String url = chan.getLink();
         URL feedURL = new URL(url);
+        String preferredEncoding = "UTF-8";
 
         try {
             switch (feedURL.getProtocol()) {
@@ -182,7 +210,15 @@ public class FeedReader extends Thread
             }
             case "http":
             case "https": {
-                is = openRemoteFeed(url);
+                Pair<InputStream,String> res = openRemoteFeed(url);
+                is = res.getFirst();
+                if (res.getSecond() != null
+                    && res.getSecond().length() > 0) {
+                    preferredEncoding = res.getSecond();
+                }
+                else {
+                    preferredEncoding = null;
+                }
                 break;
             }
             default: {
@@ -199,7 +235,7 @@ public class FeedReader extends Thread
                 chan.setProblems(problem);
                 throw new FeedHandlingException(problem);
             } else {
-                Document doc = parseFeedXml(is);
+                Document doc = parseFeedXml(is, preferredEncoding);
 
                 // optional, but recommended read this:
                 // http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
@@ -235,6 +271,7 @@ public class FeedReader extends Thread
         }
     } // end loadFeed
 
+
     public void submitLoadFeedTask(Channel chan)
         throws Exception
     {
@@ -251,6 +288,7 @@ public class FeedReader extends Thread
             });
     }
 
+
     /**
      * Attempt parsing the feed XML document in several different ways and check
      * which one works.
@@ -261,7 +299,7 @@ public class FeedReader extends Thread
      * characters (ie. in CDATA sections), which unfortunately might happen in the
      * wild.
      */
-    private Document parseFeedXml(InputStream is)
+    private Document parseFeedXml(InputStream is, String preferredEncoding)
         throws IOException, ParserConfigurationException, SAXException
     {
         String fixedStr = "n/a";
@@ -270,6 +308,9 @@ public class FeedReader extends Thread
             // final Reader feedReader = new StringReader(fixedStr);
             final InputSource feedReaderSource = new InputSource(is); // feedReader);
             // Novinar.getLogger().info("feed contents: " + fixedStr);
+            if (preferredEncoding != null) {
+                feedReaderSource.setEncoding(preferredEncoding);
+            }
 
             // Parse XML data into a DOM document/tree
             final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -284,8 +325,11 @@ public class FeedReader extends Thread
         }
     }
 
+
     /** Refresh/download all feeds from all known channels. */
-    public void loadFeeds() throws Exception {
+    public void loadFeeds()
+        throws Exception
+    {
         novinar.setStatus(Novinar.Status.READING_FEEDS);
         List<Channel> channels = novinar.getChannels();
         Novinar.getLogger().info("loading " + channels.size() + " channels");
@@ -295,6 +339,7 @@ public class FeedReader extends Thread
         novinar.setStatus(Novinar.Status.READY);
     }
 
+
     /**
      * Entry point for the main background trhead periodically checking feeds and
      * downloading new items.
@@ -303,7 +348,8 @@ public class FeedReader extends Thread
     // todo: the thread must hang in background, periodically checking
     // for the channels that have to be updated
     @Override
-    public void run() {
+    public void run()
+    {
         Novinar.getLogger().info("FeedReader thread is running");
         boolean firstRound = true;
         while (!Thread.currentThread().isInterrupted()) {
@@ -358,8 +404,21 @@ public class FeedReader extends Thread
         Novinar.getLogger().info("FeedReader thread stopped");
     }
 
-    public void close() {
-        threadPool.shutdown();
+
+    public void close()
+    {
+        try {
+            threadPool.shutdown();
+            threadPool.awaitTermination(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Novinar.getLogger().severe("tasks interrupted");
+        } finally {
+            if (!threadPool.isTerminated()) {
+                Novinar.getLogger().severe("cancel non-finished tasks");
+            }
+            threadPool.shutdownNow();
+        }
+
         interrupt();
     }
 } // end FeedReader

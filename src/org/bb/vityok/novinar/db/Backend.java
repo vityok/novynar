@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,27 +37,38 @@ public class Backend
 
     private Connection conn;
 
-    private static Logger logger = Logger.getLogger("org.bb.vityok.novinar.db");
+    private NewsItemDAO niDAO;
+
+    private static Logger logger = Logger.getLogger(Backend.class.getName());
 
     /** Initialize the backend with the default database name. */
-    public Backend() {
+    public Backend()
+    {
         this(DEFAULT_DB_NAME);
     }
 
 
-    public Backend(String dbName) {
+    public Backend(String dbName)
+    {
+        logger.info("Backend setup started");
         this.dbName = dbName;
-	try {
-	    setup();
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
+        try {
+            setup();
+            niDAO = new NewsItemDAO(this);
+            logger.info("Backend setup finished");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "problems during backend initialization", e);
+        }
     }
 
+    public NewsItemDAO getNewsItemDAO()
+    {
+        return niDAO;
+    }
 
     public Connection getConnection()
     {
-	return conn;
+        return conn;
     }
 
     /**
@@ -70,7 +82,7 @@ public class Backend
      * down.</p>
      */
     public void setup()
-	throws Exception
+        throws Exception
     {
 
         logger.info("Database backend is starting in " + framework + " mode. SETUP");
@@ -81,69 +93,70 @@ public class Backend
 
         try {
 
-	    /*
-	     * This connection specifies create=true in the connection
-	     * URL to cause the database to be created when connecting
-	     * for the first time. To remove the database, remove the
-	     * directory specified by the database name and its
-	     * contents.
-	     *
-	     * The directory dbName will be created under the
-	     * directory that the system property derby.system.home
-	     * points to, or the current directory (user.dir) if
-	     * derby.system.home is not set.
-	     */
-	    conn = DriverManager.getConnection(protocol + dbName
-					       + ";create=true", null);
+            /*
+             * This connection specifies create=true in the connection
+             * URL to cause the database to be created when connecting
+             * for the first time. To remove the database, remove the
+             * directory specified by the database name and its
+             * contents.
+             *
+             * The directory dbName will be created under the
+             * directory that the system property derby.system.home
+             * points to, or the current directory (user.dir) if
+             * derby.system.home is not set.
+             */
+            conn = DriverManager.getConnection(protocol + dbName
+                                               + ";create=true", null);
 
-	    logger.info("Connected to the database " + dbName);
+            logger.info("Connected to the database " + dbName);
 
-	    s = conn.createStatement();
+            s = conn.createStatement();
 
             // try creating the news_item table and quietly ignore the SQLException if it already exists
             s.execute("CREATE TABLE news_item("
-		    + "news_item_id INT NOT NULL PRIMARY KEY "
-		    + "  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
-		    + "channel_id INT NOT NULL, "
-                    + "title VARCHAR(2048), "
-                    + "link VARCHAR(2048), "
-                    // some websites generate items with way too much markup to fit into a VARCHAR
-                    // or even a LONG VARCHAR
-		    + "description CHARACTER LARGE OBJECT (100 K), "
-                    + "creator VARCHAR(1024), "
-                    + "date TIMESTAMP, "
-                    + "subject VARCHAR(6144), "
-		    // is set to 1 when marked as read
-		    + "is_read SMALLINT DEFAULT 0, "
-		    // is set to 1 when marked as removed. Schema v1 adds is_trash column to track
-		    // items thrown into the trash bin.
-		    //
-		    // An item that has is_trash flag set to 1 is displayed in the "Trash" folder
-		    // only. But is not displayed in the channel folder. Only when is_removed is set
-		    // to 1 the item becomes candidate for final removal from the database.
-		    + "is_removed SMALLINT DEFAULT 0 "
-                    + ")");
+                      + "news_item_id INT NOT NULL PRIMARY KEY "
+                      + "  GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
+                      + "channel_id INT NOT NULL, "
+                      + "title VARCHAR(2048), "
+                      + "link VARCHAR(2048), "
+                      // some websites generate items with way too much markup to fit into a VARCHAR
+                      // or even a LONG VARCHAR
+                      + "description CHARACTER LARGE OBJECT (100 K), "
+                      + "creator VARCHAR(1024), "
+                      + "date TIMESTAMP, "
+                      + "subject VARCHAR(6144), "
+                      // is set to 1 when marked as read
+                      + "is_read SMALLINT DEFAULT 0, "
+                      // is set to 1 when marked as removed. Schema v1 adds is_trash column to track
+                      // items thrown into the trash bin.
+                      //
+                      // An item that has is_trash flag set to 1 is displayed in the "Trash" folder
+                      // only. But is not displayed in the channel folder. Only when is_removed is set
+                      // to 1 the item becomes candidate for final removal from the database.
+                      + "is_removed SMALLINT DEFAULT 0 "
+                      + ")");
             logger.severe("Created table NEWS_ITEM");
-	} catch (SQLException sqle) {
+        } catch (SQLException sqle) {
             if (!sqle.getSQLState().equals("X0Y32")) {
                 // X0Y32 means that this table already exists,
                 // complain only if something bad happened
                 printSQLException(sqle);
             }
-	}
+        }
 
-	int schemaVersion = getSchemaVersion();
-	if (schemaVersion == 0) {
-	    upgradeSchema_NULL_v1();
-	}
+        int schemaVersion = getSchemaVersion();
+        if (schemaVersion == 0) {
+            upgradeSchema_NULL_v1();
+        }
     }
 
     /** Returns database layout schema version.
      *
      * @return database layout schema.
      */
-    public int getSchemaVersion() {
-	Connection conn = getConnection();
+    public int getSchemaVersion()
+    {
+        Connection conn = getConnection();
 
         String sql = "SELECT schema_version FROM novinar_meta_inf";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -169,8 +182,9 @@ public class Backend
      * <p>
      * Adds <tt>is_trash</tt> column to the <tt>news_item</tt> table.
      */
-    public void upgradeSchema_NULL_v1() {
-	Connection conn = getConnection();
+    public void upgradeSchema_NULL_v1()
+    {
+        Connection conn = getConnection();
 
         String sqlCreate = "CREATE TABLE novinar_meta_inf (schema_version INT)";
         try (PreparedStatement ps = conn.prepareStatement(sqlCreate)) {
@@ -186,8 +200,8 @@ public class Backend
             logger.log(Level.SEVERE, "failed to update novinar_meta_inf table: ", e);
         }
 
-	// is set to 1 when the news item is moved to the trash bin, but is not yet a
-	// candidate for the final removal from the database
+        // is set to 1 when the news item is moved to the trash bin, but is not yet a
+        // candidate for the final removal from the database
         String sqlAlter = "ALTER TABLE news_item ADD COLUMN is_trash SMALLINT DEFAULT 0";
         try (PreparedStatement ps = conn.prepareStatement(sqlAlter)) {
             ps.execute();
@@ -195,7 +209,7 @@ public class Backend
             logger.log(Level.SEVERE, "failed to alter news_item table: ", e);
         }
 
-	logger.severe("finished upgrade to the v1 database schema layout");
+        logger.severe("finished upgrade to the v1 database schema layout");
     }
 
 

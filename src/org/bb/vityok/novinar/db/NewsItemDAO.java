@@ -33,7 +33,7 @@ public class NewsItemDAO
 {
     private Backend dbend;
 
-    public NewsItemDAO(Backend dbend)
+    protected NewsItemDAO(Backend dbend)
     {
         this.dbend = dbend;
     }
@@ -41,18 +41,18 @@ public class NewsItemDAO
     public void insertOrUpdateItem(Channel chan, NewsItem item)
 	throws Exception
     {
-	Connection conn = dbend.getConnection();
+        Connection conn = dbend.getConnection();
 
         // truncate the description if it exceeds maximum possible description size
         String desc = item.getDescription();
-        if (desc !=null && desc.length() >=Backend.DESCRIPTION_MAX_LENGTH) {
+        if (desc !=null && desc.length() >= Backend.DESCRIPTION_MAX_LENGTH) {
             item.setDescription(desc.substring(0, Backend.DESCRIPTION_MAX_LENGTH - 5 ));
         }
 
-	// check if such item already exists in the database before
-	// insertion, update the item if it is not removed otherwise
+        // check if such item already exists in the database before
+        // insertion, update the item if it is not removed otherwise
         String sqlSel = "SELECT link, news_item_id, is_removed, is_trash FROM news_item WHERE link=?";
-	try (PreparedStatement cs = conn.prepareStatement(sqlSel)) {
+        try (PreparedStatement cs = conn.prepareStatement(sqlSel)) {
             cs.setString(1, item.getLink());
             ResultSet rscs = cs.executeQuery();
             boolean alreadyExists = rscs.next();

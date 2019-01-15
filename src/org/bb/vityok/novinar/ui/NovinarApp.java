@@ -718,24 +718,25 @@ public class NovinarApp extends Application
     // LIFE CYCLE OF THE APPLICATION
 
     @Override
-    public void init() {
-	try {
+    public void init()
+    {
+        try {
             novinar = new Novinar();
-	    novinar.setup();
-	} catch (Exception e) {
+            novinar.setup();
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "failure during initialization", e);
-	}
+        }
     }
 
     @Override
     public void start(Stage primaryStage) {
-	BorderPane root = new BorderPane();
-	root.setTop(buildMenuBar());
-	root.setCenter(buildCenterPane());
-    root.setBottom(buildStatusBar());
-	// populate items table with the items
-	updateItemsTable();
-	selectedNewsItem(null);
+        BorderPane root = new BorderPane();
+        root.setTop(buildMenuBar());
+        root.setCenter(buildCenterPane());
+        root.setBottom(buildStatusBar());
+        // populate items table with the items
+        updateItemsTable();
+        selectedNewsItem(null);
         primaryScene = new Scene(root);
         primaryScene.getStylesheets().add(getClass().getResource("novinar.css").toExternalForm());
 
