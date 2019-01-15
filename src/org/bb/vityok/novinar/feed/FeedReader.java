@@ -46,7 +46,8 @@ import org.bb.vityok.novinar.core.UpdatePeriod;
  * Updates channel information (last time updated, if there are any problems,
  * etc.)
  */
-public class FeedReader extends Thread {
+public class FeedReader extends Thread
+{
 
     /**
      * Some feeds start generated feeds with the UTF8 byte-order mark
@@ -125,13 +126,14 @@ public class FeedReader extends Thread {
      * Some feeds contain invalid XML characters in CDATA sections. This method
      * ensures that no such characters are left and will not break the XML parser.
      */
-    public String slurpAndFixInputStream(InputStream is) throws IOException {
+    public String slurpAndFixInputStream(InputStream is)
+        throws IOException
+    {
         StringBuilder sb = new StringBuilder();
 
         // todo: what if the input stream is not UTF_8 encoded? which might happen if
         // the server is configured for a different encoding
-        try (Reader reader = new BufferedReader(
-                                                new InputStreamReader(is, Charset.forName(StandardCharsets.UTF_8.name())))) {
+        try (Reader reader = new BufferedReader(new InputStreamReader(is, Charset.forName(StandardCharsets.UTF_8.name())))) {
             int codePoint = 0;
             boolean firstChar = true;
             char[] dst = new char[2];
@@ -238,7 +240,9 @@ public class FeedReader extends Thread {
     {
         threadPool.execute(() -> {
                 try {
-                    loadFeed(chan);
+                    if (!Thread.currentThread().isInterrupted()) {
+                        loadFeed(chan);
+                    }
                 } catch (Exception e) {
                     Novinar.getLogger().severe("Problem loading channel " + chan);
                     String problem = "Problem loading channel";
@@ -257,12 +261,14 @@ public class FeedReader extends Thread {
      * characters (ie. in CDATA sections), which unfortunately might happen in the
      * wild.
      */
-    private Document parseFeedXml(InputStream is) throws IOException, ParserConfigurationException, SAXException {
+    private Document parseFeedXml(InputStream is)
+        throws IOException, ParserConfigurationException, SAXException
+    {
         String fixedStr = "n/a";
         try {
-            fixedStr = slurpAndFixInputStream(is);
-            final Reader feedReader = new StringReader(fixedStr);
-            final InputSource feedReaderSource = new InputSource(feedReader);
+            // fixedStr = slurpAndFixInputStream(is);
+            // final Reader feedReader = new StringReader(fixedStr);
+            final InputSource feedReaderSource = new InputSource(is); // feedReader);
             // Novinar.getLogger().info("feed contents: " + fixedStr);
 
             // Parse XML data into a DOM document/tree
@@ -271,7 +277,8 @@ public class FeedReader extends Thread {
             final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             final Document doc = dBuilder.parse(feedReaderSource);
             return doc;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Novinar.getLogger().severe("failed to parse XML doc: begin[" + fixedStr + "]end");
             throw new IOException("failed to load and parse feed", e);
         }

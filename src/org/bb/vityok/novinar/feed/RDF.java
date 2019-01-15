@@ -60,34 +60,34 @@ public class RDF
 
 
     public void processFeed(Channel chan, Document doc)
-	throws Exception
+        throws Exception
     {
-	Element docElement = doc.getDocumentElement();
-	Node channelNode = docElement.getElementsByTagName("channel").item(0);
+        Element docElement = doc.getDocumentElement();
+        Node channelNode = docElement.getElementsByTagName("channel").item(0);
 
-	Novinar.getLogger().finer("Channel node is: " + channelNode.getNodeName());
+        Novinar.getLogger().finer("Channel node is: " + channelNode.getNodeName());
 
-	if (channelNode.getNodeType() == Node.ELEMENT_NODE) {
-	    Element channelElement = (Element) channelNode;
+        if (channelNode.getNodeType() == Node.ELEMENT_NODE) {
+            Element channelElement = (Element) channelNode;
 
-	    String cTitle = channelElement.getElementsByTagName("title").item(0).getTextContent();
-	    String cLink = channelElement.getElementsByTagName("link").item(0).getTextContent();
-	    String cDescription = channelElement.getElementsByTagName("description").item(0).getTextContent();
-	    Novinar.getLogger().info("channel title: " + cTitle);
-	    Novinar.getLogger().info("channel link: " + cLink);
-	    Novinar.getLogger().info("channel description: " + cDescription);
+            String cTitle = channelElement.getElementsByTagName("title").item(0).getTextContent();
+            String cLink = channelElement.getElementsByTagName("link").item(0).getTextContent();
+            String cDescription = channelElement.getElementsByTagName("description").item(0).getTextContent();
+            Novinar.getLogger().info("channel title: " + cTitle);
+            Novinar.getLogger().info("channel link: " + cLink);
+            Novinar.getLogger().info("channel description: " + cDescription);
 
-	    NodeList itemsList = docElement.getElementsByTagName("item");
+            NodeList itemsList = docElement.getElementsByTagName("item");
 
-	    Novinar.getLogger().info("got " + itemsList.getLength() + " items in description");
+            Novinar.getLogger().info("got " + itemsList.getLength() + " items in description");
 
             Instant oldestTimestamp = null;
 
-	    for (int i = 0; i < itemsList.getLength(); i++) {
-		Element item = (Element) itemsList.item(i);
-		String iTitle = item.getElementsByTagName("title").item(0).getTextContent();
-		String iLink = item.getElementsByTagName("link").item(0).getTextContent();
-		String iDescription = "";
+            for (int i = 0; i < itemsList.getLength(); i++) {
+                Element item = (Element) itemsList.item(i);
+                String iTitle = item.getElementsByTagName("title").item(0).getTextContent();
+                String iLink = item.getElementsByTagName("link").item(0).getTextContent();
+                String iDescription = "";
                 if (item.getElementsByTagName("description").getLength() > 0) {
                     iDescription = item.getElementsByTagName("description").item(0).getTextContent();
                 } else if (item.getElementsByTagNameNS(CONTENT_NS, "encoded").getLength() > 0) {
@@ -97,10 +97,10 @@ public class RDF
                 }
 
                 Instant iTs = extractTimestamp(item);
-		NewsItem newsItem = new NewsItem();
-		newsItem.setTitle(iTitle);
-		newsItem.setLink(iLink);
-		newsItem.setDescription(iDescription);
+                NewsItem newsItem = new NewsItem();
+                newsItem.setTitle(iTitle);
+                newsItem.setLink(iLink);
+                newsItem.setDescription(iDescription);
                 newsItem.setDateCalendar(iTs);
 
                 if (oldestTimestamp == null
@@ -110,10 +110,10 @@ public class RDF
 
                 String iCreator = extractCreator(item);
                 newsItem.setCreator(iCreator);
-		novinar.insertOrUpdateItem(chan, newsItem);
-	    }
+                novinar.insertOrUpdateItem(chan, newsItem);
+            }
 
             novinar.cleanupChannel(chan, oldestTimestamp);
-	}
+        }
     }
 }
